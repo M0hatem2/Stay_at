@@ -1,0 +1,21 @@
+<div class="text-center group">
+      <div class="relative mb-4 overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-500">
+            <img [src]="member.image"
+                  class="w-full h-72 object-cover group-hover:scale-110 transition-transform duration-700">
+            <div
+                  class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <div class="absolute bottom-4 left-0 right-0 flex justify-center gap-3">
+                        <a *ngIf="member.linkedinUrl" [href]="member.linkedinUrl"
+                              class="p-3 bg-white/90 backdrop-blur rounded-xl hover:bg-white transition-all shadow-md hover:shadow-lg">
+                              <i class="fa-brands fa-linkedin-in text-gray-700 text-sm"></i>
+                        </a>
+                        <a *ngIf="member.twitterUrl" [href]="member.twitterUrl"
+                              class="p-3 bg-white/90 backdrop-blur rounded-xl hover:bg-white transition-all shadow-md hover:shadow-lg">
+                              <i class="fa-brands fa-x-twitter text-gray-700 text-sm"></i>
+                        </a>
+                  </div>
+            </div>
+      </div>
+      <h3 class="text-lg font-semibold text-gray-900">{{ member.name }}</h3>
+      <p class="text-gray-600 text-sm">{{ member.role }}</p>
+</div>

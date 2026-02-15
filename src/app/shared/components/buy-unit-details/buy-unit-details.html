@@ -1,0 +1,661 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 space-y-6">
+                 <div class="bg-white rounded-2xl overflow-hidden shadow-sm">
+        <div class="relative h-64 sm:h-80 lg:h-96 bg-gray-200">
+          <img
+            [src]="galleryImages[currentImageIndex] || heroImage"
+            [alt]="displayTitle"
+            class="w-full h-full object-cover cursor-pointer"
+            (click)="openImageModal(currentImageIndex)">
+          <div class="absolute top-2 sm:top-4 left-2 sm:left-4 flex flex-col gap-1 sm:gap-2">
+            <div class="px-2 sm:px-3 py-1 sm:py-1.5 bg-black text-white text-xs sm:text-sm rounded-lg flex items-center gap-1">
+              <i class="fa-solid fa-shield-alt w-3 h-3 sm:w-4 sm:h-4"></i><span>Managed</span>
+            </div>
+            <div class="px-2 sm:px-3 py-1 sm:py-1.5 bg-green-600 text-white text-xs sm:text-sm rounded-lg flex items-center gap-1">
+              <i class="fa-solid fa-check-circle w-3 h-3 sm:w-4 sm:h-4"></i><span>Verified</span>
+            </div>
+          </div>
+          <div class="absolute top-2 sm:top-4 right-2 sm:right-4 flex gap-1 sm:gap-2">
+            <button class="p-2 sm:p-3 bg-white/90 backdrop-blur-sm rounded-lg hover:bg-white transition-colors">
+              <i class="fa-regular fa-heart w-4 h-4 sm:w-5 sm:h-5"></i>
+            </button>
+            <button class="p-2 sm:p-3 bg-white/90 backdrop-blur-sm rounded-lg hover:bg-white transition-colors">
+              <i class="fa-solid fa-share-nodes w-4 h-4 sm:w-5 sm:h-5 text-gray-700"></i>
+            </button>
+          </div>
+          <!-- Navigation arrows for main image -->
+          <button 
+            *ngIf="galleryImages.length > 1"
+            (click)="previousImage()"
+            class="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors">
+            <i class="fa-solid fa-chevron-left w-4 h-4"></i>
+          </button>
+          <button 
+            *ngIf="galleryImages.length > 1"
+            (click)="nextImage()"
+            class="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors">
+            <i class="fa-solid fa-chevron-right w-4 h-4"></i>
+          </button>
+          <!-- Image counter -->
+          <div class="absolute bottom-2 sm:bottom-4 right-2 sm:right-4 px-2 py-1 bg-black/70 text-white text-xs rounded-lg">
+            {{ currentImageIndex + 1 }} / {{ galleryImages.length }}
+          </div>
+        </div>
+        <div class="p-2 sm:p-4 grid grid-cols-4 gap-2 sm:gap-3 overflow-x-auto">
+          <button 
+            *ngFor="let image of galleryImages; let i = index"
+            (click)="selectImage(i)"
+            class="relative h-16 sm:h-20 flex-shrink-0 rounded-lg overflow-hidden transition-all hover:scale-105"
+            [class.ring-2]="i === currentImageIndex"
+            [class.ring-black]="i === currentImageIndex">
+            <img [src]="image" alt="Gallery image {{ i + 1 }}" class="w-full h-full object-cover">
+          </button>
+        </div>
+      </div>
+                  <div class="bg-white rounded-2xl p-6 shadow-sm">
+                        <h1 class="text-gray-900 mb-4">{{ propertyData.title }}</h1>
+                        <div class="flex items-center gap-2 text-gray-600 mb-6"><i
+                                    class="fa-solid fa-map-marker-alt w-5 h-5 text-[#808080]"></i><span>{{ propertyData.location.full }}</span></div>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 pb-6 border-b border-gray-200">
+                              <div class="flex flex-col">
+                                    <div class="flex items-center gap-2 mb-2"><i
+                                                class="fa-solid fa-bed w-5 h-5 text-[#808080]"></i><span
+                                                class="text-gray-500 text-sm">Bedrooms</span></div>
+                                    <div class="text-gray-900">{{ propertyData.specs.bedrooms }}</div>
+                              </div>
+                              <div class="flex flex-col">
+                                    <div class="flex items-center gap-2 mb-2"><i
+                                                class="fa-solid fa-bath w-5 h-5 text-[#808080]"></i><span
+                                                class="text-gray-500 text-sm">Bathrooms</span></div>
+                                    <div class="text-gray-900">{{ propertyData.specs.bathrooms }}</div>
+                              </div>
+                              <div class="flex flex-col">
+                                    <div class="flex items-center gap-2 mb-2"><i
+                                                class="fa-solid fa-maximize w-5 h-5 text-[#808080]"></i><span
+                                                class="text-gray-500 text-sm">Area</span></div>
+                                    <div class="text-gray-900">{{ propertyData.specs.area_sqm }} sqm</div>
+                              </div>
+                              <div class="flex flex-col">
+                                    <div class="flex items-center gap-2 mb-2"><i
+                                                class="fa-solid fa-building w-5 h-5 text-[#808080]"></i><span
+                                                class="text-gray-500 text-sm">Floor</span></div>
+                                    <div class="text-gray-900">{{ propertyData.specs.floor }}</div>
+                              </div>
+                        </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 pt-6">
+                              <div>
+                                    <div class="text-gray-500 text-sm mb-1">Property Type</div>
+                                    <div class="text-gray-900">{{ propertyData.specs.property_type }}</div>
+                              </div>
+                              <div>
+                                    <div class="text-gray-500 text-sm mb-1">Ownership</div>
+                                    <div class="text-gray-900">{{ propertyData.specs.ownership }}</div>
+                              </div>
+                              <div>
+                                    <div class="text-gray-500 text-sm mb-1">Finishing</div>
+                                    <div class="text-gray-900">{{ propertyData.specs.finishing }}</div>
+                              </div>
+                              <div>
+                                    <div class="text-gray-500 text-sm mb-1">Year Built</div>
+                                    <div class="text-gray-900">{{ propertyData.specs.year_built }}</div>
+                              </div>
+                              <div>
+                                    <div class="text-gray-500 text-sm mb-1">Compound</div>
+                                    <div class="text-gray-900">{{ propertyData.specs.compound }}</div>
+                              </div>
+                              <div>
+                                    <div class="text-gray-500 text-sm mb-1">Delivery</div>
+                                    <div class="text-black flex items-center gap-1"><i
+                                                class="fa-solid fa-bolt w-4 h-4"></i>{{ propertyData.specs.delivery }}
+                                    </div>
+                              </div>
+                        </div>
+                  </div>
+                  <div class="bg-white rounded-2xl p-6 shadow-sm">
+                        <h2 class="text-gray-900 mb-4">Description</h2>
+                        <p class="text-gray-600 leading-relaxed whitespace-pre-line">{{ propertyData.description }}</p>
+                  </div>
+                  <div class="bg-white rounded-2xl p-6 shadow-sm">
+                        <h2 class="text-gray-900 mb-6">Apartment Features</h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                              @for (feature of propertyData.features; track feature) {
+                              <div class="flex items-center gap-3"><i
+                                          class="fa-solid fa-check-circle w-5 h-5 text-[#808080]"></i><span
+                                          class="text-gray-700">{{ feature }}</span></div>
+                              }
+                        </div>
+                  </div>
+                  <div
+                        class="bg-gradient-to-br from-gray-50 via-gray-100 to-gray-100 rounded-2xl p-6 border-2 border-gray-300">
+                        <div class="flex items-center gap-2 mb-6"><i
+                                    class="fa-solid fa-building w-6 h-6 text-[#808080]"></i>
+                              <h2 class="text-gray-900">{{ propertyData.specs.compound || 'Compound' }} Features</h2>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                              @for (feature of propertyData.compound_features; track feature) {
+                              <div class="flex items-center gap-3 bg-white rounded-lg p-3"><i
+                                          class="fa-solid fa-check-circle w-5 h-5 text-[#808080]"></i><span
+                                          class="text-gray-700 text-sm">{{ feature }}</span></div>
+                              }
+                        </div>
+                  </div>
+                  <div id="payment-plans" class="bg-white rounded-2xl p-6 shadow-sm scroll-mt-24">
+                        <div class="flex items-center gap-2 mb-6"><i
+                                    class="fa-solid fa-calculator w-6 h-6 text-[#808080]"></i>
+                              <h2 class="text-gray-900">Available Payment Plans</h2>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                              <div class="relative p-6 rounded-xl cursor-pointer transition-all bg-gray-50 border-2 border-gray-200 hover:border-[#de5806]/50 hover:shadow-md transform-none"
+                                    tabindex="0">
+                                    <div
+                                          class="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-green-600 text-white text-xs rounded-full shadow-md">
+                                          🔥 Best Deal</div>
+                                    <div class="text-center">
+                                          <h3 class="mb-3 text-gray-900">Cash - Instant Discount</h3>
+                                          <div
+                                                class="inline-flex items-center gap-1 px-3 py-1 rounded-lg text-sm mb-3 bg-green-100 text-green-700">
+                                                <i class="fa-solid fa-arrow-trend-down w-4 h-4"></i><span>Save
+                                                      10%</span>
+                                          </div>
+                                          <div class="space-y-3 mb-4">
+                                                <div>
+                                                      <div class="text-xs mb-1 text-gray-500">Down Payment</div>
+                                                      <div class="text-lg text-gray-900">100%</div>
+                                                </div>
+                                                <div>
+                                                      <div class="text-xs mb-1 text-gray-500">Final Price</div>
+                                                      <div class="text-xl text-black">3</div>
+                                                </div>
+                                          </div>
+                                          <p class="text-xs text-gray-600">10% discount (EGP 350,000) on total price for
+                                                immediate payment</p>
+                                    </div>
+                              </div>
+                              <div class="relative p-6 rounded-xl cursor-pointer transition-all bg-gray-50 border-2 border-gray-200 hover:border-[#de5806]/50 hover:shadow-md transform-none"
+                                    tabindex="0">
+                                    <div class="text-center">
+                                          <h3 class="mb-3 text-gray-900">5 Years Installment</h3>
+                                          <div
+                                                class="inline-flex items-center gap-1 px-3 py-1 rounded-lg text-sm mb-3 bg-green-100 text-green-700">
+                                                <i class="fa-solid fa-arrow-trend-down w-4 h-4"></i><span>Save 5%</span>
+                                          </div>
+                                          <div class="space-y-3 mb-4">
+                                                <div>
+                                                      <div class="text-xs mb-1 text-gray-500">Down Payment</div>
+                                                      <div class="text-lg text-gray-900">20%</div>
+                                                </div>
+                                                <div>
+                                                      <div class="text-xs mb-1 text-gray-500">Monthly</div>
+                                                      <div class="text-lg text-gray-900">44,000</div>
+                                                </div>
+                                                <div>
+                                                      <div class="text-xs mb-1 text-gray-500">Final Price</div>
+                                                      <div class="text-xl text-black">3</div>
+                                                </div>
+                                          </div>
+                                          <p class="text-xs text-gray-600">EGP 700,000 down payment (20%), rest EGP
+                                                2,625,000 over 60 months</p>
+                                    </div>
+                              </div>
+                              <div class="relative p-6 rounded-xl cursor-pointer transition-all bg-gradient-to-br from-[#de5806] to-[#470e03] text-white shadow-xl ring-4 ring-[#de5806]/30 transform-none"
+                                    tabindex="0">
+                                    <div
+                                          class="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-white text-black text-xs rounded-full shadow-md flex items-center gap-1">
+                                          <i class="fa-solid fa-check-circle w-3 h-3"></i><span>Selected</span>
+                                    </div>
+                                    <div class="text-center">
+                                          <h3 class="mb-3 text-white">7 Years Installment</h3>
+                                          <div class="space-y-3 mb-4">
+                                                <div>
+                                                      <div class="text-xs mb-1 text-white/80">Down Payment</div>
+                                                      <div class="text-lg text-white">15%</div>
+                                                </div>
+                                                <div>
+                                                      <div class="text-xs mb-1 text-white/80">Monthly</div>
+                                                      <div class="text-lg text-white">35,000</div>
+                                                </div>
+                                                <div>
+                                                      <div class="text-xs mb-1 text-white/80">Final Price</div>
+                                                      <div class="text-xl text-white">3</div>
+                                                </div>
+                                          </div>
+                                          <p class="text-xs text-white/90">EGP 525,000 down payment (15%), rest EGP
+                                                2,975,000 over 84 months</p>
+                                    </div>
+                              </div>
+                        </div>
+                        <div class="p-4 bg-gradient-to-r from-gray-100 to-gray-50 rounded-xl border-2 border-gray-300 opacity-100 transform-none"
+                             >
+                              <div class="flex items-center gap-2 mb-3"><i
+                                          class="fa-solid fa-check-circle w-5 h-5 text-[#808080]"></i><span
+                                          class="text-gray-900">Selected Plan: <strong>{{ propertyData.selected_plan_summary.name }}</strong></span></div>
+                              <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
+                                    <div>
+                                          <div class="text-gray-500 mb-1">Down Payment</div>
+                                          <div class="text-gray-900">{{ propertyData.selected_plan_summary.down_payment }}</div>
+                                    </div>
+                                    <div>
+                                          <div class="text-gray-500 mb-1">Duration</div>
+                                          <div class="text-gray-900">{{ propertyData.selected_plan_summary.duration }}</div>
+                                    </div>
+                                    <div>
+                                          <div class="text-gray-500 mb-1">Monthly Installment</div>
+                                          <div class="text-gray-900">{{ propertyData.selected_plan_summary.monthly_installment }}</div>
+                                    </div>
+                                    <div>
+                                          <div class="text-gray-500 mb-1">Discount</div>
+                                          <div class="text-green-600">{{ propertyData.selected_plan_summary.discount }}</div>
+                                    </div>
+                              </div>
+                        </div>
+                  </div>
+                  <div
+                        class="bg-gradient-to-br from-black via-gray-900 to-gray-800 rounded-2xl p-6 text-white shadow-lg">
+                        <div class="flex items-center gap-2 mb-6"><i class="fa-solid fa-arrow-trend-up w-6 h-6"></i>
+                              <h2>Price &amp; Investment Analysis</h2>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                              <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                                    <div class="text-white/80 text-sm mb-2">Price per sqm</div>
+                                    <div class="text-2xl mb-2">17 EGP/sqm</div>
+                                    <div class="flex items-center gap-2 text-sm"><i
+                                                class="fa-solid fa-arrow-trend-down w-4 h-4 text-green-400"></i><span
+                                                class="text-green-400">-7.9% below area average</span></div>
+                              </div>
+                              <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                                    <div class="text-white/80 text-sm mb-2">Expected Rental Yield</div>
+                                    <div class="text-2xl mb-2">6.8%</div>
+                                    <div class="text-sm text-white/80">Annual return: 238 EGP</div>
+                              </div>
+                              <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                                    <div class="text-white/80 text-sm mb-2">Expected Appreciation</div>
+                                    <div class="text-2xl mb-2">12%</div>
+                                    <div class="text-sm text-white/80">Annually in the area</div>
+                              </div>
+                              <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                                    <div class="text-white/80 text-sm mb-2">Payback Period</div>
+                                    <div class="text-2xl mb-2">14.7 years</div>
+                                    <div class="text-sm text-white/80">From rental income</div>
+                              </div>
+                        </div>
+                  </div>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white rounded-2xl p-6 shadow-sm">
+                              <div class="flex items-center gap-2 mb-4"><i
+                                          class="fa-solid fa-file-lines w-5 h-5 text-[#de5806]"></i>
+                                    <h3 class="text-gray-900">Available Documents</h3>
+                              </div>
+                              <div class="space-y-3">
+                                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                          <div class="flex items-center gap-3"><i
+                                                      class="fa-solid fa-file-lines w-5 h-5 text-[#de5806]"></i><span
+                                                      class="text-gray-700 text-sm">Preliminary Sales
+                                                      Contract</span></div><span
+                                                class="text-xs text-green-600">Available</span>
+                                    </div>
+                                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                          <div class="flex items-center gap-3"><i
+                                                      class="fa-solid fa-check-circle w-5 h-5 text-[#de5806]"></i><span
+                                                      class="text-gray-700 text-sm">Building Permit</span></div>
+                                          <span class="text-xs text-green-600">Certified</span>
+                                    </div>
+                                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                          <div class="flex items-center gap-3"><i
+                                                      class="fa-solid fa-check-circle w-5 h-5 text-[#de5806]"></i><span
+                                                      class="text-gray-700 text-sm">Completion Certificate</span>
+                                          </div><span class="text-xs text-green-600">Certified</span>
+                                    </div>
+                                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                          <div class="flex items-center gap-3"><i
+                                                      class="fa-solid fa-building w-5 h-5 text-[#de5806]"></i><span
+                                                      class="text-gray-700 text-sm">Approved Layout</span></div>
+                                          <span class="text-xs text-green-600">Available</span>
+                                    </div>
+                                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                          <div class="flex items-center gap-3"><i
+                                                      class="fa-solid fa-file-lines w-5 h-5 text-[#de5806]"></i><span
+                                                      class="text-gray-700 text-sm">Title Deed</span></div><span
+                                                class="text-xs text-green-600">Ready to Transfer</span>
+                                    </div>
+                              </div>
+                        </div>
+                        <div class="bg-white rounded-2xl p-6 shadow-sm">
+                              <div class="flex items-center gap-2 mb-4"><i
+                                          class="fa-solid fa-dollar-sign w-5 h-5 text-[#de5806]"></i>
+                                    <h3 class="text-gray-900">Taxes &amp; Fees</h3>
+                              </div>
+                              <div class="space-y-3">
+                                    <div class="p-3 bg-gray-50 rounded-lg">
+                                          <div class="flex items-center justify-between mb-1"><span
+                                                      class="text-gray-700 text-sm">Registration Tax</span><span
+                                                      class="text-gray-900">52 EGP</span></div>
+                                          <div class="text-xs text-gray-500">Of property value</div>
+                                    </div>
+                                    <div class="p-3 bg-gray-50 rounded-lg">
+                                          <div class="flex items-center justify-between mb-1"><span
+                                                      class="text-gray-700 text-sm">Real Estate Registry</span><span
+                                                      class="text-gray-900">3 EGP</span></div>
+                                          <div class="text-xs text-gray-500">Fixed fees</div>
+                                    </div>
+                                    <div class="p-3 bg-gray-50 rounded-lg">
+                                          <div class="flex items-center justify-between mb-1"><span
+                                                      class="text-gray-700 text-sm">Admin Fees</span><span
+                                                      class="text-gray-900">7 EGP</span></div>
+                                          <div class="text-xs text-gray-500">Documentation &amp; procedures</div>
+                                    </div>
+                                    <div class="p-3 bg-gray-50 rounded-lg">
+                                          <div class="flex items-center justify-between mb-1"><span
+                                                      class="text-gray-700 text-sm">Annual Maintenance
+                                                      (Est.)</span><span class="text-gray-900">12 EGP</span></div>
+                                          <div class="text-xs text-gray-500">Compound yearly fees</div>
+                                    </div>
+                                    <div class="pt-3 border-t border-gray-200">
+                                          <div class="flex items-center justify-between"><span
+                                                      class="text-gray-900">Total</span><span
+                                                      class="text-[#de5806] font-semibold">74 EGP</span></div>
+                                    </div>
+                              </div>
+                        </div>
+                  </div>
+                  <div class="bg-white rounded-2xl p-6 shadow-sm">
+                        <div class="flex items-center gap-2 mb-6"><i
+                                    class="fa-solid fa-map-marker-alt w-5 h-5 text-[#de5806]"></i>
+                              <h2 class="text-gray-900">Nearby Places</h2>
+                        </div>
+                        <div class="space-y-3">
+                              <div
+                                    class="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                                    <div class="flex items-center gap-3">
+                                          <div
+                                                class="w-10 h-10 bg-[#de5806]/10 rounded-lg flex items-center justify-center">
+                                                <i class="fa-solid fa-building w-5 h-5 text-[#de5806]"></i>
+                                          </div>
+                                          <div>
+                                                <div class="text-gray-900">Cairo Festival City</div>
+                                                <div class="text-sm text-gray-500">Mall</div>
+                                          </div>
+                                    </div>
+                                    <div class="text-left">
+                                          <div class="text-gray-900">2 km</div>
+                                          <div class="text-sm text-gray-500">5 min</div>
+                                    </div>
+                              </div>
+                              <div
+                                    class="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                                    <div class="flex items-center gap-3">
+                                          <div
+                                                class="w-10 h-10 bg-[#de5806]/10 rounded-lg flex items-center justify-center">
+                                                <i class="fa-solid fa-building w-5 h-5 text-[#de5806]"></i>
+                                          </div>
+                                          <div>
+                                                <div class="text-gray-900">American University</div>
+                                                <div class="text-sm text-gray-500">University</div>
+                                          </div>
+                                    </div>
+                                    <div class="text-left">
+                                          <div class="text-gray-900">3.5 km</div>
+                                          <div class="text-sm text-gray-500">8 min</div>
+                                    </div>
+                              </div>
+                              <div
+                                    class="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                                    <div class="flex items-center gap-3">
+                                          <div
+                                                class="w-10 h-10 bg-[#de5806]/10 rounded-lg flex items-center justify-center">
+                                                <i class="fa-solid fa-building w-5 h-5 text-[#de5806]"></i>
+                                          </div>
+                                          <div>
+                                                <div class="text-gray-900">El Salam International Hospital</div>
+                                                <div class="text-sm text-gray-500">Hospital</div>
+                                          </div>
+                                    </div>
+                                    <div class="text-left">
+                                          <div class="text-gray-900">1.5 km</div>
+                                          <div class="text-sm text-gray-500">4 min</div>
+                                    </div>
+                              </div>
+                              <div
+                                    class="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                                    <div class="flex items-center gap-3">
+                                          <div
+                                                class="w-10 h-10 bg-[#de5806]/10 rounded-lg flex items-center justify-center">
+                                                <i class="fa-solid fa-building w-5 h-5 text-[#de5806]"></i>
+                                          </div>
+                                          <div>
+                                                <div class="text-gray-900">Carrefour Fifth Settlement</div>
+                                                <div class="text-sm text-gray-500">Supermarket</div>
+                                          </div>
+                                    </div>
+                                    <div class="text-left">
+                                          <div class="text-gray-900">1 km</div>
+                                          <div class="text-sm text-gray-500">3 min</div>
+                                    </div>
+                              </div>
+                              <div
+                                    class="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                                    <div class="flex items-center gap-3">
+                                          <div
+                                                class="w-10 h-10 bg-[#de5806]/10 rounded-lg flex items-center justify-center">
+                                                <i class="fa-solid fa-building w-5 h-5 text-[#de5806]"></i>
+                                          </div>
+                                          <div>
+                                                <div class="text-gray-900">Choueifat International School</div>
+                                                <div class="text-sm text-gray-500">School</div>
+                                          </div>
+                                    </div>
+                                    <div class="text-left">
+                                          <div class="text-gray-900">2.5 km</div>
+                                          <div class="text-sm text-gray-500">6 min</div>
+                                    </div>
+                              </div>
+                        </div>
+                  </div>
+                  <div class="bg-white rounded-2xl p-6 shadow-sm">
+                        <h2 class="text-gray-900 mb-6">Similar Properties</h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                              <div class="group cursor-pointer">
+                                    <div class="relative h-48 rounded-xl overflow-hidden mb-3"><img
+                                                src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&amp;h=300&amp;fit=crop"
+                                                alt="180sqm Apartment Same Compound"
+                                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                                    </div>
+                                    <h3 class="text-gray-900 text-sm mb-2 line-clamp-2">180sqm Apartment Same Compound
+                                    </h3>
+                                    <div class="flex items-center justify-between mb-2">
+                                          <div class="text-[#de5806] font-semibold">3 EGP</div>
+                                          <div class="text-sm text-gray-500">17 EGP/sqm</div>
+                                    </div>
+                                    <div class="flex items-center gap-4 text-sm text-gray-600">
+                                          <div class="flex items-center gap-1"><i
+                                                      class="fa-solid fa-bed w-4 h-4"></i><span>3</span></div>
+                                          <div class="flex items-center gap-1"><i
+                                                      class="fa-solid fa-bath w-4 h-4"></i><span>2</span></div>
+                                          <div class="flex items-center gap-1"><i
+                                                      class="fa-solid fa-maximize w-4 h-4"></i><span>180</span></div>
+                                    </div>
+                              </div>
+                              <div class="group cursor-pointer">
+                                    <div class="relative h-48 rounded-xl overflow-hidden mb-3"><img
+                                                src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&amp;h=300&amp;fit=crop"
+                                                alt="220sqm Apartment - Higher Floor"
+                                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                                    </div>
+                                    <h3 class="text-gray-900 text-sm mb-2 line-clamp-2">220sqm Apartment - Higher Floor
+                                    </h3>
+                                    <div class="flex items-center justify-between mb-2">
+                                          <div class="text-[#de5806] font-semibold">4 EGP</div>
+                                          <div class="text-sm text-gray-500">18 EGP/sqm</div>
+                                    </div>
+                                    <div class="flex items-center gap-4 text-sm text-gray-600">
+                                          <div class="flex items-center gap-1"><i
+                                                      class="fa-solid fa-bed w-4 h-4"></i><span>4</span></div>
+                                          <div class="flex items-center gap-1"><i
+                                                      class="fa-solid fa-bath w-4 h-4"></i><span>3</span></div>
+                                          <div class="flex items-center gap-1"><i
+                                                      class="fa-solid fa-maximize w-4 h-4"></i><span>220</span></div>
+                                    </div>
+                              </div>
+                              <div class="group cursor-pointer">
+                                    <div class="relative h-48 rounded-xl overflow-hidden mb-3"><img
+                                                src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&amp;h=300&amp;fit=crop"
+                                                alt="250sqm Duplex with Garden"
+                                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                                    </div>
+                                    <h3 class="text-gray-900 text-sm mb-2 line-clamp-2">250sqm Duplex with Garden</h3>
+                                    <div class="flex items-center justify-between mb-2">
+                                          <div class="text-[#de5806] font-semibold">4 EGP</div>
+                                          <div class="text-sm text-gray-500">19 EGP/sqm</div>
+                                    </div>
+                                    <div class="flex items-center gap-4 text-sm text-gray-600">
+                                          <div class="flex items-center gap-1"><i
+                                                      class="fa-solid fa-bed w-4 h-4"></i><span>4</span></div>
+                                          <div class="flex items-center gap-1"><i
+                                                      class="fa-solid fa-bath w-4 h-4"></i><span>4</span></div>
+                                          <div class="flex items-center gap-1"><i
+                                                      class="fa-solid fa-maximize w-4 h-4"></i><span>250</span></div>
+                                    </div>
+                              </div>
+                        </div>
+                  </div>
+            </div>
+            <div class="lg:col-span-1">
+                  <div class="sticky top-24 space-y-6">
+                        <div class="bg-gradient-to-br from-[#de5806] via-[#470e03] to-[#de5806] rounded-2xl p-6 text-white shadow-xl opacity-100 transform-none"
+                             >
+                              <div class="flex items-center justify-between mb-2">
+                                    <div class="text-white/80 text-sm">Payment Plan</div>
+                                    <div class="px-2 py-1 bg-white/20 rounded-lg text-xs">{{ propertyData.sidebar.payment_plan_label }}</div>
+                              </div>
+                              <div class="text-3xl mb-1">{{ propertyData.sidebar.price_display }}</div>
+                              <div class="space-y-2 pb-4 border-b border-white/20 mb-4">
+                                    <div class="flex justify-between text-sm"><span class="text-white/80">Per
+                                                sqm</span><span>{{ propertyData.sidebar.per_sqm }}</span></div>
+                                    <div class="flex justify-between text-sm"><span class="text-white/80">Down
+                                                Payment</span><span>{{ propertyData.sidebar.down_payment }}</span></div>
+                                    <div class="flex justify-between text-sm"><span
+                                                class="text-white/80">Monthly</span><span>{{ propertyData.sidebar.monthly }}</span></div>
+                                    <div class="flex justify-between text-sm"><span
+                                                class="text-white/80">Duration</span><span>{{ propertyData.sidebar.duration }}</span></div>
+                              </div>
+                              <div class="space-y-3"><button
+                                          class="w-full px-4 py-2 bg-white/20 backdrop-blur-sm text-white border border-white/40 rounded-lg hover:bg-white/30 transition-colors flex items-center justify-center gap-2 text-sm"><i
+                                                class="fa-solid fa-calculator w-4 h-4"></i><span>Change
+                                                Plan</span></button><button
+                                          class="w-full px-6 py-3 bg-white text-[#de5806] rounded-xl hover:bg-gray-100 transition-all font-semibold flex items-center justify-center gap-2 shadow-lg"><i
+                                                class="fa-solid fa-dollar-sign w-5 h-5"></i><span>Make an
+                                                Offer</span></button><button
+                                          class="w-full px-6 py-3 bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 rounded-xl hover:bg-white/20 transition-colors flex items-center justify-center gap-2"><i
+                                                class="fa-solid fa-calendar-days w-5 h-5"></i><span>Schedule
+                                                Viewing</span></button></div>
+                        </div>
+                        <div class="bg-white rounded-2xl p-6 shadow-sm">
+                              <div class="flex items-start gap-4 mb-4">
+                                    <div
+                                          class="w-16 h-16 bg-gradient-to-br from-[#de5806] to-[#470e03] rounded-full flex items-center justify-center text-white text-xl cursor-pointer hover:scale-110 transition-transform ring-2 ring-[#de5806]/20">
+                                          {{ agentInitial }}</div>
+                                    <div class="flex-1">
+                                          <div class="flex items-center gap-2 mb-1">
+                                                <h3
+                                                      class="text-gray-900 cursor-pointer hover:text-black transition-colors">
+                                                      {{ propertyData.agent.name }}</h3>
+                                                @if (propertyData.agent.verified) {
+                                                <i class="fa-solid fa-check-circle w-5 h-5 text-[#808080]"></i>
+                                                }
+                                          </div>
+                                          <div class="text-sm text-gray-600 mb-2">{{ propertyData.agent.title }}</div>
+                                          <div class="flex items-center gap-1 text-sm"><i
+                                                      class="fa-solid fa-star w-4 h-4 text-[#808080] fill-[#808080]"></i><span
+                                                      class="text-gray-900">{{ propertyData.agent.rating }}</span><span
+                                                      class="text-gray-500">({{ propertyData.agent.reviews_count }}
+                                                      reviews)</span></div>
+                                    </div>
+                              </div>
+                              <div class="grid grid-cols-2 gap-4 py-4 border-y border-gray-200 mb-4">
+                                    <div>
+                                          <div class="text-2xl text-black mb-1">{{ propertyData.agent.sold_count }}</div>
+                                          <div class="text-sm text-gray-600">Sold</div>
+                                    </div>
+                                    <div>
+                                          <div class="text-2xl text-black mb-1">{{ propertyData.agent.listed_count }}</div>
+                                          <div class="text-sm text-gray-600">Listed</div>
+                                    </div>
+                                    <div class="col-span-2">
+                                          <div class="flex items-center gap-2 text-sm text-gray-600"><i
+                                                      class="fa-solid fa-check-circle w-4 h-4 text-green-600"></i><span>Response
+                                                      rate: {{ propertyData.agent.response_rate }}</span></div>
+                                          <div class="flex items-center gap-2 text-sm text-gray-600 mt-1"><i
+                                                      class="fa-solid fa-check-circle w-4 h-4 text-green-600"></i><span>Response
+                                                      time: {{ propertyData.agent.response_time }}</span></div>
+                                    </div>
+                              </div>
+                              <div class="space-y-3"><button
+                                          class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-black to-[#404040] text-white rounded-lg hover:shadow-lg transition-all"><i
+                                                class="fa-solid fa-user w-4 h-4"></i><span>View
+                                                Profile</span></button><button
+                                          class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#808080]/10 text-[#808080] rounded-lg hover:bg-[#808080]/20 transition-colors"><i
+                                                class="fa-solid fa-phone w-4 h-4"></i><span>Show Phone
+                                                Number</span></button><button
+                                          class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#808080]/10 text-[#808080] rounded-lg hover:bg-[#808080]/20 transition-colors"><i
+                                                class="fa-solid fa-envelope w-4 h-4"></i><span>Send
+                                                Message</span></button></div>
+                        </div>
+                        <div
+                              class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 border-2 border-gray-300">
+                              <div class="flex items-center gap-2 mb-4"><i
+                                          class="fa-solid fa-wand-magic-sparkles w-5 h-5 text-[#808080]"></i>
+                                    <h3 class="text-gray-900">AI Insights</h3>
+                              </div>
+                              <div class="space-y-4">
+                                    @for (insight of propertyData.ai_insights; track insight.title) {
+                                    <div class="flex items-start gap-3"><i
+                                                class="fa-solid fa-check-circle w-5 h-5 text-green-600 mt-0.5"></i>
+                                          <div>
+                                                <div class="text-gray-900 text-sm mb-1">{{ insight.title }}</div>
+                                                <p class="text-gray-600 text-xs">{{ insight.detail }}</p>
+                                          </div>
+                                    </div>
+                                    }
+                              </div>
+                        </div><button
+                              class="w-full flex items-center justify-center gap-2 px-4 py-3 text-gray-600 hover:text-[#de5806] transition-colors"><i
+                                    class="fa-solid fa-exclamation-circle w-4 h-4"></i><span class="text-sm">Report this
+                                    listing</span></button>
+                  </div>
+            </div>
+      </div>
+</div>
+
+<!-- Image Modal -->
+@if (isImageModalOpen) {
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4" (click)="closeImageModal()">
+  <div class="relative max-w-4xl w-full max-h-[90vh] flex items-center justify-center" (click)="$event.stopPropagation()">
+    <img [src]="galleryImages[selectedImageIndex]" alt="" class="max-w-full max-h-full object-contain rounded-lg shadow-2xl">
+    
+    <!-- Navigation buttons -->
+    @if (galleryImages.length > 1) {
+    <button (click)="previousImage()" 
+            class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all">
+      <i class="fa-solid fa-chevron-left w-6 h-6"></i>
+    </button>
+    <button (click)="nextImage()" 
+            class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all">
+      <i class="fa-solid fa-chevron-right w-6 h-6"></i>
+    </button>
+    }
+    
+    <!-- Close button -->
+    <button (click)="closeImageModal()" 
+            class="absolute top-4 right-4 w-10 h-10 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all">
+      <i class="fa-solid fa-times w-5 h-5"></i>
+    </button>
+    
+    <!-- Image indicator -->
+    @if (galleryImages.length > 1) {
+    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 bg-black/50 backdrop-blur-sm rounded-full text-white text-sm">
+      {{ selectedImageIndex + 1 }} / {{ galleryImages.length }}
+    </div>
+    }
+  </div>
+</div>
+}

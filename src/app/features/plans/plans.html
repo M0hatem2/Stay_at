@@ -1,0 +1,164 @@
+<section class="pricing-hero">
+  <div class="pricing-hero__container">
+    <div class="pricing-hero__content">
+
+      <!-- Badge -->
+      <div class="pricing-hero__badge">
+        <i class="fas fa-sparkles"></i>
+        <span>Choose Your Perfect Plan</span>
+      </div>
+
+      <!-- Title -->
+      <h1 class="pricing-hero__title">
+        Pricing Plans
+      </h1>
+
+      <!-- Subtitle -->
+      <p class="pricing-hero__subtitle">
+        Flexible plans designed to grow with your business.
+        Upgrade, downgrade, or customize anytime.
+      </p>
+
+    </div>
+  </div>
+</section>
+
+
+
+<section class="pricing">
+      <div class="container">
+
+            <!-- Tabs -->
+            <div class="tabs">
+                  <div class="tabs__inner" role="tablist" aria-label="Pricing plan types">
+                        <button class="tab" type="button" [class.is-active]="activeType() === 'owner'"
+                              (click)="setType('owner')" role="tab" [attr.aria-selected]="activeType() === 'owner'">
+                              Owner Plans
+                        </button>
+
+                        <button class="tab" type="button" [class.is-active]="activeType() === 'broker'"
+                              (click)="setType('broker')" role="tab" [attr.aria-selected]="activeType() === 'broker'">
+                              Broker Plans
+                        </button>
+
+                        <button class="tab" type="button" [class.is-active]="activeType() === 'developer'"
+                              (click)="setType('developer')" role="tab"
+                              [attr.aria-selected]="activeType() === 'developer'">
+                              Developer Plans
+                        </button>
+                  </div>
+            </div>
+
+            <!-- Billing Toggle -->
+            <div class="billing" role="group" aria-label="Billing cycle">
+                  <span class="billing__label" [class.is-active]="!isYearly()" [class.is-muted]="isYearly()">
+                        Monthly
+                  </span>
+
+                  <label class="switch-container">
+                        <input type="checkbox" class="switch-input" [checked]="isYearly()" (change)="toggleBilling()"
+                              role="switch" [attr.aria-checked]="isYearly()">
+                        <div class="switch-track"></div>
+                  </label>
+
+                  <span class="billing__label" [class.is-active]="isYearly()" [class.is-muted]="!isYearly()">
+                        Yearly
+                        <span class="billing__badge" *ngIf="isYearly()">Save 15%</span>
+                  </span>
+            </div>
+
+
+            <!-- Plans -->
+            <div class="grid">
+                  <article class="plan" *ngFor="let plan of plans()" [class.is-popular]="plan.isPopular">
+
+                        <div class="plan__badge" *ngIf="plan.isPopular">Most Popular</div>
+
+                        <div class="plan__body" [class.has-badge]="plan.isPopular">
+
+                              <!-- icon -->
+                              <div class="plan__icon" [attr.data-icon]="plan.icon" aria-hidden="true">
+                                    <ng-container [ngSwitch]="plan.icon">
+                                          <svg *ngSwitchCase="'star'" viewBox="0 0 24 24">
+                                                <path
+                                                      d="M12 2.7l2.36 4.78c.3.61.88 1.03 1.55 1.13l5.27.77-3.82 3.72c-.49.48-.72 1.16-.61 1.84l.9 5.25-4.72-2.48a2.2 2.2 0 0 0-2.04 0l-4.72 2.48.9-5.25a2.2 2.2 0 0 0-.61-1.84L2.82 9.38l5.27-.77c.67-.1 1.25-.52 1.55-1.13L12 2.7z" />
+                                          </svg>
+
+                                          <svg *ngSwitchCase="'zap'" viewBox="0 0 24 24">
+                                                <path
+                                                      d="M13 2.3a.55.55 0 0 1 .94.5l-2 6.2a1 1 0 0 0 1 .99h7.1a1 1 0 0 1 .78 1.63l-10 10.3a.55.55 0 0 1-.94-.5l2-6.2a1 1 0 0 0-1-.99H3.8a1 1 0 0 1-.78-1.63L13 2.3z" />
+                                          </svg>
+
+                                          <svg *ngSwitchCase="'crown'" viewBox="0 0 24 24">
+                                                <path
+                                                      d="M12 3.2l3 5.7a1 1 0 0 0 1.52.3l4.3-3.7 1.2 11.1a1 1 0 0 1-1 .9H3a1 1 0 0 1-1-.9L3.2 5.5l4.3 3.7a1 1 0 0 0 1.52-.3l3-5.7z" />
+                                                <path d="M5 21h14" />
+                                          </svg>
+                                    </ng-container>
+                              </div>
+
+                              <h3 class="plan__title">{{ plan.title }}</h3>
+
+                              <div class="price">
+                                    <span class="price__value">{{ formatPrice(getPrice(plan)) }}</span>
+                                    <span class="price__meta">
+                                          <span class="price__currency">{{ plan.currency }}</span>
+                                          <span class="price__period">{{ getPeriodLabel(plan) }}</span>
+                                    </span>
+                              </div>
+
+                              <button class="cta" type="button" [class.is-primary]="plan.isPopular"
+                                    (click)="choosePlan(plan.id)">
+                                    <span>Choose Plan</span>
+                                    <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                              </button>
+
+                              <ul class="features">
+                                    <li class="feature" *ngFor="let f of plan.features"
+                                          [class.is-disabled]="!f.included">
+                                          <span class="feature__icon" aria-hidden="true">
+                                                <i class="fas" [class.fa-check]="f.included"
+                                                      [class.fa-x]="!f.included"></i>
+                                          </span>
+                                          <span class="feature__text">{{ f.label }}</span>
+                                    </li>
+                              </ul>
+
+                        </div>
+                  </article>
+            </div>
+
+            <!-- Custom plan CTA -->
+            <div class="custom">
+                  <div class="custom__icon" aria-hidden="true">
+                        <i class="fas fa-message"></i>
+                  </div>
+                  <h3 class="custom__title">Need a Custom Plan?</h3>
+                  <p class="custom__desc">Contact our sales team to get a custom plan that fits your needs.</p>
+                  <button class="custom__btn" type="button" (click)="contactSales()">
+                        Contact Sales
+                        <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                  </button>
+            </div>
+
+            <!-- FAQ -->
+            <div class="faq">
+                  <h3 class="faq__title">Frequently Asked Questions</h3>
+                  <p class="faq__subtitle">Have questions? We're here to help.</p>
+
+                  <div class="faq__grid">
+                        <div class="faq__item" *ngFor="let f of faqs">
+                              <h4 class="faq__q">{{ f.q }}</h4>
+                              <p class="faq__a">{{ f.a }}</p>
+                        </div>
+                  </div>
+            </div>
+
+      </div>
+</section>
+<!-- Payment Modal -->
+<div *ngIf="showPaymentModal()" class="payment-modal-overlay" (click)="closePaymentModal()">
+      <div class="payment-modal-content" (click)="$event.stopPropagation()">
+            <app-pay (closeModal)="closePaymentModal()"></app-pay>
+      </div>
+</div>

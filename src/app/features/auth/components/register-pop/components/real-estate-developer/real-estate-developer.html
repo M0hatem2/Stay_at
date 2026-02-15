@@ -1,0 +1,147 @@
+<div class="rounded-2xl bg-white p-6  ">
+      <!-- Header -->
+      <div class="mb-6 flex items-center justify-between">
+            <div>
+                  <h3 class="text-lg font-semibold text-gray-900">Company Information</h3>
+                  <p class="text-sm text-gray-600">Fill in your company details to complete registration.</p>
+            </div>
+
+            <div class="hidden sm:flex items-center gap-2 text-xs text-gray-500">
+                  <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-50 border">
+                        <i class="fa-solid fa-circle-check text-gray-600"></i>
+                        Verified later
+                  </span>
+            </div>
+      </div>
+
+      <!-- Form -->
+      <form [formGroup]="developerForm" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+            <!-- Company Name -->
+            <div class="md:col-span-2">
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Company Name <span class="text-red-500">*</span>
+                  </label>
+                  <div class="relative">
+                        <i class="fa-solid fa-building absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <input type="text" formControlName="companyName"
+                              class="w-full px-4 py-3 pl-12 border rounded-xl focus:outline-none focus:border-gray-800 focus:ring-2 focus:ring-gray-300 transition"
+                              [class.border-red-500]="isFieldInvalid('companyName')"
+                              [class.border-gray-300]="!isFieldInvalid('companyName')"
+                              placeholder="Real estate development company name" />
+                  </div>
+                  <p *ngIf="isFieldInvalid('companyName')" class="mt-1 text-sm text-red-500">
+                        {{ getErrorMessage('companyName') }}
+                  </p>
+            </div>
+
+            <!-- Commercial Register Number -->
+            <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Commercial Register Number <span class="text-red-500">*</span>
+                  </label>
+                  <div class="relative">
+                        <i class="fa-solid fa-id-card absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <input type="text" formControlName="commercialRegisterNumber"
+                              class="w-full px-4 py-3 pl-12 border rounded-xl focus:outline-none focus:border-gray-800 focus:ring-2 focus:ring-gray-300 transition"
+                              [class.border-red-500]="isFieldInvalid('commercialRegisterNumber')"
+                              [class.border-gray-300]="!isFieldInvalid('commercialRegisterNumber')"
+                              placeholder="Commercial register number" />
+                  </div>
+                  <p *ngIf="isFieldInvalid('commercialRegisterNumber')" class="mt-1 text-sm text-red-500">
+                        {{ getErrorMessage('commercialRegisterNumber') }}
+                  </p>
+            </div>
+
+            <!-- Website -->
+            <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Website</label>
+                  <div class="relative">
+                        <i class="fa-solid fa-globe absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <input type="url" formControlName="website"
+                              class="w-full px-4 py-3 pl-12 border rounded-xl focus:outline-none focus:border-gray-800 focus:ring-2 focus:ring-gray-300 transition"
+                              [class.border-red-500]="isFieldInvalid('website')"
+                              [class.border-gray-300]="!isFieldInvalid('website')"
+                              placeholder="https://www.example.com" />
+                  </div>
+                  <p *ngIf="isFieldInvalid('website')" class="mt-1 text-sm text-red-500">
+                        {{ getErrorMessage('website') }}
+                  </p>
+            </div>
+
+            <!-- Established Year -->
+            <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Established Year <span class="text-red-500">*</span>
+                  </label>
+                  <div class="relative">
+                        <i class="fa-solid fa-calendar-days absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <input type="number" formControlName="establishedYear" [min]="1" [max]="300"
+                              class="w-full px-4 py-3 pl-12 border rounded-xl focus:outline-none focus:border-gray-800 focus:ring-2 focus:ring-gray-300 transition"
+                              [class.border-red-500]="isFieldInvalid('establishedYear')"
+                              [class.border-gray-300]="!isFieldInvalid('establishedYear')" placeholder="7" />
+                  </div>
+                  <p *ngIf="isFieldInvalid('establishedYear')" class="mt-1 text-sm text-red-500">
+                        {{ getErrorMessage('establishedYear') }}
+                  </p>
+            </div>
+
+            <!-- Completed Projects -->
+            <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Number of Completed Projects <span class="text-red-500">*</span>
+                  </label>
+                  <div class="relative">
+                        <i
+                              class="fa-solid fa-diagram-project absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <input type="number" formControlName="numberOfCompletedProjects" [min]="0" [max]="1000"
+                              class="w-full px-4 py-3 pl-12 border rounded-xl bg-white appearance-none focus:outline-none focus:border-gray-800 focus:ring-2 focus:ring-gray-300 transition"
+                              [class.border-red-500]="isFieldInvalid('numberOfCompletedProjects')"
+                              [class.border-gray-300]="!isFieldInvalid('numberOfCompletedProjects')" placeholder="6" />
+                  </div>
+                  <p *ngIf="isFieldInvalid('numberOfCompletedProjects')" class="mt-1 text-sm text-red-500">
+                        {{ getErrorMessage('numberOfCompletedProjects') }}
+                  </p>
+            </div>
+
+            <!-- Upload Document -->
+            <div class="md:col-span-2">
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Commercial Register Document <span class="text-red-500">*</span>
+                  </label>
+
+                  <label class="group block border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition hover:border-[#de5806] hover:bg-orange-50/40"
+                        [class.border-red-500]="isFieldInvalid('commercialRegisterDocument')"
+                        [class.border-gray-300]="!isFieldInvalid('commercialRegisterDocument')">
+                        <div
+                              class="mx-auto w-12 h-12 rounded-2xl bg-gray-50 border flex items-center justify-center group-hover:border-[#de5806]/30 group-hover:bg-white transition">
+                              <i
+                                    class="fa-solid fa-cloud-arrow-up text-xl text-gray-400 group-hover:text-[#de5806] transition"></i>
+                        </div>
+
+                        <p class="mt-3 text-sm font-medium text-gray-800">
+                              {{ selectedFileName || 'Upload commercial register' }}
+                        </p>
+                        <p class="mt-1 text-xs text-gray-500">PDF, JPG, PNG (max 10MB)</p>
+
+                        <input type="file" accept="image/*,.pdf" (change)="onFileSelected($event)" class="hidden" />
+                  </label>
+                  <p *ngIf="isFieldInvalid('commercialRegisterDocument')" class="mt-1 text-sm text-red-500">
+                        {{ getErrorMessage('commercialRegisterDocument') }}
+                  </p>
+
+                  <!-- helper row -->
+                  <div class="mt-3 flex flex-wrap items-center gap-3 text-xs text-gray-500">
+                        <span class="inline-flex items-center gap-2">
+                              <i class="fa-solid fa-lock text-gray-400"></i>
+                              Your file is private
+                        </span>
+                        <span class="inline-flex items-center gap-2">
+                              <i class="fa-solid fa-file-circle-check text-gray-400"></i>
+                              Used for verification
+                        </span>
+                  </div>
+            </div>
+
+      </form>
+</div>

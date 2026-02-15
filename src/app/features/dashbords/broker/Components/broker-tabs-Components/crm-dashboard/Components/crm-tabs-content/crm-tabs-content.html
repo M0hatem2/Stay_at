@@ -1,0 +1,7 @@
+<div class="p-6">
+      <!-- Conditional rendering for each tab component -->
+      <app-available-units *ngIf="isActiveTab('available-units')"></app-available-units>
+      <app-my-customers *ngIf="isActiveTab('my-customers')"></app-my-customers>
+      <app-my-deals *ngIf="isActiveTab('my-deals')"></app-my-deals>
+      <app-my-activities *ngIf="isActiveTab('my-activities')"></app-my-activities>
+</div>

@@ -1,0 +1,74 @@
+<div class="rounded-2xl bg-white p-6 ">
+      <div class="mb-6">
+            <h3 class="text-lg font-semibold text-gray-900">System Administrator</h3>
+            <p class="text-sm text-gray-600">Enter admin credentials to verify your access</p>
+      </div>
+
+      <form [formGroup]="adminForm" class="space-y-5">
+            <!-- Admin Code -->
+            <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Admin Code <span class="text-red-500">*</span>
+                  </label>
+                  <div class="relative">
+                        <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <input [type]="showAdminCode ? 'text' : 'password'" formControlName="adminCode"
+                              class="w-full px-4 py-3 pl-12 pr-12 border rounded-xl focus:outline-none focus:border-gray-800 focus:ring-2 focus:ring-gray-300 transition"
+                              [class.border-red-500]="isFieldInvalid('adminCode')"
+                              [class.border-green-500]="adminForm.get('adminCode')?.valid && adminForm.get('adminCode')?.touched"
+                              [class.border-gray-300]="!isFieldInvalid('adminCode') && (!adminForm.get('adminCode')?.valid || !adminForm.get('adminCode')?.touched)"
+                              placeholder="Enter admin code (letters and numbers only)" />
+                        <button type="button" (click)="toggleAdminCodeVisibility()"
+                              class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                              <i [class]="showAdminCode ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
+                        </button>
+                  </div>
+                  <p *ngIf="isFieldInvalid('adminCode')" class="mt-1 text-sm text-red-500">
+                        {{ getErrorMessage('adminCode') }}
+                  </p>
+                  <p *ngIf="!isFieldInvalid('adminCode')" class="mt-1 text-xs text-gray-500">
+                        Use only letters (A-Z, a-z) and numbers (0-9), 2-20 characters long
+                  </p>
+            </div>
+
+            <!-- Department -->
+            <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Department <span class="text-red-500">*</span>
+                  </label>
+                  <div class="relative">
+                        <i class="fa-solid fa-building-user absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <select formControlName="department"
+                              class="w-full px-4 py-3 pl-12 border rounded-xl bg-white appearance-none focus:outline-none focus:border-gray-800 focus:ring-2 focus:ring-gray-300 transition"
+                              [class.border-red-500]="isFieldInvalid('department')"
+                              [class.border-gray-300]="!isFieldInvalid('department')">
+                              <option value="">Select Department</option>
+                              <option *ngFor="let dept of departments" [value]="dept.value">
+                                    {{ dept.label }}
+                              </option>
+                        </select>
+                        <i
+                              class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                  </div>
+                  <p *ngIf="isFieldInvalid('department')" class="mt-1 text-sm text-red-500">
+                        {{ getErrorMessage('department') }}
+                  </p>
+            </div>
+
+            <!-- Info Message -->
+            <div class="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-xl">
+                  <div class="flex gap-3">
+                        <i class="fa-solid fa-circle-info text-gray-600 mt-0.5"></i>
+                        <div class="text-sm text-gray-700">
+                              <p class="font-medium mb-1">Administrator Access Requirements</p>
+                              <ul class="text-xs space-y-1">
+                                    <li>• Only authorized personnel with valid admin codes can register</li>
+                                    <li>• Admin code must contain only letters (A-Z, a-z) and numbers (0-9)</li>
+                                    <li>• Special characters like @, #, $, %, &, !, are not allowed</li>
+                                    <li>• Code length must be between 2-20 characters</li>
+                              </ul>
+                        </div>
+                  </div>
+            </div>
+      </form>
+</div>

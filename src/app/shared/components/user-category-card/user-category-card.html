@@ -1,0 +1,24 @@
+<article class="card" [attr.data-theme]="category.theme">
+      <header class="card__head">
+            <div class="card__icon">
+                  <i [class]="category.icon" aria-hidden="true"></i>
+            </div>
+
+            <div class="card__meta">
+                  <h3 class="card__title">{{ category.title }}</h3>
+                  <p class="card__desc">{{ category.description }}</p>
+            </div>
+      </header>
+
+      <ul class="card__features">
+            <li class="feature" *ngFor="let feature of category.features">
+                  <span class="feature__dot" aria-hidden="true"></span>
+                  <span class="feature__text">{{ feature }}</span>
+            </li>
+      </ul>
+
+      <button class="card__btn" type="button" (click)="navigateToPlans()">
+            <span>{{ category.buttonText }}</span>
+            <i *ngIf="category.buttonIcon" [class]="category.buttonIcon" aria-hidden="true"></i>
+      </button>
+</article>

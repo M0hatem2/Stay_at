@@ -1,0 +1,24 @@
+<div class="bg-gradient-to-b from-white to-gray-50 animate-in fade-in zoom-in">
+      <section class="py-20 bg-white" id="user-categories">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                  <div class="text-center mb-16">
+                        <h2 class="text-gray-900 mb-4 text-xl font-bold">Who are you?</h2>
+                        <p class="text-gray-600 max-w-2xl mx-auto">Choose your account type for a personalized
+                              experience</p>
+                  </div>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <app-user-category-card *ngFor="let category of userCategories" [category]="category">
+                        </app-user-category-card>
+                  </div>
+                  <div class="mt-16 text-center" style="opacity: 1; transform: none;">
+                        <p class="text-gray-500 mb-6">موثوق به من قِبل:</p>
+                        <div class="flex flex-wrap items-center justify-center gap-8 opacity-60">
+                              <div class="px-6 py-3 bg-gray-100 rounded-lg">شركة عقارية 1</div>
+                              <div class="px-6 py-3 bg-gray-100 rounded-lg">مطور عقاري 2</div>
+                              <div class="px-6 py-3 bg-gray-100 rounded-lg">وكالة 3</div>
+                              <div class="px-6 py-3 bg-gray-100 rounded-lg">مطور 4</div>
+                        </div>
+                  </div>
+            </div>
+      </section>
+</div>

@@ -1,0 +1,117 @@
+<div
+  class="sidebar-container w-80 bg-gradient-to-br from-white pt-20 to-gray-50 border-l border-gray-200 min-h-screen fixed right-0 top-0 z-40 shadow-2xl transition-transform duration-300 overflow-y-auto"
+  [class.translate-x-0]="sidebarOpen"
+  [class.translate-x-full]="!sidebarOpen"
+  [class.md:translate-x-0]="true">
+  <!-- Close Button for Mobile -->
+  <button class="md:hidden absolute top-4 left-4 p-2 text-gray-500 hover:text-gray-700 transition-colors"
+    (click)="onCloseSidebar()">
+    <i class="fas fa-times text-lg"></i>
+  </button>
+
+  <div class="p-6">
+    <div class="mb-8 pb-6 border-b border-gray-200">
+      <div class="flex items-center gap-4 mb-4">
+        <div
+          class="w-14 h-14 bg-gradient-to-br from-[#de5806] via-[#ff6b35] to-[#470e03] rounded-2xl flex items-center justify-center shadow-xl transform hover:scale-105 transition-transform duration-200">
+          <i class="fa-solid fa-shield-halved text-white text-xl"></i>
+        </div>
+        <div>
+          <h2 class="text-lg font-bold text-gray-900 mb-1">Integrated Management System</h2>
+          <p class="text-xs text-gray-600">Main Control Panel</p>
+        </div>
+      </div>
+      <div
+        class="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200">
+        <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse shadow-sm"></div>
+        <span class="text-xs text-green-800 font-semibold">Online and Active Now</span>
+      </div>
+    </div>
+
+    <nav class="space-y-2">
+      <button (click)="selectMenuItem('dashboard-home')"
+        [class]="currentActive === 'dashboard-home' ? 'w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 bg-gradient-to-r from-[#de5806] to-[#470e03] text-white shadow-lg hover:shadow-xl transform hover:scale-[1.02]' : 'w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 text-gray-700 hover:bg-gradient-to-r hover:from-gray-50 hover:to-blue-50 hover:text-blue-700 hover:shadow-md group'">
+        <i class="fa-solid fa-tachometer-alt text-sm"></i>
+        <span class="font-medium text-right flex-1 text-sm">Main Dashboard</span>
+      </button>
+
+      <button (click)="selectMenuItem('users-management')"
+        [class]="currentActive === 'users-management' ? 'w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 bg-gradient-to-r from-[#de5806] to-[#470e03] text-white shadow-lg hover:shadow-xl transform hover:scale-[1.02]' : 'w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 text-gray-700 hover:bg-gradient-to-r hover:from-gray-50 hover:to-blue-50 hover:text-blue-700 hover:shadow-md group'">
+        <i class="fa-solid fa-users text-sm group-hover:scale-110 transition-transform"></i>
+        <span class="font-medium text-right flex-1 text-sm">Users & Clients Management</span>
+        <span
+          class="px-2 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800">2847</span>
+      </button>
+
+      <button (click)="selectMenuItem('properties-management')"
+        [class]="currentActive === 'properties-management' ? 'w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 bg-gradient-to-r from-[#de5806] to-[#470e03] text-white shadow-lg hover:shadow-xl transform hover:scale-[1.02]' : 'w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 text-gray-700 hover:bg-gradient-to-r hover:from-gray-50 hover:to-green-50 hover:text-green-700 hover:shadow-md group'">
+        <i class="fa-solid fa-building text-sm group-hover:scale-110 transition-transform"></i>
+        <span class="font-medium text-right flex-1 text-sm">Properties & Units Management</span>
+        <span
+          class="px-2 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-green-100 to-green-200 text-green-800">1245</span>
+      </button>
+
+      <button (click)="selectMenuItem('projects-management')"
+        [class]="currentActive === 'projects-management' ? 'w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 bg-gradient-to-r from-[#de5806] to-[#470e03] text-white shadow-lg hover:shadow-xl transform hover:scale-[1.02]' : 'w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 text-gray-700 hover:bg-gradient-to-r hover:from-gray-50 hover:to-purple-50 hover:text-purple-700 hover:shadow-md group'">
+        <i class="fa-solid fa-layer-group text-sm group-hover:scale-110 transition-transform"></i>
+        <span class="font-medium text-right flex-1 text-sm">Real Estate Projects Management</span>
+        <span
+          class="px-2 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-purple-100 to-purple-200 text-purple-800">156</span>
+      </button>
+
+      <button (click)="selectMenuItem('inquiries-messages')"
+        [class]="currentActive === 'inquiries-messages' ? 'w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 bg-gradient-to-r from-[#de5806] to-[#470e03] text-white shadow-lg hover:shadow-xl transform hover:scale-[1.02]' : 'w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 text-gray-700 hover:bg-gradient-to-r hover:from-gray-50 hover:to-red-50 hover:text-red-700 hover:shadow-md group'">
+        <i class="fa-solid fa-comments text-sm group-hover:scale-110 transition-transform"></i>
+        <span class="font-medium text-right flex-1 text-sm">Inquiries & Messages</span>
+        <span
+          class="px-2 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-red-100 to-red-200 text-red-800 animate-pulse">234</span>
+      </button>
+
+      <button (click)="selectMenuItem('appointments')"
+        [class]="currentActive === 'appointments' ? 'w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 bg-gradient-to-r from-[#de5806] to-[#470e03] text-white shadow-lg hover:shadow-xl transform hover:scale-[1.02]' : 'w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 text-gray-700 hover:bg-gradient-to-r hover:from-gray-50 hover:to-yellow-50 hover:text-yellow-700 hover:shadow-md group'">
+        <i class="fa-solid fa-calendar-alt text-sm group-hover:scale-110 transition-transform"></i>
+        <span class="font-medium text-right flex-1 text-sm">Appointments & Meetings</span>
+        <span
+          class="px-2 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-800">145</span>
+      </button>
+
+      <button (click)="selectMenuItem('contracts')"
+        [class]="currentActive === 'contracts' ? 'w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 bg-gradient-to-r from-[#de5806] to-[#470e03] text-white shadow-lg hover:shadow-xl transform hover:scale-[1.02]' : 'w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 text-gray-700 hover:bg-gradient-to-r hover:from-gray-50 hover:to-indigo-50 hover:text-indigo-700 hover:shadow-md group'">
+        <i class="fa-solid fa-file-contract text-sm group-hover:scale-110 transition-transform"></i>
+        <span class="font-medium text-right flex-1 text-sm">Contracts & Agreements</span>
+        <span
+          class="px-2 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-indigo-100 to-indigo-200 text-indigo-800">678</span>
+      </button>
+
+      <button (click)="selectMenuItem('financial-transactions')"
+        [class]="currentActive === 'financial-transactions' ? 'w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 bg-gradient-to-r from-[#de5806] to-[#470e03] text-white shadow-lg hover:shadow-xl transform hover:scale-[1.02]' : 'w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 text-gray-700 hover:bg-gradient-to-r hover:from-gray-50 hover:to-emerald-50 hover:text-emerald-700 hover:shadow-md group'">
+        <i class="fa-solid fa-dollar-sign text-sm group-hover:scale-110 transition-transform"></i>
+        <span class="font-medium text-right flex-1 text-sm">Financial Transactions & Invoices</span>
+      </button>
+
+      <button (click)="selectMenuItem('reports')"
+        [class]="currentActive === 'reports' ? 'w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 bg-gradient-to-r from-[#de5806] to-[#470e03] text-white shadow-lg hover:shadow-xl transform hover:scale-[1.02]' : 'w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 text-gray-700 hover:bg-gradient-to-r hover:from-gray-50 hover:to-cyan-50 hover:text-cyan-700 hover:shadow-md group'">
+        <i class="fa-solid fa-chart-bar text-sm group-hover:scale-110 transition-transform"></i>
+        <span class="font-medium text-right flex-1 text-sm">Reports & Statistics</span>
+      </button>
+
+      <button (click)="selectMenuItem('advanced-analytics')"
+        [class]="currentActive === 'advanced-analytics' ? 'w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 bg-gradient-to-r from-[#de5806] to-[#470e03] text-white shadow-lg hover:shadow-xl transform hover:scale-[1.02]' : 'w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 text-gray-700 hover:bg-gradient-to-r hover:from-gray-50 hover:to-orange-50 hover:text-orange-700 hover:shadow-md group'">
+        <i class="fa-solid fa-chart-pie text-sm group-hover:scale-110 transition-transform"></i>
+        <span class="font-medium text-right flex-1 text-sm">Advanced & Smart Analytics</span>
+      </button>
+
+      <button (click)="selectMenuItem('activity-log')"
+        [class]="currentActive === 'activity-log' ? 'w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 bg-gradient-to-r from-[#de5806] to-[#470e03] text-white shadow-lg hover:shadow-xl transform hover:scale-[1.02]' : 'w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 text-gray-700 hover:bg-gradient-to-r hover:from-gray-50 hover:to-teal-50 hover:text-teal-700 hover:shadow-md group'">
+        <i class="fa-solid fa-chart-line text-sm group-hover:scale-110 transition-transform"></i>
+        <span class="font-medium text-right flex-1 text-sm">Activity & Movement Log</span>
+      </button>
+
+      <button (click)="selectMenuItem('settings')"
+        [class]="currentActive === 'settings' ? 'w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 bg-gradient-to-r from-[#de5806] to-[#470e03] text-white shadow-lg hover:shadow-xl transform hover:scale-[1.02]' : 'w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 text-gray-700 hover:bg-gradient-to-r hover:from-gray-50 hover:to-slate-100 hover:text-slate-700 hover:shadow-md group'">
+        <i class="fa-solid fa-cog text-sm group-hover:rotate-90 group-hover:scale-110 transition-all duration-300"></i>
+        <span class="font-medium text-right flex-1 text-sm">Settings & Customization</span>
+      </button>
+    </nav>
+  </div>
+ 

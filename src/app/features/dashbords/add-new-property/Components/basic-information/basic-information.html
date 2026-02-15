@@ -1,0 +1,146 @@
+<div class="bg-white rounded-3xl shadow-xl border border-gray-100 p-6 md:p-10 mb-8">
+  <div class="space-y-8">
+
+    <!-- Property Title -->
+    <div>
+      <label class="block text-sm font-semibold text-gray-800 mb-2">
+        Property Title <span class="text-red-500">*</span>
+      </label>
+      <input
+        type="text"
+        placeholder="Luxurious Furnished Apartment in Fifth Settlement"
+        class="w-full px-5 py-3.5 rounded-2xl border border-gray-300
+               focus:outline-none focus:ring-2 focus:ring-black focus:border-black
+               transition-all duration-200"
+      />
+    </div>
+
+    <!-- Property Type -->
+    <div>
+      <label class="block text-sm font-semibold text-gray-800 mb-3">
+        Property Type
+      </label>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+        <!-- Item -->
+        <button type="button"
+          class="group rounded-2xl border-2 border-gray-200 p-4
+                 hover:border-black hover:shadow-md transition-all
+                 flex flex-col items-center gap-2">
+          <i class="fa-solid fa-building text-2xl text-gray-500 group-hover:text-black"></i>
+          <span class="text-sm font-medium text-gray-700">Apartment</span>
+        </button>
+
+        <button type="button"
+          class="group rounded-2xl border-2 border-gray-200 p-4
+                 hover:border-black hover:shadow-md transition-all
+                 flex flex-col items-center gap-2">
+          <i class="fa-solid fa-house text-2xl text-gray-500 group-hover:text-black"></i>
+          <span class="text-sm font-medium text-gray-700">Villa</span>
+        </button>
+
+        <button type="button"
+          class="group rounded-2xl border-2 border-gray-200 p-4
+                 hover:border-black hover:shadow-md transition-all
+                 flex flex-col items-center gap-2">
+          <i class="fa-solid fa-hotel text-2xl text-gray-500 group-hover:text-black"></i>
+          <span class="text-sm font-medium text-gray-700">Studio</span>
+        </button>
+
+        <button type="button"
+          class="group rounded-2xl border-2 border-gray-200 p-4
+                 hover:border-black hover:shadow-md transition-all
+                 flex flex-col items-center gap-2">
+          <i class="fa-solid fa-store text-2xl text-gray-500 group-hover:text-black"></i>
+          <span class="text-sm font-medium text-gray-700">Shop</span>
+        </button>
+
+        <!-- Active -->
+        <button type="button"
+          class="rounded-2xl border-2 border-black bg-black/5 p-4 shadow-sm
+                 flex flex-col items-center gap-2">
+          <i class="fa-solid fa-warehouse text-2xl text-black"></i>
+          <span class="text-sm font-semibold text-black">Warehouse</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Listing Type & Price -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Listing Type -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-800 mb-3">
+          Listing Type
+        </label>
+        <div class="flex gap-3">
+          <button type="button"
+            class="flex-1 rounded-2xl px-4 py-3 font-semibold
+                   border-2 border-black bg-black text-white
+                   hover:bg-gray-900 transition-all">
+            For Rent
+          </button>
+          <button type="button"
+            class="flex-1 rounded-2xl px-4 py-3 font-semibold
+                   border-2 border-gray-200 text-gray-600
+                   hover:border-black hover:text-black transition-all">
+            For Sale
+          </button>
+        </div>
+      </div>
+
+      <!-- Price -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-800 mb-2">
+          Price <span class="text-red-500">*</span>
+        </label>
+        <input
+          type="number"
+          placeholder="Enter the price"
+          class="w-full px-5 py-3.5 rounded-2xl border border-gray-300
+                 focus:outline-none focus:ring-2 focus:ring-black focus:border-black
+                 transition-all"
+        />
+      </div>
+    </div>
+
+    <!-- Period -->
+    <div>
+      <label class="block text-sm font-semibold text-gray-800 mb-3">
+        Period
+      </label>
+      <div class="flex gap-3">
+        <button class="flex-1 rounded-2xl py-2.5 border-2 border-gray-200 text-gray-600 hover:border-black transition">
+          Daily
+        </button>
+        <button class="flex-1 rounded-2xl py-2.5 border-2 border-black bg-black text-white transition">
+          Monthly
+        </button>
+        <button class="flex-1 rounded-2xl py-2.5 border-2 border-gray-200 text-gray-600 hover:border-black transition">
+          Yearly
+        </button>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div>
+      <div class="flex items-center justify-between mb-2">
+        <label class="text-sm font-semibold text-gray-800">
+          Description <span class="text-red-500">*</span>
+        </label>
+        <button type="button"
+          class="flex items-center gap-2 text-sm text-gray-500 hover:text-black transition">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          Generate with AI
+        </button>
+      </div>
+
+      <textarea
+        rows="5"
+        placeholder="Write a detailed description of the property..."
+        class="w-full px-5 py-3.5 rounded-2xl border border-gray-300 resize-none
+               focus:outline-none focus:ring-2 focus:ring-black focus:border-black
+               transition-all"></textarea>
+    </div>
+
+  </div>
+</div>

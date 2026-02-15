@@ -1,0 +1,17 @@
+<div class="text-sm font-medium text-center text-gray-600 border-b border-gray-200 relative overflow-x-auto">
+  <ul class="flex justify-center relative min-w-max ">
+
+    <!-- Active underline animated -->
+    <span class="absolute bottom-0 h-1 bg-blue-600 rounded-full transition-all duration-300"
+      [style.width.px]="activeTabWidth" [style.left.px]="activeTabLeft"></span>
+
+    <li class="me-2" *ngFor="let tab of tabs; let i = index" #tabRef>
+      <button (click)="onTabClick(tab.id)"
+        class="tab-btn relative inline-block px-6 py-5 rounded-t-lg transition-colors duration-300 hover:text-blue-600 whitespace-nowrap "
+        [class.text-blue-600]="isActiveTab(tab.id)" [class.font-semibold]="isActiveTab(tab.id)">
+        {{ tab.title }}
+      </button>
+    </li>
+
+  </ul>
+</div>

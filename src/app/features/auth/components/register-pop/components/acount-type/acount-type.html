@@ -1,0 +1,120 @@
+<div class="p-4 sm:p-6">
+      <p class="text-gray-600 text-center mb-6 sm:mb-8 text-base sm:text-lg font-medium">
+            Choose your account type
+      </p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5">
+
+            <!-- Property Seeker -->
+            <button (click)="selectAccountType('seeker')" class="group p-4 sm:p-6 border-2 border-blue-200 rounded-xl sm:rounded-2xl text-right transition-all
+             hover:bg-blue-50 hover:border-blue-500 hover:shadow-lg hover:-translate-y-1">
+                  <div class="flex items-start gap-3 sm:gap-4">
+                        <div class="p-3 sm:p-4 bg-blue-500 rounded-lg sm:rounded-xl text-white">
+                              <i class="fa-solid fa-user text-lg sm:text-xl"></i>
+                        </div>
+
+                        <div class="flex-1">
+                              <h3 class="text-gray-900 font-semibold mb-1 text-sm sm:text-base">
+                                    Property Seeker
+                              </h3>
+                              <p class="text-xs sm:text-sm text-gray-600">
+                                    Looking for property to rent or buy
+                              </p>
+                        </div>
+
+                        <i class="fa-solid fa-chevron-right text-gray-400
+                 group-hover:text-blue-600 transition-colors mt-1 text-sm sm:text-base">
+                        </i>
+                  </div>
+            </button>
+
+            <!-- Property Owner -->
+            <button (click)="selectAccountType('owner')" class="group p-4 sm:p-6 border-2 border-green-200 rounded-xl sm:rounded-2xl text-right transition-all
+             hover:bg-green-50 hover:border-green-500 hover:shadow-lg hover:-translate-y-1">
+                  <div class="flex items-start gap-3 sm:gap-4">
+                        <div class="p-3 sm:p-4 bg-green-500 rounded-lg sm:rounded-xl text-white">
+                              <i class="fa-solid fa-building text-lg sm:text-xl"></i>
+                        </div>
+
+                        <div class="flex-1">
+                              <h3 class="text-gray-900 font-semibold mb-1 text-sm sm:text-base">
+                                    Property Owner
+                              </h3>
+                              <p class="text-xs sm:text-sm text-gray-600">
+                                    I own properties and want to list them
+                              </p>
+                        </div>
+
+                        <i
+                              class="fa-solid fa-chevron-right text-gray-400 group-hover:text-green-600 mt-1 text-sm sm:text-base"></i>
+                  </div>
+            </button>
+
+            <!-- Real Estate Broker -->
+            <button (click)="selectAccountType('broker')" class="group p-4 sm:p-6 border-2 border-purple-200 rounded-xl sm:rounded-2xl text-right transition-all
+             hover:bg-purple-50 hover:border-purple-500 hover:shadow-lg hover:-translate-y-1">
+                  <div class="flex items-start gap-3 sm:gap-4">
+                        <div class="p-3 sm:p-4 bg-purple-500 rounded-lg sm:rounded-xl text-white">
+                              <i class="fa-solid fa-briefcase text-lg sm:text-xl"></i>
+                        </div>
+
+                        <div class="flex-1">
+                              <h3 class="text-gray-900 font-semibold mb-1 text-sm sm:text-base">
+                                    Real Estate Broker
+                              </h3>
+                              <p class="text-xs sm:text-sm text-gray-600">
+                                    Professional real estate broker
+                              </p>
+                        </div>
+
+                        <i
+                              class="fa-solid fa-chevron-right text-gray-400 group-hover:text-purple-600 mt-1 text-sm sm:text-base"></i>
+                  </div>
+            </button>
+
+            <!-- Real Estate Developer -->
+            <button (click)="selectAccountType('developer')" class="group p-4 sm:p-6 border-2 border-orange-200 rounded-xl sm:rounded-2xl text-right transition-all
+             hover:bg-orange-50 hover:border-orange-500 hover:shadow-lg hover:-translate-y-1">
+                  <div class="flex items-start gap-3 sm:gap-4">
+                        <div class="p-3 sm:p-4 bg-orange-500 rounded-lg sm:rounded-xl text-white">
+                              <i class="fa-solid fa-city text-lg sm:text-xl"></i>
+                        </div>
+
+                        <div class="flex-1">
+                              <h3 class="text-gray-900 font-semibold mb-1 text-sm sm:text-base">
+                                    Real Estate Developer
+                              </h3>
+                              <p class="text-xs sm:text-sm text-gray-600">
+                                    Real estate development company
+                              </p>
+                        </div>
+
+                        <i
+                              class="fa-solid fa-chevron-right text-gray-400 group-hover:text-orange-600 mt-1 text-sm sm:text-base"></i>
+                  </div>
+            </button>
+
+            <!-- System Admin -->
+            <button (click)="selectAccountType('admin')" class="group p-4 sm:p-6 border-2 border-red-200 rounded-xl sm:rounded-2xl text-right transition-all
+             hover:bg-red-50 hover:border-red-500 hover:shadow-lg hover:-translate-y-1 sm:col-span-2">
+                  <div class="flex items-start gap-3 sm:gap-4">
+                        <div class="p-3 sm:p-4 bg-red-500 rounded-lg sm:rounded-xl text-white">
+                              <i class="fa-solid fa-shield-halved text-lg sm:text-xl"></i>
+                        </div>
+
+                        <div class="flex-1">
+                              <h3 class="text-gray-900 font-semibold mb-1 text-sm sm:text-base">
+                                    System Admin
+                              </h3>
+                              <p class="text-xs sm:text-sm text-gray-600">
+                                    Platform management
+                              </p>
+                        </div>
+
+                        <i
+                              class="fa-solid fa-chevron-right text-gray-400 group-hover:text-red-600 mt-1 text-sm sm:text-base"></i>
+                  </div>
+            </button>
+
+      </div>
+</div>

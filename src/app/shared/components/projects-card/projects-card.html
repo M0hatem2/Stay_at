@@ -1,0 +1,76 @@
+<div
+  class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow cursor-pointer group"
+  (click)="onClick()"
+>
+  <!-- Image -->
+  <div class="relative h-56 overflow-hidden">
+    <img
+      [src]="project.imageUrl"
+      [alt]="project.name"
+      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+    />
+
+    <div
+      class="absolute top-4 right-4 px-3 py-1.5 bg-gradient-to-r from-[#C4A962] to-[#B39952] text-white text-sm rounded-lg shadow-md"
+    >
+      Delivery: {{ project.deliveryDate }}
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="p-6">
+    <!-- Title -->
+    <div class="flex items-center gap-3 mb-4">
+      <div
+        class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center"
+      >
+        <i class="fa-solid fa-building text-gray-600 text-lg"></i>
+      </div>
+
+      <div>
+        <h3 class="text-gray-900 font-semibold leading-tight">
+          {{ project.name }}
+        </h3>
+        <div class="text-gray-500 text-sm">
+          {{ project.developer }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Location -->
+    <div class="flex items-center gap-2 text-gray-600 text-sm mb-4">
+      <i class="fa-solid fa-location-dot text-gray-400"></i>
+      <span>{{ project.location }}</span>
+    </div>
+
+    <!-- Unit Types -->
+    <div class="flex flex-wrap gap-2 mb-4">
+      <span
+        *ngFor="let type of project.unitTypes"
+        class="px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded-full"
+      >
+        {{ type }}
+      </span>
+    </div>
+
+    <!-- Footer -->
+    <div
+      class="flex items-center justify-between pt-4 border-t border-gray-200"
+    >
+      <!-- Price -->
+      <div class="flex items-center gap-2 text-sm">
+        <i class="fa-solid fa-dollar-sign text-gray-400"></i>
+        <span class="text-gray-600">Starting from</span>
+        <span class="text-[#C4A962] font-semibold">
+          {{ project.startingPrice }}
+        </span>
+      </div>
+
+      <!-- Units -->
+      <div class="flex items-center gap-2 text-sm text-gray-600">
+        <i class="fa-solid fa-house text-gray-400"></i>
+        <span>{{ project.totalUnits }} Units</span>
+      </div>
+    </div>
+  </div>
+</div>

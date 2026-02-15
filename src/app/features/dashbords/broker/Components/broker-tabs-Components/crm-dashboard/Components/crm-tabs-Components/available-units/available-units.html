@@ -1,0 +1,170 @@
+<div class="available-units-container min-h-screen bg-gradient-to-br from-gray-50 to-gray-100" dir="ltr">
+      <div class="header-section bg-gradient-to-l from-[#030213] to-gray-900 text-white py-8 px-6">
+            <div class="max-w-7xl mx-auto">
+                  <div class="fade-in" style="opacity: 1; transform: none;">
+                        <h1 class="text-white mb-2">Available Units</h1>
+                        <p class="text-gray-300">Browse all available units and projects</p>
+                  </div>
+            </div>
+      </div>
+      <div class="max-w-7xl mx-auto px-6 py-8">
+            <div class="stats-grid grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                  <div class="fade-in" style="opacity: 1; transform: none;">
+                        <div data-slot="card"
+                              class="stat-card text-card-foreground flex flex-col gap-6 rounded-xl border bg-white border-gold">
+                              <div data-slot="card-content" class="[&:last-child]:pb-6 p-6">
+                                    <div class="flex items-center justify-between mb-4">
+                                          <div class="stat-icon-wrapper bg-gold">
+                                                <i class="fas fa-building fa-lg text-white"></i>
+                                          </div>
+                                    </div>
+                                    <p class="stat-label text-gray-500 mb-1">Total Units</p>
+                                    <h3 class="stat-value text-gray-900">8</h3>
+                              </div>
+                        </div>
+                  </div>
+                  <div class="fade-in" style="opacity: 1; transform: none;">
+                        <div data-slot="card"
+                              class="stat-card text-card-foreground flex flex-col gap-6 rounded-xl border bg-white border-green">
+                              <div data-slot="card-content" class="[&:last-child]:pb-6 p-6">
+                                    <div class="flex items-center justify-between mb-4">
+                                          <div class="stat-icon-wrapper bg-green">
+                                                <i class="fas fa-check-circle fa-lg text-white"></i>
+                                          </div>
+                                    </div>
+                                    <p class="stat-label text-gray-500 mb-1">Available Units</p>
+                                    <h3 class="stat-value text-gray-900">6</h3>
+                              </div>
+                        </div>
+                  </div>
+                  <div class="fade-in" style="opacity: 1; transform: none;">
+                        <div data-slot="card"
+                              class="stat-card text-card-foreground flex flex-col gap-6 rounded-xl border bg-white border-yellow">
+                              <div data-slot="card-content" class="[&:last-child]:pb-6 p-6">
+                                    <div class="flex items-center justify-between mb-4">
+                                          <div class="stat-icon-wrapper bg-yellow">
+                                                <i class="fas fa-bookmark fa-lg text-white"></i>
+                                          </div>
+                                    </div>
+                                    <p class="stat-label text-gray-500 mb-1">Reserved Units</p>
+                                    <h3 class="stat-value text-gray-900">1</h3>
+                              </div>
+                        </div>
+                  </div>
+                  <div class="fade-in" style="opacity: 1; transform: none;">
+                        <div data-slot="card"
+                              class="stat-card text-card-foreground flex flex-col gap-6 rounded-xl border bg-white border-blue">
+                              <div data-slot="card-content" class="[&:last-child]:pb-6 p-6">
+                                    <div class="flex items-center justify-between mb-4">
+                                          <div class="stat-icon-wrapper bg-blue">
+                                                <i class="fas fa-city fa-lg text-white"></i>
+                                          </div>
+                                    </div>
+                                    <p class="stat-label text-gray-500 mb-1">Projects</p>
+                                    <h3 class="stat-value text-gray-900">5</h3>
+                              </div>
+                        </div>
+                  </div>
+            </div>
+            <div data-slot="card"
+                  class="filter-section bg-card text-card-foreground flex flex-col gap-6 rounded-xl border mb-8">
+                  <div data-slot="card-content" class="[&:last-child]:pb-6 p-6">
+                        <div class="filter-grid grid grid-cols-1 md:grid-cols-4 gap-4">
+                              <div class="search-input relative"><i
+                                          class="fas fa-search search-icon absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i><input
+                                          data-slot="input"
+                                          class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border px-3 py-1 text-base bg-input-background transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive pr-10"
+                                          placeholder="Search for a unit..." value=""></div><button type="button"
+                                    role="combobox" aria-controls="radix-:r65:" aria-expanded="false"
+                                    aria-autocomplete="none" dir="ltr" data-state="closed" data-slot="select-trigger"
+                                    data-size="default"
+                                    class="select-trigger border-input data-[placeholder]:text-muted-foreground [&_svg:not([class*='text-'])]:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 dark:hover:bg-input/50 flex w-full items-center justify-between gap-2 rounded-md border bg-input-background px-3 py-2 text-sm whitespace-nowrap transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"><span
+                                          data-slot="select-value" style="pointer-events: none;">All
+                                          Projects</span><i
+                                          class="fas fa-chevron-down chevron-icon size-4 opacity-50"></i></button><button
+                                    type="button" role="combobox" aria-controls="radix-:r66:" aria-expanded="false"
+                                    aria-autocomplete="none" dir="ltr" data-state="closed" data-slot="select-trigger"
+                                    data-size="default"
+                                    class="select-trigger border-input data-[placeholder]:text-muted-foreground [&_svg:not([class*='text-'])]:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 dark:hover:bg-input/50 flex w-full items-center justify-between gap-2 rounded-md border bg-input-background px-3 py-2 text-sm whitespace-nowrap transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"><span
+                                          data-slot="select-value" style="pointer-events: none;">All Types</span><i
+                                          class="fas fa-chevron-down chevron-icon size-4 opacity-50"></i></button><button
+                                    type="button" role="combobox" aria-controls="radix-:r67:" aria-expanded="false"
+                                    aria-autocomplete="none" dir="ltr" data-state="closed" data-slot="select-trigger"
+                                    data-size="default"
+                                    class="select-trigger border-input data-[placeholder]:text-muted-foreground [&_svg:not([class*='text-'])]:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 dark:hover:bg-input/50 flex w-full items-center justify-between gap-2 rounded-md border bg-input-background px-3 py-2 text-sm whitespace-nowrap transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"><span
+                                          data-slot="select-value" style="pointer-events: none;">All Status</span><i
+                                          class="fas fa-chevron-down chevron-icon size-4 opacity-50"></i></button>
+                        </div>
+                  </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div class="fade-in" style="opacity: 1; transform: none;">
+                        <div data-slot="card"
+                              class="unit-card bg-card text-card-foreground flex flex-col gap-6 rounded-xl border overflow-hidden hover:shadow-xl transition-all">
+                              <div class="relative h-48"><img
+                                          src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800&h=600&fit=crop"
+                                          alt="Penthouse - New Cairo" class="unit-image w-full h-full object-cover">
+                                    <div class="absolute top-4 right-4"><span data-slot="badge"
+                                                class="unit-badge inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent [a&]:hover:bg-primary/90 bg-green-100 text-green-700"><i
+                                                      class="fas fa-check-circle w-3 h-3 ml-1"></i>Available</span>
+                                    </div>
+                                    <div class="absolute top-4 left-4"><span data-slot="badge"
+                                                class="unit-type-badge inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent [a&]:hover:bg-primary/90 gradient-primary-btn text-white">Penthouse</span>
+                                    </div>
+                              </div>
+                              <div data-slot="card-content" class="unit-content [&:last-child]:pb-6 p-6">
+                                    <h4 class="unit-title text-gray-900 mb-2">Penthouse - New Cairo</h4>
+                                    <div class="unit-location flex items-center gap-2 text-sm text-gray-600 mb-4"><i
+                                                class="fas fa-map-marker-alt w-4 h-4"></i><span>New Cairo</span></div>
+                                    <div
+                                          class="unit-features grid grid-cols-3 gap-3 mb-4 py-4 border-y border-gray-200">
+                                          <div class="feature-item text-center"><i
+                                                      class="fas fa-bed w-5 h-5 mx-auto text-gray-400 mb-1"></i>
+                                                <p class="feature-value text-sm text-gray-900">4</p>
+                                                <p class="feature-label text-xs text-gray-500">Bedrooms</p>
+                                          </div>
+                                          <div class="feature-item text-center"><i
+                                                      class="fas fa-bath w-5 h-5 mx-auto text-gray-400 mb-1"></i>
+                                                <p class="feature-value text-sm text-gray-900">3</p>
+                                                <p class="feature-label text-xs text-gray-500">Bathrooms</p>
+                                          </div>
+                                          <div class="feature-item text-center"><i
+                                                      class="fas fa-expand w-5 h-5 mx-auto text-gray-400 mb-1"></i>
+                                                <p class="feature-value text-sm text-gray-900">350</p>
+                                                <p class="feature-label text-xs text-gray-500">m²</p>
+                                          </div>
+                                    </div>
+                                    <div
+                                          class="unit-price bg-gradient-to-r from-[#C4A962]/10 to-[#D4BC7E]/10 rounded-lg p-3 mb-4">
+                                          <div class="flex items-center justify-between"><span
+                                                      class="price-label text-sm text-gray-600">Price</span>
+                                                <div class="flex items-center gap-1"><i
+                                                            class="fas fa-dollar-sign currency-icon w-4 h-4 text-[#C4A962]"></i><span
+                                                            class="text-gray-900">7.5 Million EGP</span>
+                                                </div>
+                                          </div>
+                                    </div>
+                                    <div class="unit-amenities space-y-2 mb-4">
+                                          <p class="amenities-label text-xs text-gray-500">Features:</p>
+                                          <div class="amenities-list flex flex-wrap gap-2"><span data-slot="badge"
+                                                      class="amenity-badge inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground text-xs">Full
+                                                      Floor</span><span data-slot="badge"
+                                                      class="amenity-badge inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground text-xs">Private
+                                                      Roof</span><span data-slot="badge"
+                                                      class="amenity-badge inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground text-xs">Private
+                                                      Elevator</span></div>
+                                    </div>
+                                    <div class="unit-actions grid grid-cols-2 gap-2"><button data-slot="button"
+                                                class="action-btn btn-details inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background text-foreground hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5"><i
+                                                      class="fas fa-eye w-3 h-3 ml-1"></i>Details</button><button
+                                                data-slot="button"
+                                                class="action-btn btn-share inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5 gradient-primary-btn hover:bg-[#B39952] text-white"><i
+                                                      class="fas fa-share-alt w-3 h-3 ml-1"></i>Share
+                                          </button>
+                                    </div>
+                              </div>
+                        </div>
+                  </div>
+            </div>
+      </div>
+</div>

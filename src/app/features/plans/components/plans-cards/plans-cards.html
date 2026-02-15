@@ -1,0 +1,53 @@
+<article class="plan" [class.is-popular]="plan.isPopular">
+
+      <div class="plan__badge" *ngIf="plan.isPopular">Most Popular</div>
+
+      <div class="plan__body" [class.has-badge]="plan.isPopular">
+
+            <!-- icon -->
+            <div class="plan__icon" [attr.data-icon]="plan.icon" aria-hidden="true">
+                  <ng-container [ngSwitch]="plan.icon">
+                        <svg *ngSwitchCase="'star'" viewBox="0 0 24 24">
+                              <path
+                                    d="M12 2.7l2.36 4.78c.3.61.88 1.03 1.55 1.13l5.27.77-3.82 3.72c-.49.48-.72 1.16-.61 1.84l.9 5.25-4.72-2.48a2.2 2.2 0 0 0-2.04 0l-4.72 2.48.9-5.25a2.2 2.2 0 0 0-.61-1.84L2.82 9.38l5.27-.77c.67-.1 1.25-.52 1.55-1.13L12 2.7z" />
+                        </svg>
+
+                        <svg *ngSwitchCase="'zap'" viewBox="0 0 24 24">
+                              <path
+                                    d="M13 2.3a.55.55 0 0 1 .94.5l-2 6.2a1 1 0 0 0 1 .99h7.1a1 1 0 0 1 .78 1.63l-10 10.3a.55.55 0 0 1-.94-.5l2-6.2a1 1 0 0 0-1-.99H3.8a1 1 0 0 1-.78-1.63L13 2.3z" />
+                        </svg>
+
+                        <svg *ngSwitchCase="'crown'" viewBox="0 0 24 24">
+                              <path
+                                    d="M12 3.2l3 5.7a1 1 0 0 0 1.52.3l4.3-3.7 1.2 11.1a1 1 0 0 1-1 .9H3a1 1 0 0 1-1-.9L3.2 5.5l4.3 3.7a1 1 0 0 0 1.52-.3l3-5.7z" />
+                              <path d="M5 21h14" />
+                        </svg>
+                  </ng-container>
+            </div>
+
+            <h3 class="plan__title">{{ plan.title }}</h3>
+
+            <div class="price">
+                  <span class="price__value">{{ formatPrice(getPrice(plan)) }}</span>
+                  <span class="price__meta">
+                        <span class="price__currency">{{ plan.currency }}</span>
+                        <span class="price__period">{{ getPeriodLabel(plan) }}</span>
+                  </span>
+            </div>
+
+            <button class="cta" type="button" [class.is-primary]="plan.isPopular" (click)="choosePlan(plan.id)">
+                  <span>Choose Plan</span>
+                  <i class="fas fa-arrow-right" aria-hidden="true"></i>
+            </button>
+
+            <ul class="features">
+                  <li class="feature" *ngFor="let f of plan.features" [class.is-disabled]="!f.included">
+                        <span class="feature__icon" aria-hidden="true">
+                              <i class="fas" [class.fa-check]="f.included" [class.fa-x]="!f.included"></i>
+                        </span>
+                        <span class="feature__text">{{ f.label }}</span>
+                  </li>
+            </ul>
+
+      </div>
+</article>

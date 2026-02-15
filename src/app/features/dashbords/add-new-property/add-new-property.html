@@ -1,0 +1,123 @@
+<div data-stepper="" class="  max-w-7xl mx-auto rounded-lg p-4  " id="wizard-validation-horizontal">
+      <!-- Stepper Nav -->
+      <ul class="stepper-navigation flex  flex-row justify-between gap-6">
+
+            <!-- Step 1 -->
+            <li class="stepper-step" [class.stepper-active]="isStepActive(1)"
+                  [class.stepper-completed]="currentStep > 1">
+
+                  <div class="stepper-step-content">
+                        <div class="stepper-step-number">
+                              <i *ngIf="currentStep > 1" class="fas fa-check"></i>
+                              <span *ngIf="currentStep <= 1">1</span>
+                        </div>
+                        <span class="stepper-step-title hidden md:block">Basic Information</span>
+                  </div>
+
+                  <span class="stepper-connector"></span>
+            </li>
+
+            <!-- Step 2 -->
+            <li class="stepper-step" [class.stepper-active]="isStepActive(2)"
+                  [class.stepper-completed]="currentStep > 2">
+
+                  <div class="stepper-step-content">
+                        <div class="stepper-step-number">
+                              <i *ngIf="currentStep > 2" class="fas fa-check"></i>
+                              <span *ngIf="currentStep <= 2">2</span>
+                        </div>
+                        <span class="stepper-step-title hidden md:block">Location & Address</span>
+                  </div>
+
+                  <span class="stepper-connector"></span>
+            </li>
+
+            <!-- Step 3 -->
+            <li class="stepper-step" [class.stepper-active]="isStepActive(3)"
+                  [class.stepper-completed]="currentStep > 3">
+
+                  <div class="stepper-step-content">
+                        <div class="stepper-step-number">
+                              <i *ngIf="currentStep > 3" class="fas fa-check"></i>
+                              <span *ngIf="currentStep <= 3">3</span>
+                        </div>
+                        <span class="stepper-step-title hidden md:block">Detailed Specifications</span>
+                  </div>
+
+                  <span class="stepper-connector"></span>
+            </li>
+
+            <!-- Step 4 -->
+            <li class="stepper-step" [class.stepper-active]="isStepActive(4)"
+                  [class.stepper-completed]="currentStep > 4">
+
+                  <div class="stepper-step-content">
+                        <div class="stepper-step-number">
+                              <i *ngIf="currentStep > 4" class="fas fa-check"></i>
+                              <span *ngIf="currentStep <= 4">4</span>
+                        </div>
+                        <span class="stepper-step-title hidden md:block">Images & Media</span>
+                  </div>
+            </li>
+
+      </ul>
+
+      <!-- End Stepper Nav -->
+
+      <!-- Stepper Content -->
+      <form id="wizard-validation-form-horizontal" class="needs-validation mt-5 sm:mt-8">
+            <!-- Step 1: Basic Information -->
+            <div *ngIf="isStepActive(1)" class="space-y-5" data-stepper-content-item='{ "index": 1 }'>
+                  <app-basic-information></app-basic-information>
+            </div>
+
+            <!-- Step 2: Location & Address -->
+            <div *ngIf="isStepActive(2)" class="space-y-5" data-stepper-content-item='{ "index": 2 }'>
+                  <app-location-and-address></app-location-and-address>
+            </div>
+
+            <!-- Step 3: Detailed Specifications -->
+            <div *ngIf="isStepActive(3)" class="space-y-5" data-stepper-content-item='{ "index": 3 }'>
+                  <app-detailed-specifications></app-detailed-specifications>
+            </div>
+
+            <!-- Step 4: Images & Media -->
+            <div *ngIf="isStepActive(4)" class="space-y-5" data-stepper-content-item='{ "index": 4 }'>
+                  <app-images-and-media></app-images-and-media>
+            </div>
+
+            <!-- Final Content -->
+            <div *ngIf="currentStep > totalSteps" data-stepper-content-item='{ "isFinal": true }'>
+                  <div
+                        class="border-base-content/40 bg-base-200/50 flex h-48 items-center justify-center rounded-xl border border-dashed p-4">
+                        <h3 class="text-base-content/50 text-3xl">Your Property has been Submitted Successfully!</h3>
+                  </div>
+            </div>
+            <!-- End Final Content -->
+
+            <!-- Button Group -->
+            <div class="mt-5 flex items-center justify-between gap-y-2">
+                  <button type="button" class="rounded-2xl px-6 py-3 font-semibold border-2 border-gray-200 text-gray-600
+                               hover:border-black hover:text-black transition-all" (click)="prevStep()"
+                        [disabled]="isFirstStep() || currentStep > totalSteps">
+                        <i class="fa-solid fa-chevron-left text-sm mr-2 rtl:rotate-180"></i>
+                        <span>Back</span>
+                  </button>
+                  <div *ngIf="currentStep <= totalSteps" class="flex gap-3">
+                        <button type="button" class="rounded-2xl px-6 py-3 font-semibold border-2 border-black bg-black text-white
+                                     hover:bg-gray-900 transition-all"
+                              (click)="isLastStep() ? submitForm() : nextStep()" [disabled]="isLastStep()">
+                              <span>{{ isLastStep() ? 'Save' : 'Next' }}</span>
+                              <i class="fa-solid fa-chevron-right text-sm ml-2 rtl:rotate-180"></i>
+                        </button>
+                  </div>
+                  <button *ngIf="currentStep > totalSteps" type="button" class="rounded-2xl px-6 py-3 font-semibold border-2 border-black bg-black text-white
+                               hover:bg-gray-900 transition-all" (click)="resetForm()">
+                        Start New Property
+                  </button>
+            </div>
+            <!-- End Button Group -->
+      </form>
+      <!-- End Stepper Content -->
+</div>
+<!-- End Stepper -->

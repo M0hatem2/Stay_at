@@ -1,0 +1,212 @@
+<header class="bg-white shadow-sm sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-20">
+      <!-- Logo -->
+      <a class="flex items-center gap-3" routerLink="/" aria-label="Stay At home">
+        <img src="logo.avif" alt="Stay At" class="h-28 block" />
+      </a>
+
+      <!-- Desktop nav -->
+      <nav class="hidden lg:flex items-center gap-8" aria-label="Primary">
+        <a
+          routerLink="/home"
+          routerLinkActive="active"
+          class="text-gray-700 hover:text-[#C4A962] transition-colors"
+          >Home</a
+        >
+        <a
+          routerLink="/all-properties"
+          routerLinkActive="active"
+          class="text-gray-700 hover:text-[#C4A962] transition-colors"
+          >All Properties</a
+        >
+        <a
+          routerLink="/rent"
+          routerLinkActive="active"
+          class="text-gray-700 hover:text-[#C4A962] transition-colors"
+          >Rent</a
+        >
+        <a
+          routerLink="/buy"
+          routerLinkActive="active"
+          class="text-gray-700 hover:text-[#C4A962] transition-colors"
+          >Buy</a
+        >
+        <a
+          routerLink="/projects"
+          routerLinkActive="active"
+          class="text-gray-700 hover:text-[#C4A962] transition-colors"
+          >Projects</a
+        >
+        <a
+          routerLink="/about"
+          routerLinkActive="active"
+          class="text-gray-700 hover:text-[#C4A962] transition-colors"
+          >About</a
+        >
+      </nav>
+
+      <!-- Actions (desktop) -->
+      <div class="hidden lg:flex items-center gap-3">
+        <button
+          (click)="toggleLanguage()"
+          class="flex items-center gap-2 px-4 py-2.5 text-gray-700 hover:text-[#C4A962] transition-colors rounded-lg hover:bg-gray-50"
+          [title]="currentLanguage === 'ar' ? 'Switch to English' : 'التبديل للعربية'"
+          aria-label="Switch language"
+        >
+          <i class="fa-solid fa-language w-5 h-5" aria-hidden="true"></i>
+          <span class="text-sm">{{ languageLabel }}</span>
+        </button>
+
+        <!-- Authenticated User Actions -->
+        <div *ngIf="isAuthenticated" class="flex items-center gap-3">
+          <button
+            routerLink="/favorites"
+            class="flex items-center gap-2 px-4 py-2.5 text-gray-700 hover:text-[#C4A962] transition-colors rounded-lg hover:bg-gray-50"
+            title="المفضلة"
+            aria-label="Favorites"
+          >
+            <i class="fa-solid fa-heart w-5 h-5" aria-hidden="true"></i>
+            <span class="text-sm">Favorites</span>
+          </button>
+
+          <button
+            class="flex items-center gap-2 px-4 py-2.5 text-gray-700 hover:text-[#C4A962] transition-colors rounded-lg hover:bg-gray-50"
+            title="الإشعارات"
+            aria-label="Notifications"
+          >
+            <i class="fa-solid fa-bell w-5 h-5" aria-hidden="true"></i>
+            <span class="text-sm">Notifications</span>
+          </button>
+
+          <button
+            [routerLink]="dashboardRoute"
+            class="flex items-center gap-2 px-4 py-2.5 text-gray-700 hover:text-[#C4A962] transition-colors rounded-lg hover:bg-gray-50"
+            title="الداشبورد"
+            aria-label="Dashboard"
+          >
+            <i class="fa-solid fa-user w-5 h-5" aria-hidden="true"></i>
+            <span class="text-sm">Dashboard</span>
+          </button>
+
+          <button
+            (click)="logout()"
+            class="flex items-center gap-2 px-6 py-2.5 gradient-primary-btn text-white rounded-xl hover:shadow-lg transition-all"
+            title="تسجيل الخروج"
+            aria-label="Logout"
+          >
+            <i class="fa-solid fa-sign-out-alt w-5 h-5" aria-hidden="true"></i>
+            <span>Logout</span>
+          </button>
+        </div>
+
+        <!-- Guest Actions -->
+        <div *ngIf="!isAuthenticated" class="flex items-center gap-3">
+          <a
+            routerLink="/auth/login"
+            class="flex items-center gap-2 px-6 py-2.5 border-2 border-[black] text-[black] rounded-xl hover:bg-gray-800 hover:text-white transition-all"
+          >
+            <i class="fa-solid fa-user w-5 h-5" aria-hidden="true"></i>
+            <span>Sign In</span>
+          </a>
+
+          <button
+            (click)="openRegisterPopup()"
+            class="flex items-center gap-2 px-6 py-2.5  bg-black text-white rounded-xl hover:shadow-lg transition-all"
+          >
+            <i class="fa-solid fa-user-plus w-5 h-5" aria-hidden="true"></i>
+            <span>Sign Up</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile: burger -->
+      <div class="lg:hidden">
+        <button
+          (click)="toggleMenu()"
+          aria-controls="mobileMenu"
+          [attr.aria-expanded]="ariaExpanded"
+          class="text-gray-600 hover:text-[#C4A962] transition-colors p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#C4A962]"
+        >
+          <span class="sr-only">Open menu</span>
+          <i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mobileMenu" class="lg:hidden" *ngIf="showMobileMenu" role="dialog" aria-modal="true">
+    <div class="bg-white border-t border-gray-100 shadow-md px-4 pt-4 pb-6 space-y-4">
+      <nav class="flex flex-col gap-3" aria-label="Mobile Primary">
+        <a
+          routerLink="/home"
+          routerLinkActive="active"
+          (click)="closeMenu()"
+          class="text-gray-700 py-2 hover:text-[#C4A962]"
+          >Home</a
+        >
+        <a
+          routerLink="/all-properties"
+          routerLinkActive="active"
+          (click)="closeMenu()"
+          class="text-gray-700 py-2 hover:text-[#C4A962]"
+          >All Properties</a
+        >
+        <a
+          routerLink="/rent"
+          routerLinkActive="active"
+          (click)="closeMenu()"
+          class="text-gray-700 py-2 hover:text-[#C4A962]"
+          >Rent</a
+        >
+        <a
+          routerLink="/buy"
+          routerLinkActive="active"
+          (click)="closeMenu()"
+          class="text-gray-700 py-2 hover:text-[#C4A962]"
+          >Buy</a
+        >
+        <a
+          routerLink="/projects"
+          routerLinkActive="active"
+          (click)="closeMenu()"
+          class="text-gray-700 py-2 hover:text-[#C4A962]"
+          >Projects</a
+        >
+        <a
+          routerLink="/about"
+          routerLinkActive="active"
+          (click)="closeMenu()"
+          class="text-gray-700 py-2 hover:text-[#C4A962]"
+          >About</a
+        >
+      </nav>
+
+      <div class="flex flex-col gap-3 pt-2">
+        <button
+          (click)="toggleLanguage()"
+          class="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-[#C4A962] rounded"
+          [title]="currentLanguage === 'ar' ? 'Switch to English' : 'التبديل للعربية'"
+        >
+          <i class="fa-solid fa-language"></i>
+          <span>{{ languageLabel }}</span>  
+        </button>
+        <a
+          routerLink="/signin"
+          (click)="closeMenu()"
+          class="block text-center px-4 py-2 border border-[#C4A962] rounded text-[#C4A962]"
+          >Sign In</a
+        >
+        <button
+          (click)="openRegisterPopup(); closeMenu()"
+          class="block text-center px-4 py-2 gradient-primary-btn text-white rounded"
+        >
+          Sign Up
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<app-register-pop [isOpen]="showRegisterPopup" (close)="closeRegisterPopup()"></app-register-pop>

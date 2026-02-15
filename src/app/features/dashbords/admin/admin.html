@@ -1,0 +1,57 @@
+<!-- Admin Dashboard Layout -->
+<div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 relative">
+    <!-- Mobile Menu Overlay -->
+    <div *ngIf="sidebarOpen" class="md:hidden fixed inset-0 bg-black bg-opacity-50 z-30" (click)="closeSidebar()"></div>
+
+    <!-- Mobile Menu Toggle Button -->
+    <button
+        class="md:hidden fixed top-4 right-4 z-50 p-3 bg-gradient-to-r from-[#de5806] to-[#470e03] text-white rounded-lg shadow-lg"
+        (click)="toggleSidebar()">
+        <i class="fas fa-bars text-lg"></i>
+    </button>
+
+    <!-- Main Content Area -->
+    <div class="md:pr-80 transition-all duration-300">
+        <div class="p-4 md:p-8">
+            <!-- Header Bar -->
+            <div class="bg-white rounded-2xl shadow-lg p-4 md:p-6 mb-6 md:mb-8 border border-gray-100">
+                <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-[#de5806] via-[#ff6b35] to-[#470e03] rounded-xl flex items-center justify-center shadow-lg">
+                            <i class="fas fa-chart-line text-white text-lg md:text-xl"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-xl md:text-2xl font-bold text-gray-900">Admin Dashboard</h1>
+                            <p class="text-sm md:text-base text-gray-600">Complete Management System</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 md:gap-3 w-full md:w-auto">
+                        <button
+                            class="flex-1 md:flex-none px-3 md:px-4 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm">
+                            <i class="fas fa-bell text-gray-600"></i>
+                            <span class="hidden sm:inline text-gray-700 font-medium">Notifications</span>
+                            <span class="px-2 py-1 bg-red-500 text-white text-xs rounded-full">12</span>
+                        </button>
+                        <button
+                            class="flex-1 md:flex-none px-3 md:px-4 py-2 bg-gradient-to-r from-[#de5806] to-[#470e03] text-white rounded-lg hover:shadow-lg transition-all text-sm">
+                            <i class="fas fa-user-circle mr-2"></i>
+                            <span class="hidden sm:inline">Profile</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dynamic Content Area with Router Outlet -->
+            <div class="bg-white rounded-2xl shadow-lg border border-gray-100 min-h-[calc(100vh-200px)]">
+                <div class="p-4 md:p-6">
+                    <router-outlet></router-outlet>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar Component -->
+    <app-sider [sidebarOpen]="sidebarOpen" (closeSidebar)="closeSidebar()" (menuItemClick)="onMenuItemClick($event)">
+    </app-sider>
+</div>

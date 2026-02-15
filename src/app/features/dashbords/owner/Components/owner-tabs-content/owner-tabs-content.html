@@ -1,0 +1,8 @@
+<div class="p-6">
+      <!-- Conditional rendering for each tab component -->
+      <app-overview *ngIf="isActiveTab('overview')"></app-overview>
+      <app-my-properties *ngIf="isActiveTab('my-properties')"></app-my-properties>
+      <app-requests-offers *ngIf="isActiveTab('requests-offers')"></app-requests-offers>
+      <app-analytics *ngIf="isActiveTab('analytics')"></app-analytics>
+      <app-financial *ngIf="isActiveTab('financial')"></app-financial>
+</div>

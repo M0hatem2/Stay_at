@@ -1,0 +1,62 @@
+<div class="rounded-2xl bg-white p-6  space-y-5">
+
+  <!-- Header -->
+  <div class="flex items-start gap-3">
+    <div class="w-12 h-12 rounded-2xl bg-gray-50 border flex items-center justify-center">
+      <i class="fa-solid fa-envelope-circle-check text-gray-600 text-xl"></i>
+    </div>
+
+    <div class="flex-1">
+      <h3 class="text-xl font-semibold text-gray-900">Verify Email</h3>
+      <p class="text-sm text-gray-600 mt-1">
+        A verification code has been sent to your email. Please enter the code below.
+      </p>
+    </div>
+  </div>
+
+  <form class="space-y-5">
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-3">
+        Verification Code
+      </label>
+
+      <!-- OTP Inputs -->
+      <div class="flex gap-2 sm:gap-3 justify-center">
+        <input #otpInput *ngFor="let _ of otpBoxes; let i = index" type="text" inputmode="numeric" maxlength="1"
+          autocomplete="one-time-code" class="
+            w-12 h-12 sm:w-14 sm:h-14
+            text-center text-lg font-bold
+            rounded-2xl border border-gray-300 bg-white shadow-sm
+            transition
+            focus:outline-none focus:border-gray-800
+            focus:ring-4 focus:ring-gray-200
+            hover:border-gray-400
+          " (input)="onOtpInput($event, i)" (keydown)="onOtpKeyDown($event, i)" (paste)="onOtpPaste($event)" />
+      </div>
+
+      <p class="mt-3 text-xs text-center text-gray-500">
+        <i class="fa-solid fa-circle-info mr-1"></i>
+        You can paste the full code in any box.
+      </p>
+    </div>
+
+    <!-- Resend -->
+    <div class="flex items-center justify-center gap-2 text-xs text-gray-600">
+      <span>Didn't receive the code?</span>
+      <button type="button" class="text-gray-800 font-semibold hover:underline inline-flex items-center gap-2">
+        <i class="fa-solid fa-rotate-right"></i>
+        Resend
+      </button>
+    </div>
+
+    <!-- Verify Button -->
+    <button type="button" (click)="verifyOtp()" [disabled]="isSubmitting"
+      class="w-full rounded-xl py-3 font-semibold text-white bg-gray-800
+             hover:bg-gray-700 transition shadow-sm inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+      <i class="fa-solid fa-shield-check"></i>
+      {{ isSubmitting ? 'Verifying...' : 'Verify' }}
+    </button>
+
+  </form>
+</div>

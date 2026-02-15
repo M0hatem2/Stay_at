@@ -1,0 +1,130 @@
+.seeker-dashboard {
+      padding: 20px;
+
+      .dashboard-header {
+            margin-bottom: 30px;
+
+            h1 {
+                  color: #333;
+                  margin-bottom: 10px;
+            }
+
+            p {
+                  color: #666;
+                  font-size: 16px;
+            }
+      }
+
+      .search-section {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+
+            h3 {
+                  margin: 0 0 20px 0;
+                  color: #333;
+            }
+
+            .search-form {
+                  display: grid;
+                  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                  gap: 15px;
+
+                  .form-group {
+                        display: flex;
+                        flex-direction: column;
+
+                        label {
+                              margin-bottom: 5px;
+                              font-size: 14px;
+                              color: #666;
+                        }
+
+                        input,
+                        select {
+                              padding: 8px 12px;
+                              border: 1px solid #ddd;
+                              border-radius: 4px;
+                              font-size: 14px;
+                        }
+                  }
+
+                  .search-btn {
+                        align-self: end;
+                        background: #007bff;
+                        color: white;
+                        border: none;
+                        padding: 10px 20px;
+                        border-radius: 4px;
+                        cursor: pointer;
+
+                        &:hover {
+                              background: #0056b3;
+                        }
+                  }
+            }
+      }
+
+      .favorites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+      }
+
+      .favorite-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+            h3 {
+                  margin: 0 0 15px 0;
+                  color: #333;
+            }
+
+            .property-info {
+                  margin-bottom: 15px;
+
+                  .info-item {
+                        display: flex;
+                        justify-content: space-between;
+                        margin-bottom: 5px;
+                        font-size: 14px;
+
+                        span:first-child {
+                              color: #666;
+                        }
+
+                        span:last-child {
+                              font-weight: bold;
+                        }
+                  }
+            }
+
+            .btn {
+                  background: #007bff;
+                  color: white;
+                  border: none;
+                  padding: 10px 20px;
+                  border-radius: 4px;
+                  cursor: pointer;
+                  text-decoration: none;
+                  display: inline-block;
+                  margin-right: 10px;
+
+                  &:hover {
+                        background: #0056b3;
+                  }
+            }
+
+            .btn-secondary {
+                  background: #6c757d;
+
+                  &:hover {
+                        background: #545b62;
+                  }
+            }
+      }
+}

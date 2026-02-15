@@ -1,0 +1,110 @@
+<!-- Modal Backdrop -->
+<div class="modal-backdrop" [class.open]="isOpen" (click)="onBackdropClick($event)">
+
+  <!-- Modal Container -->
+  <div class="modal-container">
+    <!-- Close Button -->
+    <button class="modal-close-btn" (click)="closeModal()" aria-label="Close modal">
+      <i class="fa-solid fa-times"></i>
+    </button>
+
+    <!-- Stepper -->
+    <div class="stepper-container">
+      <!-- Stepper Steps Header -->
+      <div class="stepper-header">
+        <div class="stepper-step" [class.active]="currentStep === 1" [class.completed]="currentStep > 1">
+          <div class="step-circle">
+            <span *ngIf="currentStep <= 1">1</span>
+            <i *ngIf="currentStep > 1" class="fa-solid fa-check"></i>
+          </div>
+          <span class="step-title">Account Type</span>
+        </div>
+
+        <div class="stepper-line" [class.completed]="currentStep > 1"></div>
+
+        <div class="stepper-step" [class.active]="currentStep === 2" [class.completed]="currentStep > 2">
+          <div class="step-circle">
+            <span *ngIf="currentStep <= 2">2</span>
+            <i *ngIf="currentStep > 2" class="fa-solid fa-check"></i>
+          </div>
+          <span class="step-title">Personal Info</span>
+        </div>
+
+        <div class="stepper-line" [class.completed]="currentStep > 2"></div>
+
+        <div class="stepper-step" [class.active]="currentStep === 3" [class.completed]="currentStep > 3">
+          <div class="step-circle">
+            <span *ngIf="currentStep <= 3">3</span>
+            <i *ngIf="currentStep > 3" class="fa-solid fa-check"></i>
+          </div>
+          <span class="step-title">Verify Email</span>
+        </div>
+
+        <div class="stepper-line" [class.completed]="currentStep > 3"></div>
+
+        <div class="stepper-step" [class.active]="currentStep === 4" [class.completed]="currentStep > 4">
+          <div class="step-circle">
+            <span *ngIf="currentStep <= 4">4</span>
+            <i *ngIf="currentStep > 4" class="fa-solid fa-check"></i>
+          </div>
+          <span class="step-title">Additional Info</span>
+        </div>
+
+
+
+      </div>
+
+      <!-- Stepper Content -->
+      <div class="  mt-8">
+        <!-- Step 1: Account Type Selection -->
+        <div *ngIf="currentStep === 1" class="step-content fade-in">
+          <app-acount-type (accountTypeSelected)="onAccountTypeSelected($event)"></app-acount-type>
+        </div>
+
+        <!-- Step 2: Personal Information -->
+        <div *ngIf="currentStep === 2" class="step-content fade-in">
+          <app-personal-information (signUpSuccess)="onSignUpSuccess($event); currentStep = 3">
+          </app-personal-information>
+        </div>
+
+        <!-- Step 3: Email Confirmation -->
+        <div *ngIf="currentStep === 3" class="step-content fade-in">
+          <app-email-confirmation [email]="userEmail" [providedOtp]="userOtp"
+            (confirmSuccess)="onEmailConfirmSuccess($event); currentStep = 4">
+          </app-email-confirmation>
+        </div>
+
+        <!-- Step 4: Additional Information -->
+        <div *ngIf="currentStep === 4" class="step-content fade-in">
+          <!-- Dynamic Component based on Account Type -->
+          <app-property-seeker *ngIf="selectedAccountType === 'seeker'"></app-property-seeker>
+          <app-property-owner *ngIf="selectedAccountType === 'owner'"></app-property-owner>
+          <app-real-estate-broker *ngIf="selectedAccountType === 'broker'"></app-real-estate-broker>
+          <app-real-estate-developer *ngIf="selectedAccountType === 'developer'"></app-real-estate-developer>
+          <app-system-admin *ngIf="selectedAccountType === 'admin'"></app-system-admin>
+        </div>
+
+
+      </div>
+
+      <!-- Buttons -->
+      <div class="stepper-buttons mt-8 flex flex-col sm:flex-row gap-3" *ngIf="currentStep > 1">
+        <button *ngIf="currentStep > 1" (click)="previousStep()"
+          class="w-full sm:w-[20%] px-6 py-2.5 border-2 border-gray-800 text-gray-800 rounded-lg hover:bg-gray-800 hover:text-white transition-all">
+          Previous
+        </button>
+
+        <button *ngIf="currentStep < totalSteps" (click)="nextStep()"
+          class="w-full sm:flex-1 px-6 py-2.5 bg-gray-800 text-white rounded-lg hover:bg-gray-700 hover:shadow-lg transition-all">
+          Next
+        </button>
+
+        <button *ngIf="currentStep === totalSteps" (click)="finishRegistration()"
+          class="w-full sm:flex-1 px-6 py-2.5 bg-black text-white rounded-lg hover:bg-gray-900 hover:shadow-lg transition-all">
+          Complete
+        </button>
+      </div>
+    </div>
+    <!-- End Stepper -->
+  </div>
+</div>

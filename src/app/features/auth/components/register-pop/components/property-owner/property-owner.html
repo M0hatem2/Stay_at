@@ -1,0 +1,60 @@
+<div class="rounded-2xl bg-white p-6  ">
+      <div class="mb-6">
+            <h3 class="text-lg font-semibold text-gray-900">Owner Verification</h3>
+            <p class="text-sm text-gray-600">Provide your identification details to verify ownership</p>
+      </div>
+
+      <form [formGroup]="ownerForm" class="space-y-5">
+            <!-- ID Number -->
+            <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                        ID / Residence Number <span class="text-red-500">*</span>
+                  </label>
+                  <div class="relative">
+                        <i class="fa-solid fa-id-card absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <input type="text" formControlName="idNumber"
+                              class="w-full px-4 py-3 pl-12 border rounded-xl focus:outline-none focus:border-gray-800 focus:ring-2 focus:ring-gray-300 transition"
+                              [class.border-red-500]="isFieldInvalid('idNumber')"
+                              [class.border-gray-300]="!isFieldInvalid('idNumber')"
+                              placeholder="Enter ID number (10-14 digits)" />
+                  </div>
+                  <p *ngIf="isFieldInvalid('idNumber')" class="mt-1 text-sm text-red-500">
+                        {{ getErrorMessage('idNumber') }}
+                  </p>
+            </div>
+
+            <!-- ID Document Upload -->
+            <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                        ID Document <span class="text-red-500">*</span>
+                  </label>
+                  <label class="block border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition hover:border-gray-800 hover:bg-gray-50"
+                        [class.border-red-500]="isFieldInvalid('idDocument')"
+                        [class.border-gray-300]="!isFieldInvalid('idDocument')">
+                        <div class="mx-auto w-12 h-12 rounded-2xl bg-gray-50 border flex items-center justify-center">
+                              <i class="fa-solid fa-cloud-arrow-up text-xl text-gray-400"></i>
+                        </div>
+                        <p class="mt-3 text-sm font-medium text-gray-800">
+                              {{ selectedFileName || 'Drag file here or click to upload' }}
+                        </p>
+                        <p class="mt-1 text-xs text-gray-500">PDF, JPG, PNG (max 10MB)</p>
+                        <input type="file" accept="image/*,.pdf" (change)="onFileSelected($event)" class="hidden" />
+                  </label>
+                  <p *ngIf="isFieldInvalid('idDocument')" class="mt-1 text-sm text-red-500">
+                        {{ getErrorMessage('idDocument') }}
+                  </p>
+
+                  <!-- Helper Text -->
+                  <div class="mt-3 flex flex-wrap items-center gap-3 text-xs text-gray-500">
+                        <span class="inline-flex items-center gap-2">
+                              <i class="fa-solid fa-lock text-gray-400"></i>
+                              Your document is secure
+                        </span>
+                        <span class="inline-flex items-center gap-2">
+                              <i class="fa-solid fa-shield-halved text-gray-400"></i>
+                              Used for verification only
+                        </span>
+                  </div>
+            </div>
+      </form>
+</div>

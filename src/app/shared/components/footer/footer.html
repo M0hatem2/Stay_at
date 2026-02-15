@@ -1,0 +1,103 @@
+<footer class="bg-gray-900 text-gray-300">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="text-center">
+      <i class="fas fa-spinner fa-spin text-4xl text-[white] mb-4"></i>
+      <p class="text-sm">Loading footer...</p>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="errorMessage && !isLoading" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="text-center text-red-400">
+      <i class="fas fa-exclamation-triangle text-2xl mb-2"></i>
+      <p>{{ errorMessage }}</p>
+    </div>
+  </div>
+
+  <!-- Footer Content -->
+  <div *ngIf="footerData && !isLoading" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
+      <!-- Company Info -->
+      <div>
+        <div class="mb-4">
+          <img
+            [src]="footerData.logo.secure_url"
+            [alt]="footerData.title"
+            class="h-10 brightness-0 invert opacity-90"
+          />
+        </div>
+        <p class="text-sm leading-relaxed mb-4">{{ footerData.description }}</p>
+
+        <!-- Social Links -->
+        <div class="flex items-center gap-3">
+          <a
+            *ngFor="let social of footerData.socialLinks"
+            [href]="social.link"
+            target="_blank"
+            class="w-9 h-9 bg-gray-800 hover:gradient-primary-btn rounded-lg flex items-center justify-center transition-colors"
+          >
+            <i [class]="getSocialIcon(social.icon)"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div>
+        <h3 class="text-white mb-4">
+          <i class="fas fa-link mr-2 text-[white]"></i>
+          Quick Links
+        </h3>
+        <ul class="space-y-2 text-sm">
+          <li *ngFor="let link of footerData.quickLinks">
+            <a [href]="link.url" class="hover:text-[white] transition-colors flex items-center">
+              <i [class]="getQuickLinkIcon(link.title)" class="mr-2 w-4"></i>
+              {{ link.title }}
+            </a>
+          </li>
+        </ul>
+      </div>
+      <!-- Contact Info -->
+      <div>
+        <h3 class="text-white mb-4">
+          <i class="fas fa-address-book mr-2 text-[white]"></i>
+          Contact Us
+        </h3>
+        <ul class="space-y-3 text-sm">
+          <li class="flex items-center gap-2">
+            <i class="fas fa-envelope w-4 h-4 text-[white]"></i>
+            <span>{{ footerData.contactInfo.email }}</span>
+          </li>
+          <li class="flex items-center gap-2">
+            <i class="fas fa-phone-alt w-4 h-4 text-[white]"></i>
+            <span>{{ footerData.contactInfo.phoneNumber }}</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <i class="fas fa-map-marker-alt w-4 h-4 text-[white] mt-0.5"></i>
+            <span class="leading-relaxed">{{ footerData.contactInfo.address }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer Bottom -->
+    <div class="border-t border-gray-800 pt-8 mt-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-sm">
+        <p class="flex items-center">
+          <i class="fas fa-copyright mr-2 text-[white]"></i>
+          {{ footerData.copyright }}
+        </p>
+        <div class="flex items-center gap-6">
+          <a
+            *ngFor="let policy of footerData.policies"
+            [href]="policy.url"
+            class="hover:text-[white] transition-colors flex items-center"
+          >
+            <i [class]="getPolicyIcon(policy.label)" class="mr-1 w-3"></i>
+            {{ policy.label }}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

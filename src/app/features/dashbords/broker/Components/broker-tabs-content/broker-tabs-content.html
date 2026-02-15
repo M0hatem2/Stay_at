@@ -1,0 +1,13 @@
+<div class="p-6">
+      <!-- Conditional rendering for each tab component with smooth animations -->
+      <div [@contentAnimation] class="tab-content-wrapper">
+            <app-overview *ngIf="isActiveTab('overview')" [@tabAnimation] class="tab-content"></app-overview>
+            <app-customers *ngIf="isActiveTab('customers')" [@tabAnimation] class="tab-content"></app-customers>
+            <app-deals *ngIf="isActiveTab('deals')" [@tabAnimation] class="tab-content"></app-deals>
+            <app-crm-dashboard *ngIf="isActiveTab('crm-dashboard')" [@tabAnimation]
+                  class="tab-content"></app-crm-dashboard>
+            <app-calendar *ngIf="isActiveTab('calendar')" [@tabAnimation] class="tab-content"></app-calendar>
+            <app-marketing *ngIf="isActiveTab('marketing')" [@tabAnimation] class="tab-content"></app-marketing>
+            <app-commissions *ngIf="isActiveTab('commissions')" [@tabAnimation] class="tab-content"></app-commissions>
+      </div>
+</div>

@@ -1,0 +1,114 @@
+/* ===== Stepper Wrapper ===== */
+.stepper-navigation {
+  padding: 2rem;
+  border-radius: 16px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+}
+
+/* ===== Step ===== */
+.stepper-step {
+  position: relative;
+  flex: 1;
+  text-align: center;
+  animation: fadeUp 0.4s ease;
+
+  &:hover .stepper-step-content {
+    transform: translateY(-4px);
+   }
+}
+
+/* ===== Content Card ===== */
+.stepper-step-content {
+   border-radius: 14px;
+   transition: 0.3s ease;
+}
+
+/* ===== Number / Icon ===== */
+.stepper-step-number {
+  width: 44px;
+  height: 44px;
+  margin: 0 auto 0.75rem;
+  border-radius: 50%;
+  background: #e5e7eb;
+  color: #000;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.3s ease;
+
+  i {
+    font-size: 16px;
+  }
+}
+
+/* ===== Title ===== */
+.stepper-step-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* ===== Connector ===== */
+.stepper-connector {
+  position: absolute;
+  top: 50%;
+  right: -50%;
+  width: 100%;
+  height: 2px;
+  background: #e5e7eb;
+  z-index: -1;
+}
+
+.stepper-step:last-child .stepper-connector {
+  display: none;
+}
+
+/* ===== Active Step ===== */
+.stepper-active {
+  .stepper-step-content {
+    border-color: #000;
+  }
+
+  .stepper-step-number {
+    background: #000;
+    color: #fff;
+    transform: scale(1.1);
+  }
+}
+
+/* ===== Completed Step ===== */
+.stepper-completed {
+  .stepper-step-number {
+    background: #000;
+    color: #fff;
+  }
+
+  .stepper-connector {
+    background: #000;
+  }
+}
+
+/* ===== Animations ===== */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== Mobile ===== */
+@media (max-width: 768px) {
+  .stepper-navigation {
+    padding: 1rem;
+  }
+
+  .stepper-connector {
+    display: none;
+  }
+}

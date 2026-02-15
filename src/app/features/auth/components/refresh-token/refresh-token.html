@@ -1,0 +1,35 @@
+<div class="refresh-token-container">
+      <div class="refresh-token-card">
+            <h2>Session Refresh</h2>
+            <p class="subtitle">Your session is being refreshed automatically</p>
+
+            <div *ngIf="errorMessage" class="alert alert-error">
+                  {{ errorMessage }}
+            </div>
+
+            <div *ngIf="successMessage" class="alert alert-success">
+                  {{ successMessage }}
+            </div>
+
+            <div class="loading-section" *ngIf="isLoading">
+                  <div class="spinner-large"></div>
+                  <p>Refreshing your session...</p>
+            </div>
+
+            <div class="actions" *ngIf="!isLoading && !successMessage">
+                  <button class="btn btn-primary" (click)="refreshAccessToken()" [disabled]="isLoading">
+                        <span *ngIf="isLoading" class="spinner"></span>
+                        {{ isLoading ? 'Refreshing...' : 'Refresh Session' }}
+                  </button>
+                  <button class="btn btn-secondary" (click)="goToSignIn()">
+                        Sign In Again
+                  </button>
+            </div>
+
+            <div class="actions" *ngIf="successMessage">
+                  <button class="btn btn-primary" (click)="goToDashboard()">
+                        Go to Dashboard
+                  </button>
+            </div>
+      </div>
+</div>

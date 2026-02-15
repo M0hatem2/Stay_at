@@ -1,0 +1,105 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+
+  <!-- Summary Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+    <!-- Monthly Revenue -->
+    <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl p-6 text-white">
+      <i class="fa-solid fa-dollar-sign text-5xl mb-4 opacity-80"></i>
+      <div class="text-3xl font-semibold mb-2">EGP 36,000</div>
+      <div class="text-green-100 text-sm">Revenue This Month</div>
+    </div>
+
+    <!-- Total Revenue -->
+    <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white">
+      <i class="fa-solid fa-trending-up text-5xl mb-4 opacity-80"></i>
+      <div class="text-3xl font-semibold mb-2">EGP 216,000</div>
+      <div class="text-blue-100 text-sm">Total Revenue (Last 6 Months)</div>
+    </div>
+
+    <!-- Forecast -->
+    <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-6 text-white">
+      <i class="fa-solid fa-calendar text-5xl mb-4 opacity-80"></i>
+      <div class="text-3xl font-semibold mb-2">EGP 48,000</div>
+      <div class="text-purple-100 text-sm">Expected Next Month</div>
+    </div>
+
+  </div>
+
+  <!-- Transactions Table -->
+  <div class="bg-white rounded-2xl p-6 shadow-sm">
+
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-gray-900 text-xl font-semibold flex items-center gap-2">
+        <i class="fa-solid fa-file-invoice-dollar text-[#C4A962]"></i>
+        Transaction History
+      </h2>
+
+      <button
+        class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition text-sm flex items-center gap-2">
+        <i class="fa-solid fa-download"></i>
+        Export
+      </button>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left">
+
+        <thead>
+          <tr class="border-b border-gray-200">
+            <th class="py-3 text-sm text-gray-600 font-medium">Date</th>
+            <th class="py-3 text-sm text-gray-600 font-medium">Property</th>
+            <th class="py-3 text-sm text-gray-600 font-medium">Type</th>
+            <th class="py-3 text-sm text-gray-600 font-medium">Amount</th>
+            <th class="py-3 text-sm text-gray-600 font-medium">Status</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr class="border-b border-gray-100 hover:bg-gray-50 transition">
+            <td class="py-4 text-sm text-gray-900">2024-12-01</td>
+            <td class="py-4 text-sm text-gray-900">Luxury Furnished Apartment</td>
+            <td class="py-4 text-sm text-gray-600">Monthly Rent</td>
+            <td class="py-4 text-sm text-[#C4A962] font-semibold">EGP 12,000</td>
+            <td class="py-4">
+              <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs flex items-center gap-1 w-fit">
+                <i class="fa-solid fa-circle-check"></i>
+                Completed
+              </span>
+            </td>
+          </tr>
+
+          <tr class="border-b border-gray-100 hover:bg-gray-50 transition">
+            <td class="py-4 text-sm text-gray-900">2024-11-01</td>
+            <td class="py-4 text-sm text-gray-900">Luxury Furnished Apartment</td>
+            <td class="py-4 text-sm text-gray-600">Monthly Rent</td>
+            <td class="py-4 text-sm text-[#C4A962] font-semibold">EGP 12,000</td>
+            <td class="py-4">
+              <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs flex items-center gap-1 w-fit">
+                <i class="fa-solid fa-circle-check"></i>
+                Completed
+              </span>
+            </td>
+          </tr>
+
+          <tr class="hover:bg-gray-50 transition">
+            <td class="py-4 text-sm text-gray-900">2024-10-01</td>
+            <td class="py-4 text-sm text-gray-900">Luxury Furnished Apartment</td>
+            <td class="py-4 text-sm text-gray-600">Monthly Rent</td>
+            <td class="py-4 text-sm text-[#C4A962] font-semibold">EGP 12,000</td>
+            <td class="py-4">
+              <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs flex items-center gap-1 w-fit">
+                <i class="fa-solid fa-circle-check"></i>
+                Completed
+              </span>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+</div>

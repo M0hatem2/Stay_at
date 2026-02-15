@@ -1,0 +1,140 @@
+/* Reviews Carousel Component Styles */
+:host {
+      display: block;
+      width: 100%;
+}
+
+/* Main carousel container */
+.relative.max-w-4xl {
+      transition: all 0.3s ease;
+}
+
+/* Navigation buttons */
+button {
+      transition: all 0.3s ease;
+
+      &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+
+            &:hover {
+                  background-color: white;
+                  color: currentColor;
+            }
+      }
+}
+
+/* Gradient background */
+.bg-gradient-to-br {
+      background: linear-gradient(to bottom right, #C4A962, #D4B972);
+}
+
+/* Chevron icon animations */
+.lucide-chevron-left,
+.licide-chevron-right {
+      transition: transform 0.3s ease;
+}
+
+button:hover .lucide-chevron-left {
+      transform: translateX(-2px);
+}
+
+button:hover .lucide-chevron-right {
+      transform: translateX(2px);
+}
+
+/* Card transition and animation */
+.bg-white {
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-origin: center;
+}
+
+.bg-white:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Carousel dots animation */
+button[class*="bg-\[#C4A962\]"] {
+      transition: width 0.3s ease;
+}
+
+/* Smooth fade in/out effect */
+.absolute.inset-0 {
+      transition: opacity 0.5s ease-in-out;
+}
+
+/* Auto-play indicator animation */
+.h-2.rounded-full {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Scale animation for active dots */
+.h-2.rounded-full[class*="w-8"] {
+      animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+
+      0%,
+      100% {
+            transform: scale(1);
+      }
+
+      50% {
+            transform: scale(1.05);
+      }
+}
+
+/* Card content animation */
+.bg-white>div {
+      animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+      from {
+            opacity: 0;
+            transform: translateX(20px);
+      }
+
+      to {
+            opacity: 1;
+            transform: translateX(0);
+      }
+}
+
+/* Smooth card transition during auto-play */
+.carousel-transition {
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced hover effects */
+button:not(:disabled):hover {
+      transform: scale(1.05);
+}
+
+/* Image loading animation */
+img {
+      transition: opacity 0.3s ease;
+}
+
+img[src] {
+      opacity: 1;
+}
+
+/* Quote icon animation */
+.lucide-quote {
+      animation: fadeInScale 0.6s ease-out;
+}
+
+@keyframes fadeInScale {
+      from {
+            opacity: 0;
+            transform: scale(0.8);
+      }
+
+      to {
+            opacity: 1;
+            transform: scale(1);
+      }
+}

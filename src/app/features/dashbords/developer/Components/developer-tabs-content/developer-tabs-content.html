@@ -1,0 +1,15 @@
+<div class="p-6">
+      <!-- Conditional rendering for each tab component -->
+      <app-dashboard *ngIf="isActiveTab('dashboard')"></app-dashboard>
+      <app-projects *ngIf="isActiveTab('projects')"></app-projects>
+      <app-units *ngIf="isActiveTab('units')"></app-units>
+      <app-sales *ngIf="isActiveTab('sales')"></app-sales>
+      <app-reservations *ngIf="isActiveTab('reservations')"></app-reservations>
+      <app-contracts *ngIf="isActiveTab('contracts')"></app-contracts>
+      <app-installments *ngIf="isActiveTab('installments')"></app-installments>
+      <app-deliveries *ngIf="isActiveTab('deliveries')"></app-deliveries>
+      <app-crm-management *ngIf="isActiveTab('crm-management')"></app-crm-management>
+      <app-customer-service *ngIf="isActiveTab('customer-service')"></app-customer-service>
+      <app-reports *ngIf="isActiveTab('reports')"></app-reports>
+      <app-settings *ngIf="isActiveTab('settings')"></app-settings>
+</div>

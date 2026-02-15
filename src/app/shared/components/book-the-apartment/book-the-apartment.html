@@ -1,0 +1,128 @@
+<div class="bg-white rounded-3xl p-8 w-full max-w-2xl my-8 shadow-xl relative">
+
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 flex items-center justify-center rounded-full gradient-primary-btn/20">
+                        <i class="fa-solid fa-calendar-check text-[#C4A962]"></i>
+                  </div>
+                  <h2 class="text-gray-900 text-xl font-bold">Book the Apartment</h2>
+            </div>
+
+            <button (click)="onClose()" class="p-2 bg-gray-100 rounded-full hover:bg-red-100 transition-colors">
+                  <i class="fa-solid fa-xmark text-gray-600"></i>
+            </button>
+      </div>
+
+      <!-- Form -->
+      <form class="space-y-5">
+
+            <!-- Name & Phone -->
+            <div class="grid grid-cols-2 gap-4">
+                  <div>
+                        <label class="text-gray-500 text-sm mb-1 block">Your Name</label>
+                        <div class="relative">
+                              <i class="fa-solid fa-user absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                              <input type="text"
+                                    class="w-full pl-10 p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-[#C4A962]"
+                                    required>
+                        </div>
+                  </div>
+
+                  <div>
+                        <label class="text-gray-500 text-sm mb-1 block">Phone Number</label>
+                        <div class="relative">
+                              <i class="fa-solid fa-phone absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                              <input type="tel"
+                                    class="w-full pl-10 p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-[#C4A962]"
+                                    required>
+                        </div>
+                  </div>
+            </div>
+
+            <!-- Email & Guests -->
+            <div class="grid grid-cols-2 gap-4">
+                  <div>
+                        <label class="text-gray-500 text-sm mb-1 block">Email Address</label>
+                        <div class="relative">
+                              <i
+                                    class="fa-solid fa-envelope absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                              <input type="email"
+                                    class="w-full pl-10 p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-[#C4A962]"
+                                    required>
+                        </div>
+                  </div>
+
+                  <div>
+                        <label class="text-gray-500 text-sm mb-1 block">Number of Guests</label>
+                        <div class="relative">
+                              <i class="fa-solid fa-users absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                              <select
+                                    class="w-full pl-10 p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-[#C4A962]">
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                              </select>
+                        </div>
+                  </div>
+            </div>
+
+            <!-- Dates -->
+            <div class="grid grid-cols-2 gap-4">
+                  <div>
+                        <label class="text-gray-500 text-sm mb-1 block">Check-in Date</label>
+                        <div class="relative">
+                              <i
+                                    class="fa-solid fa-calendar-day absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                              <input type="date"
+                                    class="w-full pl-10 p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-[#C4A962]"
+                                    required>
+                        </div>
+                  </div>
+
+                  <div>
+                        <label class="text-gray-500 text-sm mb-1 block">Check-out Date</label>
+                        <div class="relative">
+                              <i
+                                    class="fa-solid fa-calendar-xmark absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                              <input type="date"
+                                    class="w-full pl-10 p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-[#C4A962]"
+                                    required>
+                        </div>
+                  </div>
+            </div>
+
+            <!-- Duration -->
+            <div>
+                  <label class="text-gray-500 text-sm mb-1 block">Rental Duration</label>
+                  <div class="relative">
+                        <i class="fa-solid fa-clock absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <select
+                              class="w-full pl-10 p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-[#C4A962]">
+                              <option>Daily</option>
+                              <option>Weekly</option>
+                              <option>Monthly</option>
+                              <option>Yearly</option>
+                        </select>
+                  </div>
+            </div>
+
+            <!-- Message -->
+            <div>
+                  <label class="text-gray-500 text-sm mb-1 block">Additional Message</label>
+                  <textarea
+                        class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-[#C4A962]"
+                        rows="4" placeholder="Any special requests..."></textarea>
+            </div>
+
+            <!-- Submit -->
+            <button type="submit"
+                  class="w-full py-3 bg-black text-white rounded-2xl hover:gradient-primary-btn hover:text-black transition-all font-semibold flex items-center justify-center gap-2">
+                  <i class="fa-solid fa-check"></i>
+                  Confirm Booking
+            </button>
+
+      </form>
+</div>

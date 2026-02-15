@@ -1,0 +1,34 @@
+<div class="logout-container">
+      <div class="logout-card">
+            <h2>Signing Out</h2>
+            <p class="subtitle">You are being signed out securely</p>
+
+            <div *ngIf="errorMessage" class="alert alert-error">
+                  {{ errorMessage }}
+            </div>
+
+            <div *ngIf="successMessage" class="alert alert-success">
+                  {{ successMessage }}
+            </div>
+
+            <div class="loading-section" *ngIf="isLoading">
+                  <div class="spinner-large"></div>
+                  <p>Logging you out...</p>
+            </div>
+
+            <div class="actions" *ngIf="!isLoading && !successMessage && !errorMessage">
+                  <button class="btn btn-primary" (click)="manualLogout()" [disabled]="isLoading">
+                        Complete Logout
+                  </button>
+                  <button class="btn btn-secondary" (click)="staySignedIn()">
+                        Stay Signed In
+                  </button>
+            </div>
+
+            <div class="actions" *ngIf="successMessage || errorMessage">
+                  <button class="btn btn-primary" (click)="manualLogout()">
+                        Continue
+                  </button>
+            </div>
+      </div>
+</div>

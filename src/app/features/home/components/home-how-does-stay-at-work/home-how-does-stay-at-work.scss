@@ -1,0 +1,186 @@
+// Main component styles for home-how-does-stay-at-work
+
+.bg-white {
+      background-color: white;
+}
+
+.py-20 {
+      padding-top: 5rem;
+      padding-bottom: 5rem;
+}
+
+.bg-gradient-to-b {
+      background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
+}
+
+.from-gray-50 {
+      --tw-gradient-from: #f9fafb;
+      --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgb(249 250 251 / 0));
+}
+
+.to-white {
+      --tw-gradient-to: white;
+}
+
+.max-w-7xl {
+      max-width: 80rem;
+}
+
+.mx-auto {
+      margin-left: auto;
+      margin-right: auto;
+}
+
+.px-4 {
+      padding-left: 1rem;
+      padding-right: 1rem;
+}
+
+.sm\:px-6 {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+}
+
+.lg\:px-8 {
+      padding-left: 2rem;
+      padding-right: 2rem;
+}
+
+.text-center {
+      text-align: center;
+}
+
+.mb-16 {
+      margin-bottom: 4rem;
+}
+
+.text-gray-900 {
+      color: rgb(17 24 39);
+}
+
+.mb-4 {
+      margin-bottom: 1rem;
+}
+
+.text-gray-600 {
+      color: rgb(75 85 99);
+}
+
+.max-w-2xl {
+      max-width: 42rem;
+}
+
+.grid {
+      display: grid;
+}
+
+.grid-cols-1 {
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.md\:grid-cols-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.lg\:grid-cols-4 {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.gap-8 {
+      gap: 2rem;
+}
+
+.mt-12 {
+      margin-top: 3rem;
+}
+
+.inline-flex {
+      display: inline-flex;
+}
+
+.items-center {
+      align-items: center;
+}
+
+.gap-2 {
+      gap: 0.5rem;
+}
+
+.px-6 {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+}
+
+.py-3 {
+      padding-top: 0.75rem;
+      padding-bottom: 0.75rem;
+}
+
+.bg-gradient-to-r {
+      background-image: linear-gradient(to right, var(--tw-gradient-stops));
+}
+
+.from-\[\#C4A962\] {
+      --tw-gradient-from: #c4a962;
+      --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgb(196 169 98 / 0));
+}
+
+.to-\[\#D4B972\] {
+      --tw-gradient-to: #d4b972;
+}
+
+.text-white {
+      color: white;
+}
+
+.rounded-xl {
+      border-radius: 0.75rem;
+}
+
+.shadow-lg {
+      box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+.hover\:shadow-xl:hover {
+      box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+.transition-shadow {
+      transition-property: box-shadow;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      transition-duration: 150ms;
+}
+
+.cursor-pointer {
+      cursor: pointer;
+}
+
+.text-xl {
+      font-size: 1.25rem;
+      line-height: 1.75rem;
+}
+
+// Responsive utilities
+@media (min-width: 640px) {
+      .sm\:px-6 {
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+      }
+}
+
+@media (min-width: 768px) {
+      .md\:grid-cols-2 {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+}
+
+@media (min-width: 1024px) {
+      .lg\:px-8 {
+            padding-left: 2rem;
+            padding-right: 2rem;
+      }
+
+      .lg\:grid-cols-4 {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+}

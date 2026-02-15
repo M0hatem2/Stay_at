@@ -1,0 +1,193 @@
+/* Plan Card */
+.plan {
+      border-radius: 18px;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      box-shadow: 0 16px 40px rgba(2, 6, 23, 0.08);
+      transition: transform 220ms ease;
+
+      &:hover {
+            transform: translateY(-4px);
+      }
+
+      &.is-popular {
+            border-color: rgba(196, 169, 98, 0.55);
+            box-shadow: 0 22px 54px rgba(196, 169, 98, 0.22);
+            transform: scale(1.02);
+      }
+}
+
+.plan__badge {
+      background: linear-gradient(90deg, #c4a962, #b39952);
+      color: #fff;
+      font-weight: 700;
+      text-align: center;
+      padding: 10px 12px;
+      font-size: 13px;
+}
+
+.plan__body {
+      padding: 26px;
+
+      &.has-badge {
+            padding-top: 18px;
+      }
+}
+
+.plan__icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: rgba(196, 169, 98, 0.12);
+      margin-bottom: 14px;
+
+      svg {
+            width: 30px;
+            height: 30px;
+            fill: none;
+            stroke: #c4a962;
+            stroke-width: 2;
+      }
+
+      &[data-icon="star"] svg {
+            stroke: #3b82f6;
+      }
+
+      &[data-icon="zap"] svg {
+            stroke: #c4a962;
+      }
+
+      &[data-icon="crown"] svg {
+            stroke: #7c3aed;
+      }
+}
+
+.plan__title {
+      margin: 0 0 12px;
+      font-size: 20px;
+      font-weight: 750;
+      color: rgba(15, 23, 42, 0.96);
+}
+
+/* Price */
+.price {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 16px;
+}
+
+.price__value {
+      font-size: 38px;
+      font-weight: 800;
+      color: rgba(15, 23, 42, 0.96);
+      letter-spacing: -0.6px;
+}
+
+.price__meta {
+      display: inline-flex;
+      gap: 8px;
+      align-items: baseline;
+}
+
+.price__currency {
+      color: rgba(15, 23, 42, 0.65);
+      font-weight: 600;
+}
+
+.price__period {
+      color: rgba(15, 23, 42, 0.45);
+      font-weight: 600;
+}
+
+/* CTA */
+.cta {
+      width: 100%;
+      height: 46px;
+      border-radius: 14px;
+      border: 2px solid rgba(15, 23, 42, 0.10);
+      background: #fff;
+      color: rgba(15, 23, 42, 0.92);
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+
+      i {
+            font-size: 12px;
+            color: #c4a962;
+            transition: transform 160ms ease;
+      }
+
+      &:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 16px 30px rgba(2, 6, 23, 0.08);
+            border-color: rgba(15, 23, 42, 0.16);
+
+            i {
+                  transform: translateX(2px);
+            }
+      }
+
+      &.is-primary {
+            border: 0;
+            background: linear-gradient(90deg, #c4a962, #b39952);
+            color: #fff;
+
+            i {
+                  color: #fff;
+            }
+      }
+}
+
+/* Features */
+.features {
+      list-style: none;
+      padding: 0;
+      margin: 18px 0 0;
+      display: grid;
+      gap: 10px;
+}
+
+.feature {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+}
+
+.feature__icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: rgba(34, 197, 94, 0.14);
+      color: #16a34a;
+      flex: 0 0 auto;
+
+      i {
+            font-size: 12px;
+      }
+}
+
+.feature.is-disabled {
+      opacity: 0.55;
+
+      .feature__icon {
+            background: rgba(15, 23, 42, 0.08);
+            color: rgba(15, 23, 42, 0.45);
+      }
+}
+
+.feature__text {
+      color: rgba(15, 23, 42, 0.86);
+      font-weight: 600;
+      font-size: 13.5px;
+      line-height: 1.45;
+}

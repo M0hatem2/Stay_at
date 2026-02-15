@@ -1,0 +1,9 @@
+<div class="p-6">
+      <!-- Conditional rendering for each tab component -->
+      <app-advanced-search *ngIf="isActiveTab('advanced-search')"></app-advanced-search>
+      <app-favorites *ngIf="isActiveTab('favorites')"></app-favorites>
+      <app-previews *ngIf="isActiveTab('previews')"></app-previews>
+      <app-bookings *ngIf="isActiveTab('bookings')"></app-bookings>
+      <app-comparison *ngIf="isActiveTab('comparison')"></app-comparison>
+      <app-alerts *ngIf="isActiveTab('alerts')"></app-alerts>
+</div>

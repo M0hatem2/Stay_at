@@ -1,0 +1,32 @@
+<section class="py-20 bg-gradient-to-br from-gray-50 to-white relative overflow-hidden">
+      <div class="absolute inset-0 opacity-5">
+            <div class="absolute top-0 left-0 w-96 h-96 gradient-primary-btn rounded-full blur-3xl"></div>
+            <div class="absolute bottom-0 right-0 w-96 h-96 bg-[#D4B972] rounded-full blur-3xl"></div>
+      </div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16" style="opacity: 1; transform: none;">
+                  <h2 class="text-gray-900 mb-4 text-xl font-bold">What Our Customers Say?</h2>
+                  <p class="text-gray-600 max-w-2xl mx-auto">Real reviews from customers who used Stay At and found
+                        their perfect property</p>
+            </div>
+
+            <app-reviews-carousel [reviews]="reviews" [currentReviewIndex]="currentReviewIndex">
+            </app-reviews-carousel>
+
+            <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto"
+                  style="opacity: 1; transform: none;">
+                  <div class="text-center p-6 bg-white rounded-2xl shadow-sm">
+                        <div class="text-3xl text-[bla] mb-2">98%</div>
+                        <div class="text-gray-600 text-sm">Satisfaction Rate</div>
+                  </div>
+                  <div class="text-center p-6 bg-white rounded-2xl shadow-sm">
+                        <div class="text-3xl text-[bla] mb-2">15,000+</div>
+                        <div class="text-gray-600 text-sm">Happy Clients</div>
+                  </div>
+                  <div class="text-center p-6 bg-white rounded-2xl shadow-sm">
+                        <div class="text-3xl text-[bla] mb-2">4.9/5</div>
+                        <div class="text-gray-600 text-sm">Average Rating</div>
+                  </div>
+            </div>
+      </div>
+</section>

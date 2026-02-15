@@ -1,0 +1,125 @@
+<main>
+      <!-- Mobile overlay -->
+      <div *ngIf="showFilters" class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden" (click)="toggleFilters()">
+      </div>
+
+      <div class="min-h-screen bg-gray-50">
+            <div class="bg-white border-b border-gray-200">
+                  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                        <div class="flex items-center justify-between mb-4">
+                              <div>
+                                    <h1 class="text-gray-900 mb-2">Units for Sale</h1>
+                                    <p class="text-gray-600">{{ displayedProperties.length }} Results</p>
+                              </div><button (click)="toggleFilters()"
+                                    class="flex items-center gap-2 px-6 py-3 gradient-primary-btn text-white rounded-xl hover:bg-[#B39952] transition-colors">
+                                    <i class="fas fa-sliders-h w-5 h-5"></i>
+                                    {{ showFilters ? 'Hide Filters' : 'Filters' }}</button>
+                        </div>
+                  </div>
+            </div>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                  <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 ">
+                        <!-- Mobile sidebar -->
+                        <div *ngIf="showFilters"
+                              class="fixed top-0 left-0 h-full w-80 bg-white z-50 transform transition-transform duration-300 ease-in-out lg:relative lg:transform-none lg:col-span-1 lg:w-auto lg:z-auto"
+                              [class.translate-x-0]="showFilters" [class.-translate-x-full]="!showFilters">
+                              <div
+                                    class="bg-white rounded-2xl p-6 shadow-sm sticky top-24 h-full lg:h-auto overflow-y-auto">
+                                    <div class="flex items-center justify-between mb-6">
+                                          <h3 class="text-gray-900">Filters</h3>
+
+                                          <div class="flex gap-2">
+                                                <button (click)="toggleFilters()"
+                                                      class="text-gray-500 hover:text-gray-700 text-sm">
+                                                      <i class="fas fa-times"></i>
+                                                </button>
+                                                <button (click)="clearFilters()"
+                                                      class="text-[#C4A962] hover:text-[#B39952] text-sm">Reset</button>
+                                          </div>
+                                    </div>
+                                    <div class="space-y-6">
+                                          <div><label class="block text-gray-700 mb-2">Property Type</label><select
+                                                      class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C4A962]"
+                                                      [(ngModel)]="filters.type"
+                                                      (ngModelChange)="applyFiltersAndSort()">
+                                                      <option value="">All Types</option>
+                                                      <option value="شقة">Apartment</option>
+                                                      <option value="فيلا">Villa</option>
+                                                      <option value="استوديو">Studio</option>
+                                                      <option value="محل تجاري">Commercial Shop</option>
+                                                      <option value="مخزن">Warehouse</option>
+                                                </select></div>
+                                          <div><label class="block text-gray-700 mb-2">Price Range</label>
+                                                <div class="grid grid-cols-2 gap-3"><input type="number"
+                                                            placeholder="Min Price"
+                                                            class="px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C4A962]"
+                                                            [(ngModel)]="filters.priceMin"
+                                                            (ngModelChange)="applyFiltersAndSort()"><input type="number"
+                                                            placeholder="Max Price"
+                                                            class="px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C4A962]"
+                                                            [(ngModel)]="filters.priceMax"
+                                                            (ngModelChange)="applyFiltersAndSort()"></div>
+                                          </div>
+                                          <div><label class="block text-gray-700 mb-2">Area Range</label>
+                                                <div class="grid grid-cols-2 gap-3"><input type="number"
+                                                            placeholder="Min Area"
+                                                            class="px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C4A962]"
+                                                            [(ngModel)]="filters.areaMin"
+                                                            (ngModelChange)="applyFiltersAndSort()"><input type="number"
+                                                            placeholder="Max Area"
+                                                            class="px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C4A962]"
+                                                            [(ngModel)]="filters.areaMax"
+                                                            (ngModelChange)="applyFiltersAndSort()"></div>
+                                          </div>
+                                          <div><label class="block text-gray-700 mb-2">Bedrooms</label><select
+                                                      class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C4A962]"
+                                                      [(ngModel)]="filters.minBedrooms"
+                                                      (ngModelChange)="applyFiltersAndSort()">
+                                                      <option [ngValue]="null">Any Number</option>
+                                                      <option [ngValue]="0">Studio</option>
+                                                      <option [ngValue]="1">1</option>
+                                                      <option [ngValue]="2">2</option>
+                                                      <option [ngValue]="3">3</option>
+                                                      <option [ngValue]="4">4+</option>
+                                                </select></div>
+                                          <div><label class="block text-gray-700 mb-2">City</label><select
+                                                      class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C4A962]">
+                                                      <option value="all">All Cities</option>
+                                                      <option value="cairo">Cairo</option>
+                                                      <option value="giza">Giza</option>
+                                                      <option value="alex">Alexandria</option>
+                                                </select></div>
+                                          <div><label class="block text-gray-700 mb-2">Sort By</label><select
+                                                      class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C4A962]"
+                                                      [(ngModel)]="sortOption" (ngModelChange)="onSortChange($event)">
+                                                      <option value="recommended">Most Recommended</option>
+                                                      <option value="price-low">Price: Low to High</option>
+                                                      <option value="price-high">Price: High to Low</option>
+                                                      <option value="area">Area: Largest</option>
+                                                </select></div><button (click)="applyFiltersAndSort()"
+                                                class="w-full px-6 py-3 gradient-primary-btn text-white rounded-xl hover:bg-[#B39952] transition-colors">Apply</button>
+                                    </div>
+                              </div>
+                        </div>
+                        <div [ngClass]="showFilters ? 'lg:col-span-3' : 'lg:col-span-4'">
+                              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    @for (property of displayedProperties; track property.id) {
+                                    <app-units-card [property]="property"
+                                          (propertyClick)="onPropertyClick(property)"></app-units-card>
+                                    }
+
+                              </div>
+                              <div class="mt-8 text-center">
+                                    <button
+                                          class="px-8 py-3 border-2 border-[#C4A962] text-[#C4A962] rounded-xl hover:gradient-primary-btn hover:text-white transition-all shadow-sm hover:shadow-md"
+                                          tabindex="0" style="opacity: 1; transform: none;"><span
+                                                class="flex items-center gap-2">Load More<span
+                                                      class="text-sm opacity-75">({{ displayedProperties.length }} /
+                                                      18)</span></span>
+                                    </button>
+                              </div>
+                        </div>
+                  </div>
+            </div>
+      </div>
+</main>

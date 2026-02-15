@@ -1,0 +1,85 @@
+<div class="bg-gradient-to-l from-[#C4A962] to-[#B39952] text-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+            <!-- Header -->
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-10">
+                  <div>
+                        <h1 class="text-3xl font-semibold mb-2 flex items-center gap-3">
+                              <i class="fa-solid fa-building-user"></i>
+                              Owner Portal
+                        </h1>
+                        <p class="text-yellow-100">
+                              Manage your properties efficiently and effortlessly
+                        </p>
+                  </div>
+
+                  <button (click)="onAddProperty()"
+                        class="px-6 py-3 bg-white text-[#C4A962] rounded-xl hover:bg-gray-100 transition-all duration-300 flex items-center gap-2 shadow-sm">
+                        <i class="fa-solid fa-plus"></i>
+                        Add New Property
+                  </button>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+
+                  <!-- Total Properties -->
+                  <div class="bg-white/10 backdrop-blur-sm rounded-xl p-5 hover:bg-white/15 transition">
+                        <div class="flex items-center justify-between mb-3">
+                              <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                    <i class="fa-solid fa-house text-lg"></i>
+                              </div>
+                              <span class="text-xs bg-white/20 px-2 py-1 rounded-full">
+                                    +2
+                              </span>
+                        </div>
+                        <div class="text-2xl font-semibold mb-1">2</div>
+                        <div class="text-yellow-100 text-sm">Total Properties</div>
+                  </div>
+
+                  <!-- Total Views -->
+                  <div class="bg-white/10 backdrop-blur-sm rounded-xl p-5 hover:bg-white/15 transition">
+                        <div class="flex items-center justify-between mb-3">
+                              <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                    <i class="fa-solid fa-eye text-lg"></i>
+                              </div>
+                              <span class="text-xs bg-white/20 px-2 py-1 rounded-full">
+                                    +15%
+                              </span>
+                        </div>
+                        <div class="text-2xl font-semibold mb-1">434</div>
+                        <div class="text-yellow-100 text-sm">Total Views</div>
+                  </div>
+
+                  <!-- Total Requests -->
+                  <div class="bg-white/10 backdrop-blur-sm rounded-xl p-5 hover:bg-white/15 transition">
+                        <div class="flex items-center justify-between mb-3">
+                              <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                    <i class="fa-solid fa-comments text-lg"></i>
+                              </div>
+                              <span class="text-xs bg-white/20 px-2 py-1 rounded-full">
+                                    +5
+                              </span>
+                        </div>
+                        <div class="text-2xl font-semibold mb-1">12</div>
+                        <div class="text-yellow-100 text-sm">Total Requests</div>
+                  </div>
+
+                  <!-- Total Revenue -->
+                  <div class="bg-white/10 backdrop-blur-sm rounded-xl p-5 hover:bg-white/15 transition">
+                        <div class="flex items-center justify-between mb-3">
+                              <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                                    <i class="fa-solid fa-dollar-sign text-lg"></i>
+                              </div>
+                              <span class="text-xs bg-white/20 px-2 py-1 rounded-full">
+                                    +8%
+                              </span>
+                        </div>
+                        <div class="text-2xl font-semibold mb-1">$12,500</div>
+                        <div class="text-yellow-100 text-sm">Total Revenue</div>
+                  </div>
+
+            </div>
+
+      </div>
+</div>
