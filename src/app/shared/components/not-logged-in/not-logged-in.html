@@ -1,0 +1,32 @@
+@if (isVisible) {
+  <div class="popup-overlay" (click)="closePopup()">
+    <div class="popup-container" (click)="$event.stopPropagation()">
+      <button class="close-btn" (click)="closePopup()" aria-label="Close">
+        <i class="fas fa-times"></i>
+      </button>
+
+      <div class="content-wrapper">
+        <div class="icon-wrapper">
+          <i class="fas fa-user-lock"></i>
+        </div>
+
+        <h2 class="title">{{ title }}</h2>
+        <p class="message">{{ message }}</p>
+
+        <div class="actions">
+          <button class="btn btn-primary" (click)="goToLogin()">
+            <i class="fas fa-sign-in-alt"></i>
+            Login
+          </button>
+
+          @if (showRegisterOption) {
+            <button class="btn btn-secondary"  >
+              <i class="fas fa-user-plus"></i>
+              Create Account
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}

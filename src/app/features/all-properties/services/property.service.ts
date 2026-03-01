@@ -56,45 +56,74 @@ export interface PropertyResponse {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PropertyService {
   private baseUrl = environment.api.baseUrl;
 
   constructor(
     private http: HttpClient,
-    private languageService: LanguageService
+    private languageService: LanguageService,
   ) {}
 
-  getProperties(page: number = 1, limit: number = 10): Observable<PropertyResponse> {
+  getProperties(
+    page: number = 1,
+    limit: number = 10,
+    search: string = '',
+  ): Observable<PropertyResponse> {
     const currentLanguage = this.languageService.getCurrentLanguage();
-    
-    const params = new HttpParams()
-      .set('page', page.toString())
-      .set('limit', limit.toString());
 
     // إضافة headers مباشرة في السيرفيس كبديل
     const headers = {
       'Accept-Language': currentLanguage,
       'Content-Language': currentLanguage,
-      'X-Language': currentLanguage
+      'X-Language': currentLanguage,
     };
+
+    // If search query exists, use search endpoint
+    if (search && search.trim()) {
+      console.log('🔍 PropertyService - Using search endpoint with query:', search);
+
+      const searchBody = {
+        query: search.trim(),
+        page,
+        limit,
+      };
+
+      return this.http.post<PropertyResponse>(`${this.baseUrl}/property/search`, searchBody, {
+        headers,
+      });
+    }
+
+    // Otherwise use regular get endpoint
+    const params = new HttpParams().set('page', page.toString()).set('limit', limit.toString());
 
     console.log('🏠 PropertyService - getProperties() called with:');
     console.log('  - page:', page);
     console.log('  - limit:', limit);
     console.log('  - language:', currentLanguage);
-    console.log('  - headers:', headers);
     console.log('  - params:', params.toString());
-    
-    return this.http.get<PropertyResponse>(`${this.baseUrl}/property`, { 
+
+    return this.http.get<PropertyResponse>(`${this.baseUrl}/property`, {
       params,
-      headers 
+      headers,
     });
   }
 
   getPropertyById(id: string): Observable<any> {
-    return this.http.get(`${this.baseUrl}/property/${id}`);
+    const currentLanguage = this.languageService.getCurrentLanguage();
+
+    const headers = {
+      'Accept-Language': currentLanguage,
+      'Content-Language': currentLanguage,
+      'X-Language': currentLanguage,
+    };
+
+    console.log('🏠 PropertyService - getPropertyById() called with:');
+    console.log('  - id:', id);
+    console.log('  - language:', currentLanguage);
+
+    return this.http.get(`${this.baseUrl}/property/${id}`, { headers });
   }
 
   searchProperties(filters: any): Observable<PropertyResponse> {

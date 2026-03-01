@@ -28,7 +28,7 @@ export class HomeOurCustomersSay {
       role: 'Property Owner',
       rating: 5,
       comment:
-        'I listed my property on Stay At and found a reliable tenant in just 3 days. Professional service and excellent support.',
+        'I listed my property on HomoGo and found a reliable tenant in just 3 days. Professional service and excellent support.',
       avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop',
     },
     {
@@ -37,7 +37,7 @@ export class HomeOurCustomersSay {
       role: 'Tenant',
       rating: 5,
       comment:
-        'Found my dream apartment through Stay At. The process was smooth and the team was very helpful throughout.',
+        'Found my dream apartment through HomoGo. The process was smooth and the team was very helpful throughout.',
       avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop',
     },
     {
@@ -64,7 +64,7 @@ export class HomeOurCustomersSay {
       role: 'Property Owner',
       rating: 5,
       comment:
-        'Stay At made it so easy to rent out my property. Got multiple inquiries within the first week!',
+        'HomoGo made it so easy to rent out my property. Got multiple inquiries within the first week!',
       avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop',
     },
     {

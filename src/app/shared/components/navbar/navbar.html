@@ -2,8 +2,8 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-20">
       <!-- Logo -->
-      <a class="flex items-center gap-3" routerLink="/" aria-label="Stay At home">
-        <img src="logo.avif" alt="Stay At" class="h-28 block" />
+      <a class="flex items-center gap-3" routerLink="/" aria-label="HomoGo home">
+        <img src="logo.avif" alt="HomoGo" class="h-28 block" />
       </a>
 
       <!-- Desktop nav -->
@@ -61,13 +61,13 @@
         <!-- Authenticated User Actions -->
         <div *ngIf="isAuthenticated" class="flex items-center gap-3">
           <button
-            routerLink="/favorites"
-            class="flex items-center gap-2 px-4 py-2.5 text-gray-700 hover:text-[#C4A962] transition-colors rounded-lg hover:bg-gray-50"
+            (click)="goToFavorites()"
+            class="flex items-center gap-2 px-4 py-2.5 text-gray-700 hover:text-[#C4A962] transition-colors rounded-lg hover:bg-gray-50 cursor-pointer"
             title="المفضلة"
             aria-label="Favorites"
           >
             <i class="fa-solid fa-heart w-5 h-5" aria-hidden="true"></i>
-            <span class="text-sm">Favorites</span>
+            <!-- <span class="text-sm">Favorites</span> -->
           </button>
 
           <button
@@ -76,7 +76,7 @@
             aria-label="Notifications"
           >
             <i class="fa-solid fa-bell w-5 h-5" aria-hidden="true"></i>
-            <span class="text-sm">Notifications</span>
+            <!-- <span class="text-sm">Notifications</span> -->
           </button>
 
           <button
@@ -86,7 +86,7 @@
             aria-label="Dashboard"
           >
             <i class="fa-solid fa-user w-5 h-5" aria-hidden="true"></i>
-            <span class="text-sm">Dashboard</span>
+            <!-- <span class="text-sm">Dashboard</span> -->
           </button>
 
           <button
@@ -112,7 +112,7 @@
 
           <button
             (click)="openRegisterPopup()"
-            class="flex items-center gap-2 px-6 py-2.5  bg-black text-white rounded-xl hover:shadow-lg transition-all"
+            class="flex items-center gap-2 px-6 py-2.5 bg-black text-white rounded-xl hover:shadow-lg transition-all"
           >
             <i class="fa-solid fa-user-plus w-5 h-5" aria-hidden="true"></i>
             <span>Sign Up</span>
@@ -190,7 +190,7 @@
           [title]="currentLanguage === 'ar' ? 'Switch to English' : 'التبديل للعربية'"
         >
           <i class="fa-solid fa-language"></i>
-          <span>{{ languageLabel }}</span>  
+          <span>{{ languageLabel }}</span>
         </button>
         <a
           routerLink="/signin"

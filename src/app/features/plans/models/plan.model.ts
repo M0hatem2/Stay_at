@@ -7,7 +7,7 @@ export interface Feature {
 }
 
 export interface PlanCard {
-  id: 'starter' | 'growth' | 'premium';
+  id: string;
   title: string;
   icon: 'star' | 'zap' | 'crown';
   priceMonthly: number;

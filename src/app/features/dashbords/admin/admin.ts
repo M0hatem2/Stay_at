@@ -19,7 +19,7 @@ export class Admin {
   constructor(private router: Router) {}
 
   onMenuItemClick(menuItem: string): void {
-    this.router.navigate(['/dashboard/admin', menuItem]);
+    this.router.navigate(['/dashboard/system_admin', menuItem]);
     this.closeSidebar(); // Close sidebar on mobile after navigation
   }
 

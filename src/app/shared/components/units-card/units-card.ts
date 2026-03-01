@@ -3,12 +3,13 @@ import { CommonModule } from '@angular/common';
 import { PropertyDetails } from '../../../core/models/property-details.model';
 import { Property } from '../../../core/models/property.model';
 import { ApiProperty } from '../../../core/models/api-property.model';
+import { AddToFav } from '../add-to-fav/add-to-fav';
 
 export type PropertyCardData = PropertyDetails | Property | ApiProperty;
 
 @Component({
   selector: 'app-units-card',
-  imports: [CommonModule],
+  imports: [CommonModule, AddToFav],
   templateUrl: './units-card.html',
   styleUrl: './units-card.scss',
 })
@@ -20,39 +21,65 @@ export class UnitsCard {
     return '_id' in prop && 'gallery' in prop;
   }
 
+  private isProperty(prop: PropertyCardData): prop is Property {
+    return 'id' in prop || 'title' in prop;
+  }
+
+  private isPropertyDetails(prop: PropertyCardData): prop is PropertyDetails {
+    return 'specs' in prop || 'main_image' in prop;
+  }
+
   get image(): string {
     if (this.isApiProperty(this.property)) {
       return this.property.gallery?.[0]?.secure_url || '';
     }
-    return (this.property as PropertyDetails).main_image || (this.property as Property).image;
+    if (this.isPropertyDetails(this.property)) {
+      return this.property.main_image;
+    }
+    if (this.isProperty(this.property)) {
+      return this.property.image;
+    }
+    return '';
   }
 
   get isManaged(): boolean {
-    return (this.property as Property).isManaged || false;
+    if (this.isProperty(this.property)) {
+      return this.property.isManaged || false;
+    }
+    return false;
   }
 
   get verified(): boolean {
-    return (
-      (this.property as PropertyDetails).verified || (this.property as Property).isVerified || false
-    );
+    if (this.isPropertyDetails(this.property)) {
+      return this.property.verified || false;
+    }
+    if (this.isProperty(this.property)) {
+      return this.property.isVerified || false;
+    }
+    return false;
   }
 
   get propertyType(): string {
     if (this.isApiProperty(this.property)) {
       return this.property.type || '';
     }
-    return (
-      (this.property as PropertyDetails).specs?.property_type ||
-      (this.property as Property).type ||
-      ''
-    );
+    if (this.isPropertyDetails(this.property)) {
+      return this.property.specs?.property_type || '';
+    }
+    if (this.isProperty(this.property)) {
+      return this.property.type || '';
+    }
+    return '';
   }
 
   get title(): string {
     if (this.isApiProperty(this.property)) {
       return this.property.name || '';
     }
-    return (this.property as Property).title || '';
+    if (this.isProperty(this.property)) {
+      return this.property.title || '';
+    }
+    return '';
   }
 
   get location(): string {
@@ -60,27 +87,44 @@ export class UnitsCard {
       const loc = this.property.location;
       return `${loc.area}, ${loc.city}`;
     }
-    const details = (this.property as PropertyDetails).location;
-    if (details && typeof details === 'object' && 'full' in details) {
-      return details.full;
+    if (this.isPropertyDetails(this.property)) {
+      const details = this.property.location;
+      if (details && typeof details === 'object' && 'full' in details) {
+        return details.full;
+      }
     }
-    return (this.property as Property).location || '';
+    if (this.isProperty(this.property)) {
+      return this.property.location || '';
+    }
+    return '';
   }
 
   get bedrooms(): number {
-    return (
-      (this.property as PropertyDetails).specs?.bedrooms ||
-      (this.property as Property).bedrooms ||
-      0
-    );
+    // دعم الحقول المباشرة من Unit API
+    if ('bedrooms' in this.property && typeof this.property.bedrooms === 'number') {
+      return this.property.bedrooms;
+    }
+    if (this.isPropertyDetails(this.property)) {
+      return this.property.specs?.bedrooms || 0;
+    }
+    if (this.isProperty(this.property)) {
+      return this.property.bedrooms || 0;
+    }
+    return 0;
   }
 
   get bathrooms(): number {
-    return (
-      (this.property as PropertyDetails).specs?.bathrooms ||
-      (this.property as Property).bathrooms ||
-      0
-    );
+    // دعم الحقول المباشرة من Unit API
+    if ('bathrooms' in this.property && typeof this.property.bathrooms === 'number') {
+      return this.property.bathrooms;
+    }
+    if (this.isPropertyDetails(this.property)) {
+      return this.property.specs?.bathrooms || 0;
+    }
+    if (this.isProperty(this.property)) {
+      return this.property.bathrooms || 0;
+    }
+    return 0;
   }
 
   get floorsCount(): number {
@@ -91,35 +135,67 @@ export class UnitsCard {
   }
 
   get area(): string {
-    const details = this.property as PropertyDetails;
-    if (details.specs?.area_sqm) {
-      return `${details.specs.area_sqm} sqm`;
+    // دعم الحقول المباشرة من Unit API
+    if ('area' in this.property && typeof this.property.area === 'string') {
+      return this.property.area;
     }
-    return (this.property as Property).area || '';
+    if (this.isPropertyDetails(this.property)) {
+      if (this.property.specs?.area_sqm) {
+        return `${this.property.specs.area_sqm} sqm`;
+      }
+    }
+    if (this.isProperty(this.property)) {
+      return this.property.area || '';
+    }
+    return '';
   }
 
   get price(): string {
-    const details = this.property as PropertyDetails;
-    if (details.price?.display) {
-      return details.price.display;
+    // دعم الحقول المباشرة من Unit API
+    if ('price' in this.property && typeof this.property.price === 'string') {
+      return this.property.price;
     }
-    return String((this.property as Property).price);
+    if (this.isPropertyDetails(this.property)) {
+      if (this.property.price?.display) {
+        return this.property.price.display;
+      }
+    }
+    if (this.isProperty(this.property)) {
+      return String(this.property.price);
+    }
+    return '';
   }
 
   get priceType(): 'monthly' | 'daily' | 'sale' | undefined {
-    return (this.property as Property).priceType;
+    // دعم الحقول المباشرة من Unit API
+    if ('priceType' in this.property) {
+      return this.property.priceType as 'monthly' | 'daily' | 'sale' | undefined;
+    }
+    if (this.isProperty(this.property)) {
+      return this.property.priceType;
+    }
+    return undefined;
   }
 
   get views(): number {
-    return (this.property as PropertyDetails).views || 0;
+    if (this.isPropertyDetails(this.property)) {
+      return this.property.views || 0;
+    }
+    return 0;
   }
 
   get rating(): number | undefined {
-    return (this.property as Property).rating;
+    if (this.isProperty(this.property)) {
+      return this.property.rating;
+    }
+    return undefined;
   }
 
   get reviews(): number | undefined {
-    return (this.property as Property).reviews;
+    if (this.isProperty(this.property)) {
+      return this.property.reviews;
+    }
+    return undefined;
   }
 
   get isFeatured(): boolean {
@@ -134,6 +210,19 @@ export class UnitsCard {
       return this.property.facilitiesAndServices || [];
     }
     return [];
+  }
+
+  get propertyId(): string {
+    if (this.isApiProperty(this.property)) {
+      return this.property._id || '';
+    }
+    if (this.isProperty(this.property)) {
+      return String(this.property.id || '');
+    }
+    if (this.isPropertyDetails(this.property)) {
+      return String(this.property.id || '');
+    }
+    return '';
   }
 
   onClick() {

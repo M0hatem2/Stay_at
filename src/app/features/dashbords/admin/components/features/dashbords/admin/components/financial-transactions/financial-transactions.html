@@ -1,184 +1,145 @@
 <div class="space-y-6">
-    <div class="flex items-center justify-between">
-        <div>
-            <h1 class="text-2xl font-bold text-gray-900 mb-2">المعاملات المالية</h1>
-            <p class="text-gray-600 text-sm">عرض وإدارة جميع المعاملات المالية</p>
-        </div><button
-            class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"><svg
-                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                class="lucide lucide-download w-4 h-4">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" x2="12" y1="15" y2="3"></line>
-            </svg>تصدير التقرير</button>
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900 mb-2">Financial Transactions</h1>
+      <p class="text-gray-600 text-sm">View and manage all financial transactions</p>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div class="bg-white rounded-xl p-6 border-r-4 border-green-500">
-            <div class="flex items-center justify-between mb-3">
-                <p class="text-sm text-gray-600">إجمالي الإيرادات</p><svg xmlns="http://www.w3.org/2000/svg" width="24"
-                    height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round"
-                    class="lucide lucide-arrow-up-right w-5 h-5 text-green-600">
-                    <path d="M7 7h10v10"></path>
-                    <path d="M7 17 17 7"></path>
-                </svg>
-            </div>
-            <p class="text-2xl font-bold text-gray-900">12.5M</p>
-            <p class="text-sm text-green-600 mt-1">+24% عن الشهر الماضي</p>
-        </div>
-        <div class="bg-white rounded-xl p-6 border-r-4 border-blue-500">
-            <div class="flex items-center justify-between mb-3">
-                <p class="text-sm text-gray-600">المعاملات المكتملة</p><svg xmlns="http://www.w3.org/2000/svg"
-                    width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round"
-                    class="lucide lucide-circle-check-big w-5 h-5 text-blue-600">
-                    <path d="M21.801 10A10 10 0 1 1 17 3.335"></path>
-                    <path d="m9 11 3 3L22 4"></path>
-                </svg>
-            </div>
-            <p class="text-2xl font-bold text-gray-900">1,234</p>
-            <p class="text-sm text-blue-600 mt-1">نسبة النجاح: 98%</p>
-        </div>
-        <div class="bg-white rounded-xl p-6 border-r-4 border-yellow-500">
-            <div class="flex items-center justify-between mb-3">
-                <p class="text-sm text-gray-600">قيد المعالجة</p><svg xmlns="http://www.w3.org/2000/svg" width="24"
-                    height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock w-5 h-5 text-yellow-600">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <polyline points="12 6 12 12 16 14"></polyline>
-                </svg>
-            </div>
-            <p class="text-2xl font-bold text-gray-900">45</p>
-            <p class="text-sm text-yellow-600 mt-1">بحاجة للمتابعة</p>
-        </div>
-        <div class="bg-white rounded-xl p-6 border-r-4 border-red-500">
-            <div class="flex items-center justify-between mb-3">
-                <p class="text-sm text-gray-600">المرتجعات</p><svg xmlns="http://www.w3.org/2000/svg" width="24"
-                    height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round"
-                    class="lucide lucide-arrow-down-right w-5 h-5 text-red-600">
-                    <path d="m7 7 10 10"></path>
-                    <path d="M17 7v10H7"></path>
-                </svg>
-            </div>
-            <p class="text-2xl font-bold text-gray-900">12</p>
-            <p class="text-sm text-red-600 mt-1">2% من الإجمالي</p>
-        </div>
+    <button
+      class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
+    >
+      <i class="fas fa-download text-sm"></i>
+      Export Report
+    </button>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+    <div class="bg-white rounded-xl p-6 border-r-4 border-green-500">
+      <div class="flex items-center justify-between mb-3">
+        <p class="text-sm text-gray-600">Total Revenue</p>
+        <i class="fas fa-arrow-up text-green-600 text-lg"></i>
+      </div>
+      <p class="text-2xl font-bold text-gray-900">12.5M</p>
+      <p class="text-sm text-green-600 mt-1">+24% from last month</p>
     </div>
-    <div class="bg-white rounded-2xl overflow-hidden shadow-sm">
-        <table class="w-full">
-            <thead class="bg-gray-50 border-b border-gray-200">
-                <tr>
-                    <th class="px-6 py-4 text-right text-sm font-medium text-gray-900">رقم المعاملة</th>
-                    <th class="px-6 py-4 text-right text-sm font-medium text-gray-900">النوع</th>
-                    <th class="px-6 py-4 text-right text-sm font-medium text-gray-900">المبلغ</th>
-                    <th class="px-6 py-4 text-right text-sm font-medium text-gray-900">المستخدم</th>
-                    <th class="px-6 py-4 text-right text-sm font-medium text-gray-900">العقار</th>
-                    <th class="px-6 py-4 text-right text-sm font-medium text-gray-900">طريقة الدفع</th>
-                    <th class="px-6 py-4 text-right text-sm font-medium text-gray-900">الحالة</th>
-                    <th class="px-6 py-4 text-right text-sm font-medium text-gray-900">التاريخ</th>
-                    <th class="px-6 py-4 text-right text-sm font-medium text-gray-900">الإجراءات</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200">
-                <tr class="hover:bg-gray-50 transition-colors">
-                    <td class="px-6 py-4 text-sm font-medium text-gray-900">#000001</td>
-                    <td class="px-6 py-4"><span
-                            class="px-3 py-1 text-xs rounded-full bg-green-100 text-green-600">دفعة</span></td>
-                    <td class="px-6 py-4 text-sm font-bold text-gray-900">50,000 جنيه</td>
-                    <td class="px-6 py-4 text-sm text-gray-600">أحمد محمد</td>
-                    <td class="px-6 py-4 text-sm text-gray-600">شقة فاخرة</td>
-                    <td class="px-6 py-4 text-sm text-gray-600">بطاقة ائتمان</td>
-                    <td class="px-6 py-4"><span
-                            class="px-3 py-1 text-xs rounded-full bg-green-100 text-green-600">مكتمل</span></td>
-                    <td class="px-6 py-4 text-sm text-gray-600">2024-01-26 10:30</td>
-                    <td class="px-6 py-4">
-                        <div class="flex items-center gap-2"><button
-                                class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"><svg
-                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="lucide lucide-eye w-4 h-4">
-                                    <path
-                                        d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0">
-                                    </path>
-                                    <circle cx="12" cy="12" r="3"></circle>
-                                </svg></button><button
-                                class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"><svg
-                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="lucide lucide-download w-4 h-4">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                    <polyline points="7 10 12 15 17 10"></polyline>
-                                    <line x1="12" x2="12" y1="15" y2="3"></line>
-                                </svg></button></div>
-                    </td>
-                </tr>
-                <tr class="hover:bg-gray-50 transition-colors">
-                    <td class="px-6 py-4 text-sm font-medium text-gray-900">#000002</td>
-                    <td class="px-6 py-4"><span
-                            class="px-3 py-1 text-xs rounded-full bg-orange-100 text-orange-600">مرتجع</span></td>
-                    <td class="px-6 py-4 text-sm font-bold text-gray-900">15,000 جنيه</td>
-                    <td class="px-6 py-4 text-sm text-gray-600">سارة علي</td>
-                    <td class="px-6 py-4 text-sm text-gray-600">فيلا مستقلة</td>
-                    <td class="px-6 py-4 text-sm text-gray-600">تحويل بنكي</td>
-                    <td class="px-6 py-4"><span class="px-3 py-1 text-xs rounded-full bg-yellow-100 text-yellow-600">قيد
-                            المعالجة</span></td>
-                    <td class="px-6 py-4 text-sm text-gray-600">2024-01-25 15:45</td>
-                    <td class="px-6 py-4">
-                        <div class="flex items-center gap-2"><button
-                                class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"><svg
-                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="lucide lucide-eye w-4 h-4">
-                                    <path
-                                        d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0">
-                                    </path>
-                                    <circle cx="12" cy="12" r="3"></circle>
-                                </svg></button><button
-                                class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"><svg
-                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="lucide lucide-download w-4 h-4">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                    <polyline points="7 10 12 15 17 10"></polyline>
-                                    <line x1="12" x2="12" y1="15" y2="3"></line>
-                                </svg></button></div>
-                    </td>
-                </tr>
-                <tr class="hover:bg-gray-50 transition-colors">
-                    <td class="px-6 py-4 text-sm font-medium text-gray-900">#000003</td>
-                    <td class="px-6 py-4"><span
-                            class="px-3 py-1 text-xs rounded-full bg-green-100 text-green-600">دفعة</span></td>
-                    <td class="px-6 py-4 text-sm font-bold text-gray-900">12,000 جنيه</td>
-                    <td class="px-6 py-4 text-sm text-gray-600">محمد حسن</td>
-                    <td class="px-6 py-4 text-sm text-gray-600">استوديو عصري</td>
-                    <td class="px-6 py-4 text-sm text-gray-600">فودافون كاش</td>
-                    <td class="px-6 py-4"><span
-                            class="px-3 py-1 text-xs rounded-full bg-green-100 text-green-600">مكتمل</span></td>
-                    <td class="px-6 py-4 text-sm text-gray-600">2024-01-25 09:20</td>
-                    <td class="px-6 py-4">
-                        <div class="flex items-center gap-2"><button
-                                class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"><svg
-                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="lucide lucide-eye w-4 h-4">
-                                    <path
-                                        d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0">
-                                    </path>
-                                    <circle cx="12" cy="12" r="3"></circle>
-                                </svg></button><button
-                                class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"><svg
-                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="lucide lucide-download w-4 h-4">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                    <polyline points="7 10 12 15 17 10"></polyline>
-                                    <line x1="12" x2="12" y1="15" y2="3"></line>
-                                </svg></button></div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="bg-white rounded-xl p-6 border-r-4 border-blue-500">
+      <div class="flex items-center justify-between mb-3">
+        <p class="text-sm text-gray-600">Completed Transactions</p>
+        <i class="fas fa-check-circle text-blue-600 text-lg"></i>
+      </div>
+      <p class="text-2xl font-bold text-gray-900">1,234</p>
+      <p class="text-sm text-blue-600 mt-1">Success rate: 98%</p>
     </div>
+    <div class="bg-white rounded-xl p-6 border-r-4 border-yellow-500">
+      <div class="flex items-center justify-between mb-3">
+        <p class="text-sm text-gray-600">Processing</p>
+        <i class="fas fa-clock text-yellow-600 text-lg"></i>
+      </div>
+      <p class="text-2xl font-bold text-gray-900">45</p>
+      <p class="text-sm text-yellow-600 mt-1">Needs follow-up</p>
+    </div>
+    <div class="bg-white rounded-xl p-6 border-r-4 border-red-500">
+      <div class="flex items-center justify-between mb-3">
+        <p class="text-sm text-gray-600">Refunds</p>
+        <i class="fas fa-undo text-red-600 text-lg"></i>
+      </div>
+      <p class="text-2xl font-bold text-gray-900">12</p>
+      <p class="text-sm text-red-600 mt-1">2% of total</p>
+    </div>
+  </div>
+  <div class="bg-white rounded-2xl overflow-hidden shadow-sm">
+    <table class="w-full">
+      <thead class="bg-gray-50 border-b border-gray-200">
+        <tr>
+          <th class="px-6 py-4 text-left text-sm font-medium text-gray-900">Transaction ID</th>
+          <th class="px-6 py-4 text-left text-sm font-medium text-gray-900">Type</th>
+          <th class="px-6 py-4 text-left text-sm font-medium text-gray-900">Amount</th>
+          <th class="px-6 py-4 text-left text-sm font-medium text-gray-900">User</th>
+          <th class="px-6 py-4 text-left text-sm font-medium text-gray-900">Property</th>
+          <th class="px-6 py-4 text-left text-sm font-medium text-gray-900">Payment Method</th>
+          <th class="px-6 py-4 text-left text-sm font-medium text-gray-900">Status</th>
+          <th class="px-6 py-4 text-left text-sm font-medium text-gray-900">Date</th>
+          <th class="px-6 py-4 text-left text-sm font-medium text-gray-900">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        <tr class="hover:bg-gray-50 transition-colors">
+          <td class="px-6 py-4 text-sm font-medium text-gray-900">#000001</td>
+          <td class="px-6 py-4">
+            <span class="px-3 py-1 text-xs rounded-full bg-green-100 text-green-600">Payment</span>
+          </td>
+          <td class="px-6 py-4 text-sm font-bold text-gray-900">$50,000</td>
+          <td class="px-6 py-4 text-sm text-gray-600">Ahmed Mohamed</td>
+          <td class="px-6 py-4 text-sm text-gray-600">Luxury apartment</td>
+          <td class="px-6 py-4 text-sm text-gray-600">Credit Card</td>
+          <td class="px-6 py-4">
+            <span class="px-3 py-1 text-xs rounded-full bg-green-100 text-green-600"
+              >Completed</span
+            >
+          </td>
+          <td class="px-6 py-4 text-sm text-gray-600">2024-01-26 10:30</td>
+          <td class="px-6 py-4">
+            <div class="flex items-center gap-2">
+              <button class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                <i class="fas fa-eye text-sm"></i>
+              </button>
+              <button class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors">
+                <i class="fas fa-download text-sm"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr class="hover:bg-gray-50 transition-colors">
+          <td class="px-6 py-4 text-sm font-medium text-gray-900">#000002</td>
+          <td class="px-6 py-4">
+            <span class="px-3 py-1 text-xs rounded-full bg-orange-100 text-orange-600">Refund</span>
+          </td>
+          <td class="px-6 py-4 text-sm font-bold text-gray-900">$15,000</td>
+          <td class="px-6 py-4 text-sm text-gray-600">Sarah Ali</td>
+          <td class="px-6 py-4 text-sm text-gray-600">Independent villa</td>
+          <td class="px-6 py-4 text-sm text-gray-600">Bank Transfer</td>
+          <td class="px-6 py-4">
+            <span class="px-3 py-1 text-xs rounded-full bg-yellow-100 text-yellow-600"
+              >Processing</span
+            >
+          </td>
+          <td class="px-6 py-4 text-sm text-gray-600">2024-01-25 15:45</td>
+          <td class="px-6 py-4">
+            <div class="flex items-center gap-2">
+              <button class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                <i class="fas fa-eye text-sm"></i>
+              </button>
+              <button class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors">
+                <i class="fas fa-download text-sm"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr class="hover:bg-gray-50 transition-colors">
+          <td class="px-6 py-4 text-sm font-medium text-gray-900">#000003</td>
+          <td class="px-6 py-4">
+            <span class="px-3 py-1 text-xs rounded-full bg-green-100 text-green-600">Payment</span>
+          </td>
+          <td class="px-6 py-4 text-sm font-bold text-gray-900">$12,000</td>
+          <td class="px-6 py-4 text-sm text-gray-600">Mohamed Hassan</td>
+          <td class="px-6 py-4 text-sm text-gray-600">Modern studio</td>
+          <td class="px-6 py-4 text-sm text-gray-600">Mobile Wallet</td>
+          <td class="px-6 py-4">
+            <span class="px-3 py-1 text-xs rounded-full bg-green-100 text-green-600"
+              >Completed</span
+            >
+          </td>
+          <td class="px-6 py-4 text-sm text-gray-600">2024-01-25 09:20</td>
+          <td class="px-6 py-4">
+            <div class="flex items-center gap-2">
+              <button class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                <i class="fas fa-eye text-sm"></i>
+              </button>
+              <button class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors">
+                <i class="fas fa-download text-sm"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

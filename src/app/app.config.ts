@@ -7,6 +7,7 @@ import { provideRouter } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { provideToastr } from 'ngx-toastr';
 
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
@@ -21,10 +22,14 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
     provideAnimations(),
-    provideHttpClient(
-      withFetch(),
-      withInterceptors([languageInterceptor])
-    ),
+    provideToastr({
+      positionClass: 'toast-bottom-right',
+      timeOut: 3000,
+      preventDuplicates: true,
+      progressBar: true,
+      closeButton: true,
+    }),
+    provideHttpClient(withFetch(), withInterceptors([languageInterceptor])),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

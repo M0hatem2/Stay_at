@@ -1,0 +1,17 @@
+<button
+  (click)="onFavoriteClick($event)"
+  [disabled]="isLoading"
+  class="absolute top-3 right-3 w-9 h-9 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors disabled:opacity-50"
+>
+  <i
+    [class]="isFavorite ? 'fa-solid fa-heart text-red-500' : 'fa-regular fa-heart text-gray-700'"
+    [class.animate-pulse]="isLoading"
+  ></i>
+</button>
+
+<app-not-logged-in
+  [isVisible]="showLoginPopup"
+  [title]="'تسجيل الدخول مطلوب'"
+  [message]="'يجب تسجيل الدخول لإضافة العقارات إلى المفضلة'"
+  (close)="closeLoginPopup()"
+></app-not-logged-in>

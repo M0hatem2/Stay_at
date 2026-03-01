@@ -1,0 +1,67 @@
+<div class="bg-white rounded-2xl shadow-sm p-6 mb-8">
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <!-- Filter Buttons -->
+    <div class="flex items-center gap-2 flex-wrap">
+      <i class="fas fa-filter text-gray-500 text-lg mr-2"></i>
+
+      <button
+        (click)="onFilterChange('all')"
+        [class]="
+          activeFilter === 'all'
+            ? 'px-6 py-2 rounded-xl transition-all bg-gradient-to-r from-[#C4A962] to-[#D4B972] text-white shadow-lg'
+            : 'px-6 py-2 rounded-xl transition-all bg-gray-100 text-gray-700 hover:bg-gray-200'
+        "
+      >
+        <i class="fas fa-list mr-2"></i>
+        All ({{ totalFavorites }})
+      </button>
+
+      <button
+        (click)="onFilterChange('units')"
+        [class]="
+          activeFilter === 'units'
+            ? 'px-6 py-2 rounded-xl transition-all bg-gradient-to-r from-[#C4A962] to-[#D4B972] text-white shadow-lg'
+            : 'px-6 py-2 rounded-xl transition-all bg-gray-100 text-gray-700 hover:bg-gray-200'
+        "
+      >
+        <i class="fas fa-home mr-2"></i>
+        Units ({{ totalUnits }})
+      </button>
+
+      <button
+        (click)="onFilterChange('projects')"
+        [class]="
+          activeFilter === 'projects'
+            ? 'px-6 py-2 rounded-xl transition-all bg-gradient-to-r from-[#C4A962] to-[#D4B972] text-white shadow-lg'
+            : 'px-6 py-2 rounded-xl transition-all bg-gray-100 text-gray-700 hover:bg-gray-200'
+        "
+      >
+        <i class="fas fa-building mr-2"></i>
+        Projects ({{ totalProjects }})
+      </button>
+    </div>
+
+    <!-- Sort Dropdown -->
+    <div class="flex items-center gap-3">
+      <i class="fas fa-sort text-gray-500 text-lg"></i>
+      <select
+        [value]="sortBy"
+        (change)="onSortChange($event)"
+        class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#C4A962] focus:border-transparent outline-none bg-white cursor-pointer"
+      >
+        <option value="recent">
+          <i class="fas fa-clock mr-2"></i>
+          Most Recent
+        </option>
+        <option value="price-low">
+          <i class="fas fa-arrow-up mr-2"></i>
+          Price: Low to High
+        </option>
+        <option value="price-high">
+          <i class="fas fa-arrow-down mr-2"></i>
+          Price: High to Low
+        </option>
+      </select>
+    </div>
+  </div>
+</div>

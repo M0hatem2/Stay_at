@@ -1,24 +1,124 @@
-<div class="bg-gradient-to-b from-white to-gray-50 animate-in fade-in zoom-in">
-      <section class="py-20 bg-white" id="user-categories">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                  <div class="text-center mb-16">
-                        <h2 class="text-gray-900 mb-4 text-xl font-bold">Who are you?</h2>
-                        <p class="text-gray-600 max-w-2xl mx-auto">Choose your account type for a personalized
-                              experience</p>
-                  </div>
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <app-user-category-card *ngFor="let category of userCategories" [category]="category">
-                        </app-user-category-card>
-                  </div>
-                  <div class="mt-16 text-center" style="opacity: 1; transform: none;">
-                        <p class="text-gray-500 mb-6">موثوق به من قِبل:</p>
-                        <div class="flex flex-wrap items-center justify-center gap-8 opacity-60">
-                              <div class="px-6 py-3 bg-gray-100 rounded-lg">شركة عقارية 1</div>
-                              <div class="px-6 py-3 bg-gray-100 rounded-lg">مطور عقاري 2</div>
-                              <div class="px-6 py-3 bg-gray-100 rounded-lg">وكالة 3</div>
-                              <div class="px-6 py-3 bg-gray-100 rounded-lg">مطور 4</div>
-                        </div>
-                  </div>
+<div class="relative bg-gradient-to-b from-white via-gray-50 to-white overflow-hidden">
+  <!-- Background Decorations -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute -top-40 -right-40 w-80 h-80 bg-[#de5806]/5 rounded-full blur-3xl"></div>
+    <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-black/5 rounded-full blur-3xl"></div>
+  </div>
+
+  <section class="relative py-20 lg:py-28" id="user-categories">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Header Section -->
+      <div class="text-center mb-16 animate-in fade-in zoom-in duration-700">
+        <div class="inline-flex items-center gap-2 px-4 py-2 bg-[#de5806]/10 rounded-full mb-6">
+          <i class="fa-solid fa-users text-[#de5806]"></i>
+          <span class="text-sm font-medium text-[#de5806]">Get Started</span>
+        </div>
+        <h2
+          class="text-4xl md:text-5xl font-bold text-gray-900 mb-6 bg-gradient-to-r from-gray-900 via-black to-gray-900 bg-clip-text text-transparent"
+        >
+          Who Are You?
+        </h2>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+          Choose your account type for a personalized experience tailored to your needs
+        </p>
+      </div>
+
+      <!-- User Categories Grid -->
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 mb-16 animate-in fade-in slide-in-from-bottom duration-700 delay-200"
+      >
+        @for (category of userCategories; track category.title) {
+          <app-user-category-card [category]="category"></app-user-category-card>
+        }
+      </div>
+
+      <!-- Trusted By Section -->
+      <div class="mt-20 text-center animate-in fade-in slide-in-from-bottom duration-700 delay-400">
+        <p class="text-sm font-medium text-gray-500 mb-8 uppercase tracking-wider">
+          Trusted By Leading Companies
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-6 lg:gap-8">
+          <div
+            class="group px-8 py-4 bg-white border-2 border-gray-100 rounded-xl hover:border-[#de5806]/20 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+          >
+            <div class="flex items-center gap-3">
+              <div
+                class="w-10 h-10 bg-gradient-to-br from-[#de5806] to-[#ff7a3d] rounded-lg flex items-center justify-center"
+              >
+                <i class="fa-solid fa-building text-white text-lg"></i>
+              </div>
+              <span class="text-gray-700 font-semibold group-hover:text-[#de5806] transition-colors"
+                >Real Estate Co.</span
+              >
             </div>
-      </section>
+          </div>
+
+          <div
+            class="group px-8 py-4 bg-white border-2 border-gray-100 rounded-xl hover:border-[#de5806]/20 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+          >
+            <div class="flex items-center gap-3">
+              <div
+                class="w-10 h-10 bg-gradient-to-br from-black to-gray-700 rounded-lg flex items-center justify-center"
+              >
+                <i class="fa-solid fa-city text-white text-lg"></i>
+              </div>
+              <span class="text-gray-700 font-semibold group-hover:text-black transition-colors"
+                >Property Developers</span
+              >
+            </div>
+          </div>
+
+          <div
+            class="group px-8 py-4 bg-white border-2 border-gray-100 rounded-xl hover:border-[#de5806]/20 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+          >
+            <div class="flex items-center gap-3">
+              <div
+                class="w-10 h-10 bg-gradient-to-br from-[#de5806] to-[#ff7a3d] rounded-lg flex items-center justify-center"
+              >
+                <i class="fa-solid fa-handshake text-white text-lg"></i>
+              </div>
+              <span class="text-gray-700 font-semibold group-hover:text-[#de5806] transition-colors"
+                >Agency Partners</span
+              >
+            </div>
+          </div>
+
+          <div
+            class="group px-8 py-4 bg-white border-2 border-gray-100 rounded-xl hover:border-[#de5806]/20 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+          >
+            <div class="flex items-center gap-3">
+              <div
+                class="w-10 h-10 bg-gradient-to-br from-black to-gray-700 rounded-lg flex items-center justify-center"
+              >
+                <i class="fa-solid fa-hammer text-white text-lg"></i>
+              </div>
+              <span class="text-gray-700 font-semibold group-hover:text-black transition-colors"
+                >Construction Firms</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+          <div class="text-center p-6 bg-white rounded-xl border border-gray-100">
+            <div class="text-3xl font-bold text-[#de5806] mb-2">500+</div>
+            <div class="text-sm text-gray-600">Active Users</div>
+          </div>
+          <div class="text-center p-6 bg-white rounded-xl border border-gray-100">
+            <div class="text-3xl font-bold text-black mb-2">1000+</div>
+            <div class="text-sm text-gray-600">Properties Listed</div>
+          </div>
+          <div class="text-center p-6 bg-white rounded-xl border border-gray-100">
+            <div class="text-3xl font-bold text-[#de5806] mb-2">50+</div>
+            <div class="text-sm text-gray-600">Partner Companies</div>
+          </div>
+          <div class="text-center p-6 bg-white rounded-xl border border-gray-100">
+            <div class="text-3xl font-bold text-black mb-2">98%</div>
+            <div class="text-sm text-gray-600">Satisfaction Rate</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </div>

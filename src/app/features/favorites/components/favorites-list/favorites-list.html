@@ -1,0 +1,128 @@
+<div class="space-y-6">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div
+      *ngFor="let item of [1, 2, 3, 4, 5, 6]"
+      class="bg-white rounded-2xl shadow-sm overflow-hidden animate-pulse"
+    >
+      <div class="h-48 bg-gray-200"></div>
+      <div class="p-6">
+        <div class="h-4 bg-gray-200 rounded mb-2"></div>
+        <div class="h-3 bg-gray-200 rounded mb-4 w-3/4"></div>
+        <div class="h-6 bg-gray-200 rounded w-1/2"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Favorites Grid -->
+  <div
+    *ngIf="!loading && favorites.length > 0"
+    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+  >
+    <div
+      *ngFor="let item of favorites"
+      class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300 group"
+    >
+      <!-- Image -->
+      <div class="relative h-48 overflow-hidden">
+        <img
+          [src]="item.image"
+          [alt]="item.title"
+          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+        />
+
+        <!-- Type Badge -->
+        <div class="absolute top-3 left-3">
+          <span
+            [class]="
+              item.type === 'unit'
+                ? 'inline-flex items-center gap-1 px-3 py-1 bg-blue-500 text-white text-xs font-medium rounded-full'
+                : 'inline-flex items-center gap-1 px-3 py-1 bg-green-500 text-white text-xs font-medium rounded-full'
+            "
+          >
+            <i [class]="item.type === 'unit' ? 'fas fa-home' : 'fas fa-building'"></i>
+            {{ item.type === 'unit' ? 'Unit' : 'Project' }}
+          </span>
+        </div>
+
+        <!-- Remove from Favorites -->
+        <button
+          (click)="onRemoveFavorite(item.id)"
+          class="absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-red-500 hover:text-white transition-all duration-300 group/btn"
+          title="Remove from favorites"
+        >
+          <i class="fas fa-heart text-red-500 group-hover/btn:text-white transition-colors"></i>
+        </button>
+      </div>
+
+      <!-- Content -->
+      <div class="p-6">
+        <!-- Title -->
+        <h3
+          class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-[#C4A962] transition-colors"
+        >
+          {{ item.title }}
+        </h3>
+
+        <!-- Location -->
+        <div class="flex items-center gap-2 text-gray-600 mb-4">
+          <i class="fas fa-map-marker-alt text-sm"></i>
+          <span class="text-sm">{{ item.location }}</span>
+        </div>
+
+        <!-- Details for Units -->
+        <div
+          *ngIf="item.type === 'unit' && (item.bedrooms || item.bathrooms || item.area)"
+          class="flex items-center gap-4 text-sm text-gray-600 mb-4"
+        >
+          <div *ngIf="item.bedrooms" class="flex items-center gap-1">
+            <i class="fas fa-bed"></i>
+            <span>{{ item.bedrooms }}</span>
+          </div>
+          <div *ngIf="item.bathrooms" class="flex items-center gap-1">
+            <i class="fas fa-bath"></i>
+            <span>{{ item.bathrooms }}</span>
+          </div>
+          <div *ngIf="item.area" class="flex items-center gap-1">
+            <i class="fas fa-ruler-combined"></i>
+            <span>{{ item.area }}m²</span>
+          </div>
+        </div>
+
+        <!-- Price -->
+        <div class="flex items-center justify-between mb-4">
+          <div class="text-2xl font-bold text-gray-900">
+            {{ formatPrice(item.price) }}
+            <span class="text-sm font-normal text-gray-600">{{ item.currency }}</span>
+          </div>
+        </div>
+
+        <!-- Date Added -->
+        <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+          <div class="flex items-center gap-1">
+            <i class="fas fa-clock"></i>
+            <span>Added {{ item.dateAdded | date: 'MMM d, y' }}</span>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex gap-3">
+          <button
+            (click)="onViewDetails(item)"
+            class="flex-1 px-4 py-2 bg-gradient-to-r from-[#C4A962] to-[#D4B972] text-white rounded-xl hover:shadow-lg transition-all duration-300 font-medium"
+          >
+            <i class="fas fa-eye mr-2"></i>
+            View Details
+          </button>
+
+          <button
+            class="px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-300"
+            title="Share"
+          >
+            <i class="fas fa-share-alt"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

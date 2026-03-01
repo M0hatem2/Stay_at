@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { UnitsCard, PropertyCardData } from '../../../../shared/components/units-card/units-card';
 import { ApiProperty, PaginationInfo } from '../../../../core/models/api-property.model';
 import { Subscription } from 'rxjs';
@@ -25,6 +25,7 @@ export class AllProperties implements OnInit, OnDestroy {
   showFilters = false;
   isLoading = false;
   errorMessage = '';
+  searchQuery = '';
 
   /* ===============================
    Data
@@ -35,15 +36,21 @@ export class AllProperties implements OnInit, OnDestroy {
   currentPage = 1;
   itemsPerPage = 10;
   private languageSubscription: Subscription | null = null;
+  private routeSubscription: Subscription | null = null;
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private propertyService: PropertyService,
     private languageService: LanguageService
   ) {}
 
   ngOnInit(): void {
-    this.loadProperties();
+    // Listen to query params for search
+    this.routeSubscription = this.route.queryParams.subscribe(params => {
+      this.searchQuery = params['search'] || '';
+      this.loadProperties();
+    });
     
     // الاشتراك في تغييرات اللغة لإعادة تحميل البيانات
     this.languageSubscription = this.languageService.currentLanguage$
@@ -55,6 +62,7 @@ export class AllProperties implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.languageSubscription?.unsubscribe();
+    this.routeSubscription?.unsubscribe();
   }
 
   loadProperties(page: number = 1): void {
@@ -62,13 +70,10 @@ export class AllProperties implements OnInit, OnDestroy {
     this.errorMessage = '';
     this.currentPage = page;
 
-    this.propertyService.getProperties(page, this.itemsPerPage).subscribe({
+    this.propertyService.getProperties(page, this.itemsPerPage, this.searchQuery).subscribe({
       next: (response) => {
         console.log('📦 Properties Response:', response);
-        console.log('🏠 Properties Data Sample:', response.properties.data[0]);
-        console.log('🏷️ Property Name:', response.properties.data[0]?.name);
-        console.log('📝 Property Description:', response.properties.data[0]?.description);
-        console.log('🏢 Property Type:', response.properties.data[0]?.type);
+        console.log('🔍 Search Query:', this.searchQuery);
         
         this.properties = response.properties.data as unknown as ApiProperty[];
         this.paginationInfo = {

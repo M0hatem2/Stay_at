@@ -7,6 +7,7 @@ export interface PaymentData {
   plan: PlanCard;
   planType: string;
   billing: string;
+  subscriptionId?: string; // Add subscriptionId
 }
 
 @Injectable({

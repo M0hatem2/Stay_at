@@ -76,24 +76,38 @@ export class GoogleMap implements OnInit, OnChanges, AfterViewInit {
   private addMarker() {
     if (!this.map) return;
 
+    // استخدام صورة افتراضية إذا لم تكن هناك صورة أو كانت فارغة
+    const hasValidImage = this.propertyImage && this.propertyImage.trim() !== '';
+
     const popupContent = `
       <div style="width:200px; text-align: center;">
         ${
-          this.propertyImage
-            ? `<img 
-          src="${this.propertyImage}" 
-          style="width:100%; height:120px; object-fit:cover; border-radius:8px"
-        />`
-            : ''
+          hasValidImage
+            ? `
+          <img 
+            src="${this.propertyImage}" 
+            alt="${this.propertyName || 'موقع العقار'}"
+            style="width:100%; height:120px; object-fit:cover; border-radius:8px; margin-bottom: 8px; background: #f3f4f6;"
+            onerror="this.style.display='none'"
+          />
+        `
+            : `
+          <div style="width:100%; height:120px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius:8px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; color: white;">
+            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+          </div>
+        `
         }
-        <h4 style="margin:8px 0 4px; font-weight: bold;">${this.propertyName || 'موقع العقار'}</h4>
-        ${this.propertyAddress ? `<p style="font-size:13px; color: #666;">${this.propertyAddress}</p>` : ''}
+        <h4 style="margin:8px 0 4px; font-weight: bold; color: #333; font-size: 14px;">${this.propertyName || 'موقع العقار'}</h4>
+        ${this.propertyAddress ? `<p style="font-size:12px; color: #666; margin: 4px 0; line-height: 1.4;">${this.propertyAddress}</p>` : ''}
       </div>
     `;
 
     this.marker = L.marker([this.latitude, this.longitude])
       .addTo(this.map)
-      .bindPopup(popupContent)
+      .bindPopup(popupContent, { maxWidth: 220 })
       .openPopup();
   }
 }

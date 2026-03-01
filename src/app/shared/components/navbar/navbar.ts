@@ -4,7 +4,7 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { RegisterPopComponent } from '../../../features/auth/components/register-pop/register-pop';
 import { AuthService } from '../../../core/services/auth.service';
 import { LanguageService } from '../../../core/services/language.service';
- 
+
 @Component({
   selector: 'app-navbar',
   imports: [CommonModule, RouterLink, RegisterPopComponent, RouterLinkActive],
@@ -21,12 +21,12 @@ export class Navbar {
     private host: ElementRef,
     private router: Router,
     private authService: AuthService,
-    private languageService: LanguageService
-   ) {
-    this.languageService.currentLanguage$.subscribe(language => {
+    private languageService: LanguageService,
+  ) {
+    this.languageService.currentLanguage$.subscribe((language) => {
       this.currentLanguage = language;
     });
-   }
+  }
 
   get isAuthenticated(): boolean {
     return this.authService.isAuthenticated();
@@ -36,15 +36,15 @@ export class Navbar {
     const role = this.authService.getRole();
     switch (role) {
       case 'system_admin':
-        return '/dashboard/owner';
+        return '/dashboard/system_admin';
       case 'broker':
-        return '/dashboard/broker';
+        return '/dashboard/real_estate_broker';
       case 'developer':
-        return '/dashboard/developer';
+        return '/dashboard/real_estate_developer';
       case 'seeker':
-        return '/dashboard/seeker';
+        return '/dashboard/property_seeker';
       case 'owner':
-        return '/dashboard/owner';
+        return '/dashboard/property_owner';
       default:
         return '/home';
     }
@@ -104,6 +104,10 @@ export class Navbar {
     this.router.navigate(['/auth/register-pop']);
   }
 
+  goToFavorites(): void {
+    this.router.navigate(['/favorites']);
+  }
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event): void {
     const target = event.target as HTMLElement;
@@ -127,6 +131,4 @@ export class Navbar {
   get languageLabel(): string {
     return this.currentLanguage === 'ar' ? 'English' : 'عربي';
   }
-
-  
 }

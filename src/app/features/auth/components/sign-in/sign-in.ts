@@ -59,19 +59,19 @@ export class SignInComponent {
   private navigateBasedOnRole(role: string) {
     switch (role) {
       case 'system_admin':
-        this.router.navigate(['/dashboard/owner']); // Assuming admin uses owner dashboard
+        this.router.navigate(['/dashboard/dashboard-home']); // Assuming admin uses owner dashboard
         break;
       case 'broker':
-        this.router.navigate(['/dashboard/broker']);
+        this.router.navigate(['/dashboard/real_estate_broker']);
         break;
       case 'developer':
-        this.router.navigate(['/dashboard/developer']);
+        this.router.navigate(['/dashboard/real_estate_developer']);
         break;
       case 'seeker':
-        this.router.navigate(['/dashboard/seeker']);
+        this.router.navigate(['/dashboard/property_seeker']);
         break;
       case 'owner':
-        this.router.navigate(['/dashboard/owner']);
+        this.router.navigate(['/dashboard/property_owner']);
         break;
       default:
         this.router.navigate(['/home']);

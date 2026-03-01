@@ -1,0 +1,51 @@
+// Rent Component Styles
+
+// Smooth transitions for filter sidebar
+.transform {
+  transition: transform 0.3s ease-in-out;
+}
+
+// Custom scrollbar for filter sidebar
+.overflow-y-auto {
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #c4a962;
+    border-radius: 10px;
+
+    &:hover {
+      background: #b39952;
+    }
+  }
+}
+
+// Animation for cards
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.grid > * {
+  animation: fadeInUp 0.5s ease-out;
+  animation-fill-mode: both;
+}
+
+// Stagger animation for cards
+@for $i from 1 through 12 {
+  .grid > *:nth-child(#{$i}) {
+    animation-delay: #{$i * 0.05}s;
+  }
+}

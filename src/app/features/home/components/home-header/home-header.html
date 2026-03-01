@@ -1,22 +1,31 @@
 <section class="relative min-h-[700px] overflow-hidden animate-in">
   <!-- Background image + overlays -->
   <div class="absolute inset-0">
-    <img src="https://images.unsplash.com/photo-1699946330980-6566206d6afd?w=1920&h=1080&fit=crop" alt="Aleppo Citadel"
-      class="w-full h-full object-cover brightness-[0.3] scale-105 animate-[scale_20s_ease-in-out_infinite]" />
+    <img
+      src="https://images.unsplash.com/photo-1699946330980-6566206d6afd?w=1920&h=1080&fit=crop"
+      alt="Aleppo Citadel"
+      class="w-full h-full object-cover brightness-[0.3] scale-105 animate-[scale_20s_ease-in-out_infinite]"
+    />
     <div class="absolute inset-0 bg-gradient-to-b from-black/90 via-black/75 to-black/90"></div>
-    <div class="absolute inset-0 bg-gradient-to-r from-black/15 via-transparent to-black/15 mix-blend-overlay">
-    </div>
+    <div
+      class="absolute inset-0 bg-gradient-to-r from-black/15 via-transparent to-black/15 mix-blend-overlay"
+    ></div>
   </div>
 
   <!-- Decorative blurred circles (purely visual) -->
   <div class="absolute inset-0 pointer-events-none opacity-20">
-    <div class="absolute top-20 right-20 w-96 h-96 bg-black rounded-full blur-[100px] animate-pulse"
-      style="animation-duration: 3s;"></div>
-    <div class="absolute bottom-20 left-20 w-[500px] h-[500px] bg-[#E5D5A8] rounded-full blur-[120px] animate-pulse"
-      style="animation-duration: 4s;"></div>
+    <div
+      class="absolute top-20 right-20 w-96 h-96 bg-black rounded-full blur-[100px] animate-pulse"
+      style="animation-duration: 3s"
+    ></div>
+    <div
+      class="absolute bottom-20 left-20 w-[500px] h-[500px] bg-[#E5D5A8] rounded-full blur-[120px] animate-pulse"
+      style="animation-duration: 4s"
+    ></div>
     <div
       class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-[#C4A962] rounded-full blur-[100px] animate-pulse"
-      style="animation-duration: 5s;"></div>
+      style="animation-duration: 5s"
+    ></div>
   </div>
 
   <!-- Content -->
@@ -24,13 +33,16 @@
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <!-- Badge -->
       <div
-        class="inline-flex items-center gap-3 px-8 py-3 bg-white/10 backdrop-blur-xl text-white border border-white/30 rounded-full mb-10 shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
+        class="inline-flex items-center gap-3 px-8 py-3 bg-white/10 backdrop-blur-xl text-white border border-white/30 rounded-full mb-10 shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300"
+      >
         <i class="fas fa-home text-white text-lg animate-pulse"></i>
-        <span class="text-sm font-medium tracking-wide">Stay At - Your Next Address</span>
+        <span class="text-sm font-medium tracking-wide">HomoGo - Your Next Address</span>
       </div>
 
       <!-- Headings -->
-      <h1 class="text-white text-5xl md:text-6xl font-bold mb-4 drop-shadow-2xl tracking-tight leading-tight">
+      <h1
+        class="text-white text-5xl md:text-6xl font-bold mb-4 drop-shadow-2xl tracking-tight leading-tight"
+      >
         Search – List – Book
       </h1>
       <h2 class="text-white text-3xl md:text-4xl mb-4 drop-shadow-xl font-semibold tracking-wide">
@@ -41,32 +53,41 @@
       <!-- Rent / Buy buttons -->
       <div class="mb-12">
         <div class="flex items-center justify-center gap-5 max-w-lg mx-auto">
-          <button
-            class="group relative flex-1 px-10 py-5 rounded-2xl transition-all duration-300 backdrop-blur-sm gradient-primary-btn text-white shadow-xl shadow-[#C4A962]/40 hover:shadow-2xl hover:shadow-[#C4A962]/60 hover:scale-105 hover:-translate-y-1">
+          <a
+            routerLink="/rent"
+            class="group relative flex-1 px-10 py-5 rounded-2xl transition-all duration-300 backdrop-blur-sm gradient-primary-btn text-white shadow-xl shadow-[#C4A962]/40 hover:shadow-2xl hover:shadow-[#C4A962]/60 hover:scale-105 hover:-translate-y-1"
+          >
             <span
-              class="absolute -top-3 -left-3 px-3 py-1.5 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs font-semibold rounded-full shadow-lg animate-bounce">
+              class="absolute -top-3 -left-3 px-3 py-1.5 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs font-semibold rounded-full shadow-lg animate-bounce"
+            >
               <i class="fas fa-star mr-1"></i>New
             </span>
-            <div class="flex items-center justify-center gap-3 text-lg font-semibold ">
-              <i class="fas fa-key text-xl group-hover:rotate-12 transition-transform duration-300"></i>
-              <span>Rent</span>
-            </div>
-          </button>
-
-          <button
-            class="group flex-1 px-10 py-5 rounded-2xl transition-all duration-300 backdrop-blur-sm bg-white/95 text-gray-800 hover:bg-white hover:scale-105 hover:-translate-y-1 shadow-xl hover:shadow-2xl">
             <div class="flex items-center justify-center gap-3 text-lg font-semibold">
               <i
-                class="fas fa-building text-xl text-black group-hover:scale-110 transition-transform duration-300"></i>
+                class="fas fa-key text-xl group-hover:rotate-12 transition-transform duration-300"
+              ></i>
+              <span>Rent</span>
+            </div>
+          </a>
+
+          <a
+            routerLink="/buy"
+            class="group flex-1 px-10 py-5 rounded-2xl transition-all duration-300 backdrop-blur-sm bg-white/95 text-gray-800 hover:bg-white hover:scale-105 hover:-translate-y-1 shadow-xl hover:shadow-2xl"
+          >
+            <div class="flex items-center justify-center gap-3 text-lg font-semibold">
+              <i
+                class="fas fa-building text-xl text-black group-hover:scale-110 transition-transform duration-300"
+              ></i>
               <span>Buy</span>
             </div>
-          </button>
+          </a>
         </div>
       </div>
 
       <!-- Search card -->
       <div
-        class="bg-white/95 backdrop-blur-xl rounded-3xl p-10 shadow-2xl max-w-4xl mx-auto border border-white/40 hover:shadow-3xl transition-all duration-300">
+        class="bg-white/95 backdrop-blur-xl rounded-3xl p-10 shadow-2xl max-w-4xl mx-auto border border-white/40 hover:shadow-3xl transition-all duration-300"
+      >
         <div class="flex items-center justify-center gap-3 mb-8">
           <div class="p-3 gradient-primary-btn rounded-xl shadow-lg">
             <i class="fas fa-magic text-white text-xl"></i>
@@ -74,20 +95,33 @@
           <h3 class="text-gray-800 text-xl font-bold">Smart Search – Type Naturally</h3>
         </div>
 
-        <form class="mb-6">
+        <form class="mb-6" (ngSubmit)="onSearch($event)">
           <div class="relative group">
             <div class="absolute inset-y-0 left-5 flex items-center pointer-events-none">
-              <i class="fas fa-search text-gray-400 text-lg group-focus-within:text-[#C4A962] transition-colors"></i>
+              <i
+                class="fas fa-search text-gray-400 text-lg group-focus-within:text-[#C4A962] transition-colors"
+              ></i>
             </div>
-            <input type="text" placeholder="Example: Furnished apartment in Sheikh Zayed 15k monthly"
-              class="w-full px-6 py-6 pl-14 bg-gray-50 border-2 border-gray-200 rounded-2xl outline-none focus:border-black focus:bg-white focus:shadow-lg transition-all duration-300 placeholder:text-gray-400 text-lg" />
+            <input
+              type="text"
+              [(ngModel)]="searchQuery"
+              name="search"
+              placeholder="Example: Furnished apartment in Sheikh Zayed 15k monthly"
+              class="w-full px-6 py-6 pl-14 bg-gray-50 border-2 border-gray-200 rounded-2xl outline-none focus:border-black focus:bg-white focus:shadow-lg transition-all duration-300 placeholder:text-gray-400 text-lg"
+            />
           </div>
 
-          <button type="submit"
-            class="group w-full mt-5 px-8 py-5 gradient-primary-btn text-white rounded-2xl hover:from-[#B39952] hover:to-[#A08842] transition-all duration-300 flex items-center justify-center gap-3 shadow-xl hover:shadow-2xl hover:scale-[1.02] font-semibold text-lg">
-            <i class="fas fa-search-location text-xl group-hover:scale-110 transition-transform duration-300"></i>
+          <button
+            type="submit"
+            class="group w-full mt-5 px-8 py-5 gradient-primary-btn text-white rounded-2xl hover:from-[#B39952] hover:to-[#A08842] transition-all duration-300 flex items-center justify-center gap-3 shadow-xl hover:shadow-2xl hover:scale-[1.02] font-semibold text-lg"
+          >
+            <i
+              class="fas fa-search-location text-xl group-hover:scale-110 transition-transform duration-300"
+            ></i>
             <span>Search Now</span>
-            <i class="fas fa-arrow-right text-sm group-hover:translate-x-1 transition-transform duration-300"></i>
+            <i
+              class="fas fa-arrow-right text-sm group-hover:translate-x-1 transition-transform duration-300"
+            ></i>
           </button>
         </form>
 
@@ -97,18 +131,30 @@
             Quick Search:
           </span>
           <button
-            class="group px-5 py-2.5 bg-gradient-to-r from-gray-100 to-gray-50  hover:bg-gray-200 rounded-full transition-all duration-300 shadow-sm hover:shadow-md border border-transparent hover:border-black/30 font-medium">
-            <i class="fas fa-couch mr-2 text-xs group-hover:scale-110 transition-transform duration-300"></i>
+            (click)="quickSearch('Furnished apartment in Sheikh Zayed')"
+            class="group px-5 py-2.5 bg-gradient-to-r from-gray-100 to-gray-50 hover:bg-gray-200 rounded-full transition-all duration-300 shadow-sm hover:shadow-md border border-transparent hover:border-black/30 font-medium"
+          >
+            <i
+              class="fas fa-couch mr-2 text-xs group-hover:scale-110 transition-transform duration-300"
+            ></i>
             Furnished apartment in Sheikh Zayed
           </button>
           <button
-            class="group px-5 py-2.5 bg-gradient-to-r from-gray-100 to-gray-50  hover:bg-gray-200 rounded-full transition-all duration-300 shadow-sm hover:shadow-md border border-transparent hover:border-black/30 font-medium">
-            <i class="fas fa-leaf mr-2 text-xs group-hover:scale-110 transition-transform duration-300"></i>
+            (click)="quickSearch('Studio with garden in Sheikhah')"
+            class="group px-5 py-2.5 bg-gradient-to-r from-gray-100 to-gray-50 hover:bg-gray-200 rounded-full transition-all duration-300 shadow-sm hover:shadow-md border border-transparent hover:border-black/30 font-medium"
+          >
+            <i
+              class="fas fa-leaf mr-2 text-xs group-hover:scale-110 transition-transform duration-300"
+            ></i>
             Studio with garden in Sheikhah
           </button>
           <button
-            class="group px-5 py-2.5 bg-gradient-to-r from-gray-100 to-gray-50  hover:bg-gray-200 rounded-full transition-all duration-300 shadow-sm hover:shadow-md border border-transparent hover:border-black/30 font-medium">
-            <i class="fas fa-umbrella-beach mr-2 text-xs group-hover:scale-110 transition-transform duration-300"></i>
+            (click)="quickSearch('Weekly chalet')"
+            class="group px-5 py-2.5 bg-gradient-to-r from-gray-100 to-gray-50 hover:bg-gray-200 rounded-full transition-all duration-300 shadow-sm hover:shadow-md border border-transparent hover:border-black/30 font-medium"
+          >
+            <i
+              class="fas fa-umbrella-beach mr-2 text-xs group-hover:scale-110 transition-transform duration-300"
+            ></i>
             Weekly chalet
           </button>
         </div>

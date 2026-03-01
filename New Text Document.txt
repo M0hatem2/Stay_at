@@ -1,0 +1,108 @@
+
+إليك البرومت الجاهز:
+
+برومت إضافة الترجمة لمكون Angular
+أضف دعم الترجمة الكامل للمكون في المسار: [ضع مسار المكون هنا]
+
+المطلوب:
+1. تحديث السيرفيس (إذا كان موجود)
+استخدم HttpClient مباشرة بدلاً من ApiService
+أضف LanguageService في الـ constructor
+احصل على اللغة الحالية من languageService.getCurrentLanguage()
+أرسل اللغة في 3 headers مع كل request:
+const headers = {
+  'Accept-Language': currentLanguage,
+  'Content-Language': currentLanguage,
+  'X-Language': currentLanguage
+};
+أضف console.log للتأكد من إرسال اللغة
+2. تحديث الكومبوننت (.ts)
+أضف الـ imports:
+
+import { OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { skip } from 'rxjs/operators';
+import { LanguageService } from '[المسار الصحيح]/language.service';
+أضف في الكلاس:
+
+export class [ComponentName] implements OnInit, OnDestroy {
+  currentLanguage: string = 'ar';
+  private languageSubscription?: Subscription;
+في الـ constructor:
+
+constructor(
+  // ... existing services
+  private languageService: LanguageService
+) {
+  this.currentLanguage = this.languageService.getCurrentLanguage();
+}
+في ngOnInit:
+
+// Subscribe to language changes and reload data
+this.languageSubscription = this.languageService.currentLanguage$
+  .pipe(skip(1))
+  .subscribe((language) => {
+    this.currentLanguage = language;
+    this.loadData(); // أو أي دالة تحميل البيانات
+  });
+أضف ngOnDestroy:
+
+ngOnDestroy() {
+  if (this.languageSubscription) {
+    this.languageSubscription.unsubscribe();
+  }
+}
+أضف translations getter:
+
+get translations() {
+  const lang = this.currentLanguage === 'ar' ? 'ar' : 'en';
+  const translations = {
+    ar: {
+      // أضف جميع النصوص بالعربي
+    },
+    en: {
+      // أضف جميع النصوص بالإنجليزي
+    }
+  };
+  return translations[lang];
+}
+3. تحديث الـ Template (.html)
+استبدل جميع النصوص الثابتة بـ {{ translations.keyName }}
+مثال:
+<!-- قبل -->
+<h1>Welcome</h1>
+
+<!-- بعد -->
+<h1>{{ translations.welcome }}</h1>
+4. تحديث أي Arrays ثابتة (مثل FAQs)
+حولها إلى getter مترجم:
+get faqs() {
+  return this.currentLanguage === 'ar' ? [
+    { q: 'سؤال؟', a: 'جواب' }
+  ] : [
+    { q: 'Question?', a: 'Answer' }
+  ];
+}
+ملاحظات مهمة:
+اتبع نفس الطريقة المستخدمة في src/app/features/rent/components/rent و src/app/features/plans
+تأكد من إرسال اللغة في headers من السيرفيس
+تأكد من الاستماع لتغييرات اللغة وإعادة تحميل البيانات
+استخدم skip(1) لتجاهل القيمة الأولية
+نظف الـ subscription في ngOnDestroy
+كيفية الاستخدام:
+فقط أرسل هذا البرومت مع مسار المكون:
+
+[الصق البرومت أعلاه]
+
+المكون: src/app/features/[اسم-المكون]/components/[اسم-المكون]
+أو بشكل أبسط:
+
+أضف دعم الترجمة الكامل للمكون في: src/app/features/[المسار]
+
+اتبع نفس الطريقة المستخدمة في src/app/features/plans:
+1. تحديث السيرفيس ليرسل اللغة في headers (Accept-Language, Content-Language, X-Language)
+2. إضافة currentLanguage و languageSubscription في الكومبوننت
+3. إضافة translations getter للنصوص الثابتة
+4. الاستماع لتغييرات اللغة وإعادة تحميل البيانات
+5. استبدال النصوص في HTML بـ translations
+6. تنظيف subscription في ngOnDestroy

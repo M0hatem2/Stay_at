@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
 import { AuthLayoutComponent } from './layout/auth-layout/auth-layout.component';
+import { AdminLayoutComponent } from './layout/admin-layout/admin-layout.component';
 import { HomePage } from './features/home/pages/home.page';
 import { AllPropertiesPage } from './features/all-properties/pages/all-properties.page';
 import { RentPage } from './features/rent/pages/rent.page';
@@ -42,6 +43,12 @@ export const routes: Routes = [
       { path: 'projects', component: ProjectsPage },
       { path: 'about', component: AboutPage },
 
+      // Favorites Page
+      {
+        path: 'favorites',
+        loadComponent: () => import('./features/favorites/favorites').then((m) => m.Favorites),
+      },
+
       // Plans Page
       {
         path: 'plans',
@@ -56,22 +63,22 @@ export const routes: Routes = [
 
       // Dashboard Routes
       {
-        path: 'dashboard/broker',
+        path: 'dashboard/real_estate_broker',
         component: BrokerDashboardComponent,
         data: { prerender: false },
       },
       {
-        path: 'dashboard/developer',
+        path: 'dashboard/real_estate_developer',
         component: DeveloperDashboardComponent,
         data: { prerender: false },
       },
       {
-        path: 'dashboard/owner',
+        path: 'dashboard/property_owner',
         component: OwnerDashboardComponent,
         data: { prerender: false },
       },
       {
-        path: 'dashboard/owner/add-property',
+        path: 'dashboard/property_owner/add-property',
         loadComponent: () =>
           import('./features/dashbords/add-new-property/add-new-property').then(
             (m) => m.AddNewProperty,
@@ -79,20 +86,19 @@ export const routes: Routes = [
         data: { prerender: false },
       },
       {
-        path: 'dashboard/admin',
-        loadChildren: () => import('./features/dashbords/admin/admin.routes').then(m => m.adminRoutes),
-        data: { prerender: false },
-      },
-      {
-        path: 'dashboard/seeker',
+        path: 'dashboard/property_seeker',
         component: SeekerDashboardComponent,
         data: { prerender: false },
       },
-      
-      // Admin Dashboard Routes
+    ],
+  },
+  {
+    path: 'dashboard/system_admin',
+    component: AdminLayoutComponent,
+    children: [
       {
-        path: 'dashboard/admin',
-        loadChildren: () => 
+        path: '',
+        loadChildren: () =>
           import('./features/dashbords/admin/admin.routes').then((m) => m.adminRoutes),
         data: { prerender: false },
       },

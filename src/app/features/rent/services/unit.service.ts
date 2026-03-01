@@ -83,6 +83,39 @@ export interface Unit {
   description: string;
   unitType: string;
   facilitiesAndServices: string[];
+  finalPricing?: {
+    _id: string;
+    targetType: string;
+    targetId: string;
+    purpose: string;
+    rentType: string;
+    price: number;
+    tiers: Array<{
+      minDays: number;
+      pricePerDay: number;
+      label: string;
+      _id: string;
+    }>;
+    currency: string;
+    isActive: boolean;
+    createdBy: string;
+    isDeleted: boolean;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+    updatedBy?: string;
+    deletedAt?: string;
+    deletedBy?: string;
+  };
+  owner?: {
+    type: string;
+    name: string;
+    role: string;
+    contact: {
+      phoneNumber: string;
+      email: string;
+    };
+  };
 }
 
 export interface UnitFilters {
@@ -154,7 +187,7 @@ export class UnitService {
     console.log('  - params:', params.toString());
     console.log('  - headers:', headers);
     
-    return this.http.get<UnitsResponse>(`${this.baseUrl}/unit`, { 
+    return this.http.get<UnitsResponse>(`${this.baseUrl}/unit/rent`, { 
       params,
       headers 
     });
@@ -169,6 +202,6 @@ export class UnitService {
       'X-Language': currentLanguage
     };
 
-    return this.http.get(`${this.baseUrl}/unit/${id}`, { headers });
+    return this.http.get(`${this.baseUrl}/unit/${id}/rent`, { headers });
   }
 }

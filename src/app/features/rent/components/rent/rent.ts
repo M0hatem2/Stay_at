@@ -74,7 +74,7 @@ export class Rent implements OnInit, OnDestroy {
     this.languageSubscription?.unsubscribe();
   }
 
-  loadUnits(): void {
+  loadUnits(append: boolean = false): void {
     this.isLoading = true;
     this.errorMessage = '';
 
@@ -83,9 +83,17 @@ export class Rent implements OnInit, OnDestroy {
         console.log('🏠 Units Response:', response);
         console.log('🏠 Units Data Sample:', response.units.data[0]);
         
-        this.units = response.units.data;
+        if (append) {
+          // إضافة النتائج الجديدة إلى القائمة الموجودة
+          this.units = [...this.units, ...response.units.data];
+        } else {
+          // استبدال القائمة بالكامل
+          this.units = response.units.data;
+        }
+        
         this.totalResults = response.units.totalItems;
         this.currentPage = response.units.currentPage;
+        this.itemsPerPage = response.units.itemsPerPage;
         this.isLoading = false;
       },
       error: (error) => {
@@ -196,9 +204,9 @@ export class Rent implements OnInit, OnDestroy {
   }
 
   loadMore(): void {
-    if (this.currentPage * this.itemsPerPage < this.totalResults) {
+    if (this.currentPage * this.itemsPerPage < this.totalResults && !this.isLoading) {
       this.filters.page = (this.filters.page || 1) + 1;
-      this.loadUnits();
+      this.loadUnits(true); // true = append results
     }
   }
 
@@ -216,8 +224,8 @@ export class Rent implements OnInit, OnDestroy {
     });
   }
 
-  // Convert Unit to ApiProperty for compatibility
-  convertUnitToApiProperty(unit: Unit): ApiProperty {
+  // Convert Unit to ApiProperty for compatibility with units-card component
+  convertUnitToApiProperty(unit: Unit): ApiProperty & { bedrooms?: number; bathrooms?: number; area?: string; price?: string; priceType?: 'monthly' | 'daily' | 'sale' } {
     return {
       _id: unit._id,
       slug: unit.slug,
@@ -256,8 +264,28 @@ export class Rent implements OnInit, OnDestroy {
       name: unit.title,
       description: unit.description,
       type: unit.unitType,
-      facilitiesAndServices: unit.facilitiesAndServices
+      facilitiesAndServices: unit.facilitiesAndServices,
+      // إضافة الحقول المطلوبة للكارد
+      bedrooms: unit.bedrooms,
+      bathrooms: unit.bathrooms,
+      area: `${unit.unitArea} م²`,
+      price: unit.listingPrice.rentPrice.toLocaleString('ar-EG'),
+      priceType: this.mapRentPeriodToPriceType(unit.listingPrice.rentPeriod)
     };
+  }
+
+  // تحويل فترة الإيجار إلى نوع السعر
+  private mapRentPeriodToPriceType(rentPeriod: string): 'monthly' | 'daily' | 'sale' {
+    switch (rentPeriod.toLowerCase()) {
+      case 'day':
+      case 'daily':
+        return 'daily';
+      case 'month':
+      case 'monthly':
+        return 'monthly';
+      default:
+        return 'monthly';
+    }
   }
 
 }

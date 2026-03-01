@@ -1,31 +1,37 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
- 
-import { BookTheApartment } from '../book-the-apartment/book-the-apartment';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+
 import { ActivatedRoute, Router } from '@angular/router';
 import { FullPropertyData } from '../../../core/models/property.model';
 import { PropertyCardData } from '../units-card/units-card';
-import { CommonModule, DatePipe } from '@angular/common';
- import { ApiProperty } from '../../../core/models/api-property.model';
+import { CommonModule } from '@angular/common';
+import { ApiProperty } from '../../../core/models/api-property.model';
 import { Subscription } from 'rxjs';
-import { skip } from 'rxjs/operators';
-import { GoogleMap } from '../google-map/google-map';
+import { UnitService, Unit } from '../../../features/rent/services/unit.service';
+import { PropertyService } from '../../../features/all-properties/services/property.service';
+import { UnitGalleryComponent } from './components/unit-gallery';
+import { UnitInfoComponent } from './components/unit-info';
+import { BookingSidebarComponent } from './components/booking-sidebar';
+import { AiAnalysisComponent } from './components/ai-analysis';
+import { LocationMapComponent } from './components/location-map';
+import { DayDetailsModalComponent } from './components/day-details-modal';
+import { ImageModalComponent } from './components/image-modal';
+import { PricingTableComponent } from './components/pricing-table';
+import { AvailabilityCalendarComponent } from './components/availability-calendar/availability-calendar';
 
-interface CalendarDay {
-  date: number;
-  status: 'available' | 'occupied' | 'pending' | 'past';
-  isCurrentMonth: boolean;
-  fullDate: Date;
-  isToday: boolean;
-}
- 
 @Component({
   selector: 'app-unit-details',
   imports: [
     CommonModule,
-    DatePipe,
-     
-    BookTheApartment,
-    GoogleMap,
+
+    UnitGalleryComponent,
+    UnitInfoComponent,
+    BookingSidebarComponent,
+    AiAnalysisComponent,
+    LocationMapComponent,
+    DayDetailsModalComponent,
+    ImageModalComponent,
+    PricingTableComponent,
+    AvailabilityCalendarComponent,
   ],
   templateUrl: './unit-details.html',
   styleUrl: './unit-details.scss',
@@ -33,6 +39,7 @@ interface CalendarDay {
 export class UnitDetails implements OnInit, OnDestroy {
   property: FullPropertyData | undefined;
   apiProperty: ApiProperty | undefined;
+  unitData: Unit | undefined;
   showBookingPopup = false;
   isLoading = false;
   errorMessage = '';
@@ -42,35 +49,24 @@ export class UnitDetails implements OnInit, OnDestroy {
   private currentPropertyId: string | null = null;
   private loadedFromApiId: string | null = null;
 
-  // Calendar properties
-  currentDate = new Date();
-  calendarMonth = new Date().getMonth();
-  calendarYear = new Date().getFullYear();
-  calendarDays: CalendarDay[] = [];
-  availableCount = 0;
-  occupiedCount = 0;
-  pendingCount = 0;
-  selectedDay: CalendarDay | null = null;
+  private unitService = inject(UnitService);
+  private propertyService = inject(PropertyService);
+
+  // Selected day for modal
+  selectedDay: any | null = null;
   showDayDetails = false;
-  
+
+  // Selected pricing
+  selectedPrice: number | null = null;
+  selectedPricePeriod: string = '';
+
   // Image gallery properties
   currentImageIndex = 0;
   showImageModal = false;
-  
-  // Sample booking data (replace with real data from API)
-  private bookedDates = new Set<string>([
-    '2026-02-10', '2026-02-11', '2026-02-15', '2026-02-25',
-    '2026-03-05', '2026-03-15', '2026-03-20'
-  ]);
-  
-  private pendingDates = new Set<string>([
-    '2026-02-18', '2026-02-22', '2026-03-08', '2026-03-12'
-  ]);
 
   constructor(
     public router: Router,
     private route: ActivatedRoute,
-    
   ) {}
 
   goToLogin() {
@@ -93,6 +89,12 @@ export class UnitDetails implements OnInit, OnDestroy {
     this.router.navigate(['/auth/register-pop']);
   }
 
+  onPriceSelected(event: { pricePerDay: number; totalPrice: number; days: number; label: string }) {
+    this.selectedPrice = event.pricePerDay;
+    this.selectedPricePeriod = event.label;
+    console.log('Selected price:', event);
+  }
+
   openBookingPopup() {
     this.showBookingPopup = true;
   }
@@ -102,7 +104,126 @@ export class UnitDetails implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.generateCalendar();
+    // الحصول على ID من الـ route
+    this.routeSubscription = this.route.paramMap.subscribe((params) => {
+      const id = params.get('id');
+      if (id) {
+        this.currentPropertyId = id;
+        // Check the current route to determine which endpoint to use
+        const currentUrl = this.router.url;
+        if (currentUrl.includes('/property/')) {
+          this.loadPropertyDetails(id);
+        } else {
+          this.loadUnitDetails(id);
+        }
+      }
+    });
+  }
+
+  private loadUnitDetails(id: string): void {
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    this.unitService.getUnitById(id).subscribe({
+      next: (response: any) => {
+        console.log('🏠 Unit Details Response:', response);
+
+        // Handle both response formats: {unit: ...} or {property: ...}
+        if (response.unit) {
+          this.unitData = response.unit;
+        } else if (response.property) {
+          // Convert property format to unit format
+          this.apiProperty = response.property;
+          // Map property data to unitData structure for compatibility
+          this.unitData = this.mapPropertyToUnit(response.property);
+        }
+
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('❌ Error loading unit details:', error);
+        this.errorMessage = 'حدث خطأ أثناء تحميل تفاصيل الوحدة';
+        this.isLoading = false;
+      },
+    });
+  }
+
+  private loadPropertyDetails(id: string): void {
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    this.propertyService.getPropertyById(id).subscribe({
+      next: (response: any) => {
+        console.log('🏠 Property Details Response:', response);
+
+        // Handle property response format
+        if (response.property) {
+          this.apiProperty = response.property;
+          // Map property data to unitData structure for compatibility
+          this.unitData = this.mapPropertyToUnit(response.property);
+        }
+
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('❌ Error loading property details:', error);
+        this.errorMessage = 'حدث خطأ أثناء تحميل تفاصيل العقار';
+        this.isLoading = false;
+      },
+    });
+  }
+
+  private mapPropertyToUnit(property: any): Unit {
+    // Map property structure to unit structure
+    return {
+      _id: property._id,
+      slug: property.slug,
+      title: property.name,
+      description: property.description,
+      unitType: property.type,
+      location: property.location,
+      gallery: property.gallery || [],
+      documents: property.documents || [],
+      facilitiesAndServices: property.facilitiesAndServices || [],
+      project: property.project,
+      owner: property.owner,
+      status: property.status,
+      // Add other fields with defaults or from property
+      propertyId: property._id,
+      projectId: property.projectId,
+      ownerType: property.ownerType,
+      ownerId: property.ownerId,
+      unitNumber: '',
+      purpose: 'sale_and_rent',
+      unitArea: 0,
+      bedrooms: 0,
+      bathrooms: 0,
+      floorNumber: property.floorsCount || 0,
+      furnished: false,
+      maxGuests: 0,
+      isFeatured: property.isFeatured || false,
+      listingPrice: {
+        salePrice: 0,
+        rentPrice: 0,
+        rentPeriod: 'daily',
+        currency: 'EGP',
+      },
+      aiAnalysis: {
+        priceEvaluation: {
+          status: '',
+          marketComparison: '',
+          isGoodDeal: false,
+        },
+        locationEvaluation: {
+          rating: 0,
+          pros: [],
+          description: '',
+        },
+        nearbyLandmarks: [],
+        summary: '',
+        lastUpdated: '',
+      },
+    } as Unit;
   }
 
   private handlePropertyData(property: PropertyCardData): void {
@@ -117,16 +238,18 @@ export class UnitDetails implements OnInit, OnDestroy {
     }
   }
 
- 
   private isLikelySlug(id: string): boolean {
     return id.includes('-');
   }
 
   get displayTitle(): string {
-    return this.apiProperty?.name || this.property?.title || '';
+    return this.unitData?.title || this.apiProperty?.name || this.property?.title || '';
   }
 
   get displayLocation(): string {
+    if (this.unitData?.location) {
+      return `${this.unitData.location.area}, ${this.unitData.location.city}`;
+    }
     if (this.apiProperty?.location) {
       return `${this.apiProperty.location.area}, ${this.apiProperty.location.city}`;
     }
@@ -134,6 +257,9 @@ export class UnitDetails implements OnInit, OnDestroy {
   }
 
   get heroImage(): string {
+    if (this.unitData?.gallery?.length) {
+      return this.unitData.gallery[0]?.secure_url || '';
+    }
     if (this.apiProperty?.gallery?.length) {
       return this.apiProperty.gallery[0]?.secure_url || '';
     }
@@ -141,6 +267,9 @@ export class UnitDetails implements OnInit, OnDestroy {
   }
 
   get galleryImages(): string[] {
+    if (this.unitData?.gallery?.length) {
+      return this.unitData.gallery.map((item) => item.secure_url).filter(Boolean);
+    }
     if (this.apiProperty?.gallery?.length) {
       return this.apiProperty.gallery.map((item) => item.secure_url).filter(Boolean);
     }
@@ -153,7 +282,7 @@ export class UnitDetails implements OnInit, OnDestroy {
       'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1200&h=800&fit=crop',
       'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1200&h=800&fit=crop',
       'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1200&h=800&fit=crop'
+      'https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1200&h=800&fit=crop',
     ];
   }
 
@@ -166,14 +295,22 @@ export class UnitDetails implements OnInit, OnDestroy {
   }
 
   get bedrooms(): number | null {
-    return this.property?.bedrooms ?? this.property?.stats?.bedrooms ?? null;
+    return (
+      this.unitData?.bedrooms ?? this.property?.bedrooms ?? this.property?.stats?.bedrooms ?? null
+    );
   }
 
   get bathrooms(): number | null {
-    return this.property?.bathrooms ?? this.property?.stats?.bathrooms ?? null;
+    return (
+      this.unitData?.bathrooms ??
+      this.property?.bathrooms ??
+      this.property?.stats?.bathrooms ??
+      null
+    );
   }
 
   get area(): string | null {
+    if (this.unitData?.unitArea) return `${this.unitData.unitArea} م²`;
     if (this.property?.area) return this.property.area;
     if (this.property?.stats?.area_sqm) return `${this.property.stats.area_sqm} sqm`;
     return null;
@@ -188,11 +325,11 @@ export class UnitDetails implements OnInit, OnDestroy {
   }
 
   get floor(): string | number | null {
-    return this.property?.details?.floor ?? null;
+    return this.unitData?.floorNumber ?? this.property?.details?.floor ?? null;
   }
 
   get furnished(): boolean | null {
-    return this.property?.details?.furnished ?? null;
+    return this.unitData?.furnished ?? this.property?.details?.furnished ?? null;
   }
 
   get yearBuilt(): number | null {
@@ -200,22 +337,73 @@ export class UnitDetails implements OnInit, OnDestroy {
   }
 
   get descriptionText(): string {
-    return this.apiProperty?.description || this.property?.description || '';
+    return (
+      this.unitData?.description ||
+      this.apiProperty?.description ||
+      this.property?.description ||
+      ''
+    );
   }
 
   get amenities(): string[] {
-    return this.property?.amenities || this.apiProperty?.facilitiesAndServices || [];
+    return (
+      this.unitData?.facilitiesAndServices ||
+      this.property?.amenities ||
+      this.apiProperty?.facilitiesAndServices ||
+      []
+    );
   }
 
   get pricingTable() {
+    // استخدام finalPricing من Unit API
+    if (this.unitData?.finalPricing?.tiers) {
+      return this.unitData.finalPricing.tiers.map(
+        (tier: { minDays: number; pricePerDay: number; label: string }) => ({
+          duration_label: tier.label,
+          days: tier.minDays,
+          price_per_day: tier.pricePerDay,
+          total_price: tier.pricePerDay * tier.minDays,
+          discount_percent: this.calculateDiscount(tier.pricePerDay),
+          savings: this.calculateSavings(tier.pricePerDay, tier.minDays),
+        }),
+      );
+    }
     return this.property?.pricing?.pricing_table || [];
   }
 
+  private calculateDiscount(pricePerDay: number): number {
+    if (!this.unitData?.finalPricing?.price) return 0;
+    const basePrice = this.unitData.finalPricing.price;
+    return Math.round(((basePrice - pricePerDay) / basePrice) * 100);
+  }
+
+  private calculateSavings(pricePerDay: number, days: number): number {
+    if (!this.unitData?.finalPricing?.price) return 0;
+    const basePrice = this.unitData.finalPricing.price;
+    return (basePrice - pricePerDay) * days;
+  }
+
   get pricingCurrency(): string {
-    return this.property?.pricing?.currency || 'EGP';
+    return (
+      this.unitData?.finalPricing?.currency ||
+      this.unitData?.listingPrice?.currency ||
+      this.property?.pricing?.currency ||
+      'EGP'
+    );
   }
 
   get priceDisplay(): string {
+    // إذا تم اختيار سعر، استخدمه
+    if (this.selectedPrice !== null) {
+      return `${this.selectedPrice.toLocaleString('ar-EG')} ${this.pricingCurrency}`;
+    }
+
+    if (this.unitData?.finalPricing?.price) {
+      return `${this.unitData.finalPricing.price.toLocaleString('ar-EG')} ${this.pricingCurrency}`;
+    }
+    if (this.unitData?.listingPrice?.rentPrice) {
+      return `${this.unitData.listingPrice.rentPrice.toLocaleString('ar-EG')} ${this.pricingCurrency}`;
+    }
     if (this.property?.pricing?.sidebar_display_price) {
       const price = this.property.pricing.sidebar_display_price;
       return `${price.amount} ${price.currency}`;
@@ -227,6 +415,28 @@ export class UnitDetails implements OnInit, OnDestroy {
   }
 
   get pricePeriodLabel(): string {
+    if (this.unitData?.finalPricing?.rentType) {
+      const rentType = this.unitData.finalPricing.rentType;
+      return rentType === 'daily'
+        ? 'يومياً'
+        : rentType === 'monthly'
+          ? 'شهرياً'
+          : rentType === 'yearly'
+            ? 'سنوياً'
+            : '';
+    }
+    if (this.unitData?.listingPrice?.rentPeriod) {
+      const period = this.unitData.listingPrice.rentPeriod;
+      return period === 'day'
+        ? 'يومياً'
+        : period === 'week'
+          ? 'أسبوعياً'
+          : period === 'month'
+            ? 'شهرياً'
+            : period === 'year'
+              ? 'سنوياً'
+              : '';
+    }
     if (this.property?.pricing?.sidebar_display_price?.period_label) {
       return this.property.pricing.sidebar_display_price.period_label;
     }
@@ -261,11 +471,12 @@ export class UnitDetails implements OnInit, OnDestroy {
   }
 
   get smartAnalysis() {
-    return this.property?.smart_analysis;
+    return this.unitData?.aiAnalysis || this.property?.smart_analysis;
   }
 
   get locationLat(): number | null {
     return (
+      this.unitData?.location?.coordinates?.coordinates?.[1] ??
       this.property?.location_details?.latitude ??
       this.property?.locationDetails?.latitude ??
       this.apiProperty?.location?.coordinates?.coordinates?.[1] ??
@@ -275,6 +486,7 @@ export class UnitDetails implements OnInit, OnDestroy {
 
   get locationLng(): number | null {
     return (
+      this.unitData?.location?.coordinates?.coordinates?.[0] ??
       this.property?.location_details?.longitude ??
       this.property?.locationDetails?.longitude ??
       this.apiProperty?.location?.coordinates?.coordinates?.[0] ??
@@ -282,86 +494,97 @@ export class UnitDetails implements OnInit, OnDestroy {
     );
   }
 
+  get locationCoordinates(): string {
+    const lat = this.locationLat;
+    const lng = this.locationLng;
+    if (lat !== null && lng !== null) {
+      return `Lat: ${lat.toFixed(4)}, Lng: ${lng.toFixed(4)}`;
+    }
+    return 'Lat: 30.0444, Lng: 31.2357';
+  }
+
+  get locationAddress(): string {
+    return this.unitData?.location?.address || this.apiProperty?.location?.address || '';
+  }
+
+  get locationArea(): string {
+    return this.unitData?.location?.area || this.apiProperty?.location?.area || '';
+  }
+
+  get locationCity(): string {
+    return this.unitData?.location?.city || this.apiProperty?.location?.city || '';
+  }
+
+  get locationCountry(): string {
+    return this.unitData?.location?.country || this.apiProperty?.location?.country || '';
+  }
+
   get nearbyPlaces() {
+    if (this.unitData?.aiAnalysis?.nearbyLandmarks) {
+      return this.unitData.aiAnalysis.nearbyLandmarks.map((landmark) => ({
+        name: landmark.name,
+        type: landmark.type,
+        distance: landmark.distance,
+      }));
+    }
     return this.property?.location_details?.nearby_places || [];
   }
 
   get ownerInfo() {
-    return this.property?.owner;
+    if (!this.unitData?.owner) return null;
+
+    return {
+      name: this.unitData.owner.name,
+      type: this.unitData.owner.type,
+      role: this.unitData.owner.role,
+      phoneNumber: this.unitData.owner.contact.phoneNumber,
+      email: this.unitData.owner.contact.email,
+    };
+  }
+
+  get ownerName(): string {
+    return this.unitData?.owner?.name || this.property?.owner?.name || 'Ahmed Mohamed';
+  }
+
+  get ownerType(): string {
+    return this.unitData?.owner?.type || '';
+  }
+
+  get ownerRole(): string {
+    return this.unitData?.owner?.role || '';
+  }
+
+  get ownerPhone(): string {
+    return this.unitData?.owner?.contact?.phoneNumber || '';
+  }
+
+  get ownerEmail(): string {
+    return this.unitData?.owner?.contact?.email || '';
   }
 
   get safetyTips(): string[] {
     return this.property?.safety_tips || [];
   }
 
-  // Calendar methods
-  generateCalendar(): void {
-    const firstDay = new Date(this.calendarYear, this.calendarMonth, 1);
-    const lastDay = new Date(this.calendarYear, this.calendarMonth + 1, 0);
-    const startDate = new Date(firstDay);
-    startDate.setDate(startDate.getDate() - firstDay.getDay());
-    
-    const days: CalendarDay[] = [];
-    this.availableCount = 0;
-    this.occupiedCount = 0;
-    this.pendingCount = 0;
-    
-    for (let i = 0; i < 42; i++) {
-      const current = new Date(startDate);
-      current.setDate(startDate.getDate() + i);
-      
-      const dateStr = this.formatDateForComparison(current);
-      const isCurrentMonth = current.getMonth() === this.calendarMonth;
-      const isPast = current < new Date(new Date().setHours(0, 0, 0, 0));
-      
-      let status: 'available' | 'occupied' | 'pending' | 'past';
-      
-      if (isPast) {
-        status = 'past';
-      } else if (this.bookedDates.has(dateStr)) {
-        status = 'occupied';
-        this.occupiedCount++;
-      } else if (this.pendingDates.has(dateStr)) {
-        status = 'pending';
-        this.pendingCount++;
-      } else {
-        status = 'available';
-        if (isCurrentMonth) this.availableCount++;
-      }
-      
-      days.push({
-        date: current.getDate(),
-        status,
-        isCurrentMonth,
-        fullDate: new Date(current),
-        isToday: this.isToday(current)
-      });
-    }
-    
-    this.calendarDays = days;
+  get defaultSafetyTips(): string[] {
+    return ["Don't pay before viewing", 'Verify official documents', 'Use secure payment methods'];
   }
 
-  previousMonth(): void {
-    if (this.calendarMonth === 0) {
-      this.calendarMonth = 11;
-      this.calendarYear--;
-    } else {
-      this.calendarMonth--;
-    }
-    this.generateCalendar();
+  // AI Analysis getters
+  get hasPriceEvaluation(): boolean {
+    return !!this.unitData?.aiAnalysis?.priceEvaluation;
   }
 
-  nextMonth(): void {
-    if (this.calendarMonth === 11) {
-      this.calendarMonth = 0;
-      this.calendarYear++;
-    } else {
-      this.calendarMonth++;
-    }
-    this.generateCalendar();
+  get hasLocationEvaluation(): boolean {
+    return !!this.unitData?.aiAnalysis?.locationEvaluation;
   }
 
-  onDateClick(day: CalendarDay): void {
+  get hasAiSummary(): boolean {
+    return !!this.unitData?.aiAnalysis?.summary;
+  }
+
+  // Calendar event handler
+  onDateClick(day: any): void {
     this.selectedDay = day;
     this.showDayDetails = true;
     console.log('Date clicked:', day.fullDate, 'Status:', day.status);
@@ -372,13 +595,18 @@ export class UnitDetails implements OnInit, OnDestroy {
     this.selectedDay = null;
   }
 
-  getDayStatusText(day: CalendarDay): string {
+  getDayStatusText(day: any): string {
     switch (day.status) {
-      case 'available': return 'Available for booking';
-      case 'occupied': return 'Already booked';
-      case 'pending': return 'Pending confirmation';
-      case 'past': return 'Past date';
-      default: return 'Unknown status';
+      case 'available':
+        return 'Available for booking';
+      case 'occupied':
+        return 'Already booked';
+      case 'pending':
+        return 'Pending confirmation';
+      case 'past':
+        return 'Past date';
+      default:
+        return 'Unknown status';
     }
   }
 
@@ -409,54 +637,8 @@ export class UnitDetails implements OnInit, OnDestroy {
   }
 
   previousImage(): void {
-    this.currentImageIndex = this.currentImageIndex === 0 
-      ? this.galleryImages.length - 1 
-      : this.currentImageIndex - 1;
-  }
-
-  getMonthName(): string {
-    const months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
-    ];
-    return `${months[this.calendarMonth]} ${this.calendarYear}`;
-  }
-
-  getDayClasses(day: CalendarDay): string {
-    let classes = 'aspect-square rounded-lg border-2 flex flex-col items-center justify-center transition-all relative cursor-pointer hover:scale-105 hover:shadow-md min-h-[32px] sm:min-h-[40px]';
-    
-    // All days have the same basic styling
-    if (day.isCurrentMonth) {
-      classes += ' bg-white text-gray-700 border-gray-200 hover:bg-gray-50';
-    } else {
-      classes += ' bg-gray-50 text-gray-400 border-gray-200';
-    }
-    
-    // Special styling for today
-    if (day.isToday) {
-      classes += ' ring-2 ring-[#de5806] ring-offset-2';
-    }
-    
-    // Disable past dates
-    if (day.status === 'past') {
-      classes += ' cursor-not-allowed opacity-60';
-    }
-    
-    return classes;
-  }
-
-  getStatusIcon(day: CalendarDay): string {
-    // Don't show icons on the calendar anymore
-    return '';
-  }
-
-  private formatDateForComparison(date: Date): string {
-    return date.toISOString().split('T')[0];
-  }
-
-  private isToday(date: Date): boolean {
-    const today = new Date();
-    return date.toDateString() === today.toDateString();
+    this.currentImageIndex =
+      this.currentImageIndex === 0 ? this.galleryImages.length - 1 : this.currentImageIndex - 1;
   }
 
   ngOnDestroy(): void {

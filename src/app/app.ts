@@ -2,15 +2,14 @@ import { Component, OnInit, signal } from '@angular/core';
 import { Router, NavigationEnd, RouterOutlet } from '@angular/router';
 import * as AOS from 'aos';
 import { filter } from 'rxjs/operators';
-import { Plans } from './features/plans/plans';
-import { GoogleMap } from "./shared/components/google-map/google-map";
+import { NotLoggedInComponent } from "./shared/components/not-logged-in/not-logged-in";
 
 @Component({
   selector: 'app-root',
   standalone: true,
   templateUrl: './app.html',
   styleUrls: ['./app.scss'],
-  imports: [RouterOutlet, GoogleMap],
+  imports: [RouterOutlet, NotLoggedInComponent],
 })
 export class App implements OnInit {
   protected readonly title = signal('Stay_At');

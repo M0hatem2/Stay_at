@@ -1,61 +1,106 @@
-<div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto" dir="ltr"
-      style="opacity: 1; transform: none;">
-      <!-- Header -->
-      <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between z-10">
-            <div>
-                  <h3 class="text-xl text-gray-900">Complete Payment</h3>
-                  <p class="text-sm text-gray-600 mt-1">{{ planTitle() }} - {{ formatPrice(planPrice()) }} {{
-                        planCurrency() }} {{ planPeriod() }}</p>
-            </div>
-            <button (click)="closePayment()" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="lucide lucide-x w-5 h-5" aria-hidden="true">
-                        <path d="M18 6 6 18"></path>
-                        <path d="m6 6 12 12"></path>
-                  </svg>
-            </button>
+<div
+  class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto"
+  dir="ltr"
+  style="opacity: 1; transform: none"
+>
+  <!-- Header -->
+  <div
+    class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between z-10"
+  >
+    <div>
+      <h3 class="text-xl text-gray-900">Complete Payment</h3>
+      <p class="text-sm text-gray-600 mt-1">
+        {{ planTitle() }} - {{ formatPrice(planPrice()) }} {{ planCurrency() }} {{ planPeriod() }}
+      </p>
+    </div>
+    <button (click)="closePayment()" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="lucide lucide-x w-5 h-5"
+        aria-hidden="true"
+      >
+        <path d="M18 6 6 18"></path>
+        <path d="m6 6 12 12"></path>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Stepper Progress -->
+  <div class="px-6 py-4">
+    <div class="flex items-center gap-2">
+      <!-- Step 1 -->
+      <div class="flex items-center gap-2 flex-1">
+        <div
+          [class]="
+            currentStep() >= 1
+              ? 'w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm font-medium'
+              : 'w-8 h-8 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center text-sm font-medium'
+          "
+        >
+          <span *ngIf="currentStep() > 1">✓</span>
+          <span *ngIf="currentStep() <= 1">1</span>
+        </div>
+        <span class="text-sm text-gray-600">Payment Method</span>
       </div>
 
-      <!-- Stepper Progress -->
-      <div class="px-6 py-4">
-            <div class="flex items-center gap-2">
-                  <!-- Step 1 -->
-                  <div class="flex items-center gap-2 flex-1">
-                        <div
-                              [class]="currentStep() >= 1 ? 'w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm font-medium' : 'w-8 h-8 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center text-sm font-medium'">
-                              <span *ngIf="currentStep() > 1">✓</span>
-                              <span *ngIf="currentStep() <= 1">1</span>
-                        </div>
-                        <span class="text-sm text-gray-600">Payment Method</span>
-                  </div>
+      <!-- Divider -->
+      <div
+        [class]="currentStep() >= 2 ? 'flex-1 h-0.5 bg-blue-600' : 'flex-1 h-0.5 bg-gray-200'"
+      ></div>
 
-                  <!-- Divider -->
-                  <div [class]="currentStep() >= 2 ? 'flex-1 h-0.5 bg-blue-600' : 'flex-1 h-0.5 bg-gray-200'"></div>
-
-                  <!-- Step 2 -->
-                  <div class="flex items-center gap-2 flex-1">
-                        <div
-                              [class]="currentStep() >= 2 ? 'w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm font-medium' : 'w-8 h-8 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center text-sm font-medium'">
-                              2
-                        </div>
-                        <span class="text-sm text-gray-600">Payment Details</span>
-                  </div>
-            </div>
+      <!-- Step 2 -->
+      <div class="flex items-center gap-2 flex-1">
+        <div
+          [class]="
+            currentStep() >= 2
+              ? 'w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm font-medium'
+              : 'w-8 h-8 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center text-sm font-medium'
+          "
+        >
+          2
+        </div>
+        <span class="text-sm text-gray-600">Payment Details</span>
       </div>
+    </div>
+  </div>
 
-      <!-- Content -->
-      <div class="px-6 pb-6">
-            <!-- Step 1: Payment Method Selection -->
-            <div *ngIf="currentStep() === 1">
-                  <app-payment-method (methodSelected)="onPaymentMethodSelected($event)"></app-payment-method>
-            </div>
+  <!-- Content -->
+  <div class="px-6 pb-6">
+    <!-- Step 1: Payment Method Selection -->
+    <div *ngIf="currentStep() === 1">
+      <app-payment-method (methodSelected)="onPaymentMethodSelected($event)"></app-payment-method>
+    </div>
 
-            <!-- Step 2: Payment Details -->
-            <div *ngIf="currentStep() === 2">
-                  <app-card *ngIf="selectedMethod() === 'card'"></app-card>
-                  <app-wallet *ngIf="selectedMethod() === 'wallet'"></app-wallet>
-                  <app-bank *ngIf="selectedMethod() === 'bank'"></app-bank>
-            </div>
-      </div>
+    <!-- Step 2: Payment Details -->
+    <div *ngIf="currentStep() === 2">
+      <app-card
+        *ngIf="selectedMethod() === 'card'"
+        [subscriptionId]="subscriptionId()"
+        [planTitle]="planTitle()"
+        [planPrice]="planPrice()"
+        [planCurrency]="planCurrency()"
+        [planPeriod]="planPeriod()"
+        (back)="goBack()"
+        (paymentSuccess)="closePayment()"
+      ></app-card>
+      <app-wallet
+        *ngIf="selectedMethod() === 'wallet'"
+        [subscriptionId]="subscriptionId()"
+        [planTitle]="planTitle()"
+        [planPrice]="planPrice()"
+        [planCurrency]="planCurrency()"
+        [planPeriod]="planPeriod()"
+        (back)="goBack()"
+        (paymentSuccess)="closePayment()"
+      ></app-wallet>
+    </div>
+  </div>
 </div>

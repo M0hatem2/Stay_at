@@ -9,6 +9,7 @@ import { HomeHowDoesStayAtWork } from '../components/home-how-does-stay-at-work/
 import { HomeReport } from '../components/home-report/home-report';
 import { HomeOurCustomersSay } from "../components/home-our-customers-say/home-our-customers-say";
 import { DownloadTheAppNow } from "../components/download-the-app-now/download-the-app-now";
+import { NotLoggedInComponent } from "../../../shared/components/not-logged-in/not-logged-in";
 
 @Component({
   selector: 'app-home-page',
@@ -21,7 +22,8 @@ import { DownloadTheAppNow } from "../components/download-the-app-now/download-t
     HomeHowDoesStayAtWork,
     HomeReport,
     HomeOurCustomersSay,
-    DownloadTheAppNow
+    DownloadTheAppNow,
+    NotLoggedInComponent
 ],
   templateUrl: './home.page.html',
   styleUrl: './home.page.scss',

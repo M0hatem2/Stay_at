@@ -284,8 +284,36 @@
 
         <!-- Main Content -->
         <div [ngClass]="showFilters ? 'lg:col-span-3' : 'lg:col-span-4'">
+          <!-- Sort and View Options -->
+          @if (!isLoading && !errorMessage && units.length > 0) {
+            <div class="mb-6 flex items-center justify-between">
+              <div class="text-gray-600">
+                <span class="font-medium text-gray-900">{{ totalResults }}</span> Available Units
+              </div>
+              <div class="flex items-center gap-4">
+                <div class="relative">
+                  <select
+                    [(ngModel)]="filters.sort"
+                    (change)="onApplyFilters()"
+                    class="appearance-none px-5 py-2.5 pr-10 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#de5806] focus:border-[#de5806] text-sm font-medium text-gray-700 hover:border-gray-300 transition-all cursor-pointer shadow-sm"
+                  >
+                    <option value="">Sort By</option>
+                    <option value="price_asc">💰 Price: Low to High</option>
+                    <option value="price_desc">💎 Price: High to Low</option>
+                    <option value="newest">🆕 Newest First</option>
+                  </select>
+                  <div
+                    class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
+                  >
+                    <i class="fas fa-chevron-down text-gray-400 text-xs"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+
           <!-- Loading State -->
-          @if (isLoading) {
+          @if (isLoading && units.length === 0) {
             <div class="text-center py-12">
               <i class="fas fa-spinner fa-spin text-4xl text-[#C4A962] mb-4"></i>
               <p class="text-gray-600">Loading units...</p>
@@ -301,7 +329,7 @@
                 (click)="loadUnits()"
                 class="mt-4 px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
               >
-                إعادة المحاولة
+                Try Again
               </button>
             </div>
           }
@@ -310,8 +338,8 @@
           @if (!isLoading && !errorMessage && units.length === 0) {
             <div class="bg-gray-50 border border-gray-200 rounded-xl p-12 text-center">
               <i class="fas fa-home text-gray-400 text-5xl mb-4"></i>
-              <h3 class="text-gray-700 text-xl mb-2">لا توجد وحدات</h3>
-              <p class="text-gray-500">لم يتم العثور على وحدات مطابقة لبحثك</p>
+              <h3 class="text-gray-700 text-xl mb-2">No Units Found</h3>
+              <p class="text-gray-500">No units match your search criteria</p>
             </div>
           }
 
@@ -326,14 +354,23 @@
               }
             </div>
 
+            <!-- Pagination Info -->
+            <div class="mt-6 text-center text-gray-600">
+              <p>Showing {{ units.length }} of {{ totalResults }} Units</p>
+            </div>
+
             <!-- Load More Button -->
             @if (currentPage * itemsPerPage < totalResults) {
               <div class="mt-8 text-center">
                 <button
                   (click)="loadMore()"
-                  class="px-8 py-3 border-2 border-[#C4A962] text-[#C4A962] rounded-xl hover:gradient-primary-btn hover:text-white transition-all shadow-sm hover:shadow-md"
+                  [disabled]="isLoading"
+                  class="px-8 py-3 border-2 border-[#C4A962] text-[#C4A962] rounded-xl hover:gradient-primary-btn hover:text-white transition-all shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <span class="flex items-center gap-2">
+                  <span class="flex items-center gap-2 justify-center">
+                    @if (isLoading) {
+                      <i class="fas fa-spinner fa-spin"></i>
+                    }
                     Load More
                     <span class="text-sm opacity-75"
                       >({{ units.length }} / {{ totalResults }})</span

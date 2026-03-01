@@ -1,737 +1,103 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8">
     <div class="lg:col-span-2 space-y-4 sm:space-y-6">
-      <div class="bg-white rounded-2xl overflow-hidden shadow-sm">
-        <div class="relative h-64 sm:h-80 lg:h-96 bg-gray-200">
-          <img
-            [src]="galleryImages[currentImageIndex] || heroImage"
-            [alt]="displayTitle"
-            class="w-full h-full object-cover cursor-pointer"
-            (click)="openImageModal()">
-          <div class="absolute top-2 sm:top-4 left-2 sm:left-4 flex flex-col gap-1 sm:gap-2">
-            <div class="px-2 sm:px-3 py-1 sm:py-1.5 bg-black text-white text-xs sm:text-sm rounded-lg flex items-center gap-1">
-              <i class="fa-solid fa-shield-alt w-3 h-3 sm:w-4 sm:h-4"></i><span>Managed</span>
-            </div>
-            <div class="px-2 sm:px-3 py-1 sm:py-1.5 bg-green-600 text-white text-xs sm:text-sm rounded-lg flex items-center gap-1">
-              <i class="fa-solid fa-check-circle w-3 h-3 sm:w-4 sm:h-4"></i><span>Verified</span>
-            </div>
-          </div>
-          <div class="absolute top-2 sm:top-4 right-2 sm:right-4 flex gap-1 sm:gap-2">
-            <button class="p-2 sm:p-3 bg-white/90 backdrop-blur-sm rounded-lg hover:bg-white transition-colors">
-              <i class="fa-regular fa-heart w-4 h-4 sm:w-5 sm:h-5"></i>
-            </button>
-            <button class="p-2 sm:p-3 bg-white/90 backdrop-blur-sm rounded-lg hover:bg-white transition-colors">
-              <i class="fa-solid fa-share-nodes w-4 h-4 sm:w-5 sm:h-5 text-gray-700"></i>
-            </button>
-          </div>
-          <!-- Navigation arrows for main image -->
-          <button 
-            *ngIf="galleryImages.length > 1"
-            (click)="previousImage()"
-            class="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors">
-            <i class="fa-solid fa-chevron-left w-4 h-4"></i>
-          </button>
-          <button 
-            *ngIf="galleryImages.length > 1"
-            (click)="nextImage()"
-            class="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors">
-            <i class="fa-solid fa-chevron-right w-4 h-4"></i>
-          </button>
-          <!-- Image counter -->
-          <div class="absolute bottom-2 sm:bottom-4 right-2 sm:right-4 px-2 py-1 bg-black/70 text-white text-xs rounded-lg">
-            {{ currentImageIndex + 1 }} / {{ galleryImages.length }}
-          </div>
-        </div>
-        <div class="p-2 sm:p-4 grid grid-cols-4 gap-2 sm:gap-3 overflow-x-auto">
-          <button 
-            *ngFor="let image of galleryImages; let i = index"
-            (click)="selectImage(i)"
-            class="relative h-16 sm:h-20 flex-shrink-0 rounded-lg overflow-hidden transition-all hover:scale-105"
-            [class.ring-2]="i === currentImageIndex"
-            [class.ring-black]="i === currentImageIndex">
-            <img [src]="image" alt="Gallery image {{ i + 1 }}" class="w-full h-full object-cover">
-          </button>
-        </div>
-      </div>
-      <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-sm">
-        <h1 class="text-lg sm:text-xl lg:text-2xl text-gray-900 mb-3 sm:mb-4">{{ displayTitle || 'Luxury Furnished Apartment - Fifth Settlement' }}</h1>
-        <div class="flex items-center gap-1 text-gray-600 mb-4 sm:mb-6">
-          <i class="fa-solid fa-map-marker-alt w-4 h-4 sm:w-5 sm:h-5"></i>
-          <span class="text-sm sm:text-base">{{ displayLocation || 'Fifth Settlement, New Cairo' }}</span>
-        </div>
-        <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 pb-4 sm:pb-6 border-b border-gray-200">
-          <div class="flex flex-col">
-            <div class="flex items-center gap-2 mb-2">
-              <i class="fa-solid fa-bed w-4 h-4 sm:w-5 sm:h-5 text-[#808080]"></i>
-              <span class="text-gray-500 text-xs sm:text-sm">Bedrooms</span>
-            </div>
-            <div class="text-gray-900 text-sm sm:text-base">{{ bedrooms || 3 }}</div>
-          </div>
-          <div class="flex flex-col">
-            <div class="flex items-center gap-2 mb-2">
-              <i class="fa-solid fa-bath w-4 h-4 sm:w-5 sm:h-5 text-[#808080]"></i>
-              <span class="text-gray-500 text-xs sm:text-sm">Bathrooms</span>
-            </div>
-            <div class="text-gray-900 text-sm sm:text-base">{{ bathrooms || 2 }}</div>
-          </div>
-          <div class="flex flex-col">
-            <div class="flex items-center gap-2 mb-2">
-              <i class="fa-solid fa-maximize w-4 h-4 sm:w-5 sm:h-5 text-[#808080]"></i>
-              <span class="text-gray-500 text-xs sm:text-sm">Area</span>
-            </div>
-            <div class="text-gray-900 text-sm sm:text-base">{{ area || '180 sqm' }}</div>
-          </div>
-          <div class="flex flex-col">
-            <div class="flex items-center gap-2 mb-2">
-              <i class="fa-solid fa-star w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 fill-yellow-400"></i>
-              <span class="text-gray-500 text-xs sm:text-sm">Rating</span>
-            </div>
-            <div class="text-gray-900 text-sm sm:text-base">{{ rating || 4.8 }} ({{ reviews || 24 }})</div>
-          </div>
-        </div>
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 py-4 sm:py-6 border-b border-gray-200">
-          <div>
-            <div class="text-gray-500 text-xs sm:text-sm mb-1">Floor</div>
-            <div class="text-gray-900 text-sm sm:text-base">{{ floor || 5 }}</div>
-          </div>
-          <div>
-            <div class="text-gray-500 text-xs sm:text-sm mb-1">Furnished</div>
-            <div class="text-gray-900 text-sm sm:text-base">{{ (furnished !== null ? (furnished ? 'Yes' : 'No') : 'Yes') }}</div>
-          </div>
-          <div>
-            <div class="text-gray-500 text-xs sm:text-sm mb-1">Year Built</div>
-            <div class="text-gray-900 text-sm sm:text-base">{{ yearBuilt || 2021 }}</div>
-          </div>
-        </div>
-        <div class="py-4 sm:py-6 border-b border-gray-200">
-          <h2 class="text-gray-900 mb-2 sm:mb-3 text-base sm:text-lg">Description</h2>
-          <p class="text-gray-600 leading-relaxed text-sm sm:text-base">{{ descriptionText || 'Luxury apartment in a prime location with all amenities and services. Super luxury finishing, wonderful view, close to all services and transportation. The apartment is fully furnished with modern furniture and appliances.' }}</p>
-        </div>
-        <div class="py-4 sm:py-6">
-          <h2 class="text-gray-900 mb-3 sm:mb-4 text-base sm:text-lg">Amenities</h2>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-            <div *ngFor="let amenity of (amenities.length ? amenities : ['Central AC', 'Fully Equipped Kitchen', 'Swimming Pool', 'Gym', '24/7 Security', 'Parking', 'Private Garden', 'Spacious Balcony'])" 
-                 class="flex items-center gap-2">
-              <i class="fa-solid fa-check-circle w-4 h-4 sm:w-5 sm:h-5 text-green-600"></i>
-              <span class="text-gray-700 text-sm sm:text-base">{{ amenity }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="mt-6 sm:mt-8">
-        <div class="bg-gradient-to-br from-gray-50 to-white rounded-2xl border-2 border-gray-100 overflow-hidden">
-          <div class="bg-gradient-to-r from-black to-gray-900 px-4 sm:px-6 py-4 sm:py-5 border-b-4 border-[#de5806]">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-2 sm:gap-3">
-                <div class="p-1.5 sm:p-2 bg-[#808080]/20 rounded-lg">
-                  <i class="fa-solid fa-calendar-days w-4 h-4 sm:w-6 sm:h-6 text-[#808080]"></i>
-                </div>
-                <div>
-                  <h3 class="text-lg sm:text-xl text-white">Pricing Table</h3>
-                  <p class="text-xs sm:text-sm text-gray-400 mt-0.5">Choose the duration that suits you</p>
-                </div>
-              </div>
-              <i class="fa-solid fa-wand-magic-sparkles w-5 h-5 sm:w-6 sm:h-6 text-white"></i>
-            </div>
-          </div>
-          <div class="overflow-x-auto">
-            <table class="w-full min-w-[600px]" dir="ltr">
-              <thead>
-                <tr class="bg-gray-100 border-b-2 border-gray-200">
-                  <th class="px-3 sm:px-6 py-3 sm:py-4 text-right text-xs sm:text-sm text-gray-700">Duration</th>
-                  <th class="px-3 sm:px-6 py-3 sm:py-4 text-center text-xs sm:text-sm text-gray-700">Price/Day</th>
-                  <th class="px-3 sm:px-6 py-3 sm:py-4 text-center text-xs sm:text-sm text-gray-700">Discount</th>
-                  <th class="px-3 sm:px-6 py-3 sm:py-4 text-center text-xs sm:text-sm text-gray-700">Total</th>
-                  <th class="px-3 sm:px-6 py-3 sm:py-4 text-center text-xs sm:text-sm text-gray-700">Savings</th>
-                  <th class="px-3 sm:px-6 py-3 sm:py-4 text-center text-xs sm:text-sm text-gray-700">Select</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  class="border-b border-gray-200 cursor-pointer transition-all hover:bg-gray-50 opacity-100 transform-none">
-                  <td class="px-6 py-4">
-                    <div class="flex items-center gap-2"><span class="text-gray-900 ">1 Day</span></div>
-                  </td>
-                  <td class="px-6 py-4 text-center">
-                    <div class="text-gray-900">450<span class="text-sm text-gray-500 mr-1">EGP</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-center"><span class="text-gray-400">-</span></td>
-                  <td class="px-6 py-4 text-center">
-                    <div class="text-lg text-gray-900">450<span class="text-sm text-gray-500 mr-1">EGP</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-center"><span class="text-gray-400">-</span></td>
-                  <td class="px-6 py-4 text-center"><button
-                      class="px-4 py-2 rounded-lg transition-all font-medium bg-black text-white hover:bg-[#404040] hover:shadow-md"><span
-                        class="text-sm">Select</span></button></td>
-                </tr>
-                <tr
-                  class="border-b border-gray-200 cursor-pointer transition-all hover:bg-gray-50 opacity-100 transform-none">
-                  <td class="px-6 py-4">
-                    <div class="flex items-center gap-2"><span class="text-gray-900 ">3 Days</span></div>
-                  </td>
-                  <td class="px-6 py-4 text-center">
-                    <div class="text-gray-900">428<span class="text-sm text-gray-500 mr-1">EGP</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-center">
-                    <div
-                      class="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm">
-                      <i class="fa-solid fa-arrow-trend-down w-4 h-4"></i>5%
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-center">
-                    <div class="text-lg text-gray-900">1,283<span class="text-sm text-gray-500 mr-1">EGP</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-center">
-                    <div class="text-green-600">67<span class="text-xs mr-1">EGP</span></div>
-                  </td>
-                  <td class="px-6 py-4 text-center"><button
-                      class="px-4 py-2 rounded-lg transition-all font-medium bg-black text-white hover:bg-[#404040] hover:shadow-md"><span
-                        class="text-sm">Select</span></button></td>
-                </tr>
-                <tr
-                  class="border-b border-gray-200 cursor-pointer transition-all hover:bg-gray-50 opacity-100 transform-none">
-                  <td class="px-6 py-4">
-                    <div class="flex items-center gap-2"><span class="text-gray-900 ">1 Week</span></div>
-                  </td>
-                  <td class="px-6 py-4 text-center">
-                    <div class="text-gray-900">405<span class="text-sm text-gray-500 mr-1">EGP</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-center">
-                    <div
-                      class="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm">
-                      <i class="fa-solid fa-arrow-trend-down w-4 h-4"></i>10%
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-center">
-                    <div class="text-lg text-gray-900">2,835<span class="text-sm text-gray-500 mr-1">EGP</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-center">
-                    <div class="text-green-600">315<span class="text-xs mr-1">EGP</span></div>
-                  </td>
-                  <td class="px-6 py-4 text-center"><button
-                      class="px-4 py-2 rounded-lg transition-all font-medium bg-black text-white hover:bg-[#404040] hover:shadow-md"><span
-                        class="text-sm">Select</span></button></td>
-                </tr>
-                <tr
-                  class="border-b border-gray-200 cursor-pointer transition-all hover:bg-gray-50 opacity-100 transform-none">
-                  <td class="px-6 py-4">
-                    <div class="flex items-center gap-2"><span class="text-gray-900 ">2 Weeks</span></div>
-                  </td>
-                  <td class="px-6 py-4 text-center">
-                    <div class="text-gray-900">383<span class="text-sm text-gray-500 mr-1">EGP</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-center">
-                    <div
-                      class="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm">
-                      <i class="fa-solid fa-arrow-trend-down w-4 h-4"></i>15%
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-center">
-                    <div class="text-lg text-gray-900">5,355<span class="text-sm text-gray-500 mr-1">EGP</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-center">
-                    <div class="text-green-600">945<span class="text-xs mr-1">EGP</span></div>
-                  </td>
-                  <td class="px-6 py-4 text-center"><button
-                      class="px-4 py-2 rounded-lg transition-all font-medium bg-black text-white hover:bg-[#404040] hover:shadow-md"><span
-                        class="text-sm">Select</span></button></td>
-                </tr>
-                <tr
-                  class="border-b border-gray-200 cursor-pointer transition-all bg-gradient-to-r from-black/10 to-black/5 opacity-100 transform-none">
-                  <td class="px-6 py-4">
-                    <div class="flex items-center gap-2"><i
-                        class="fa-solid fa-star w-4 h-4 text-black fill-black"></i><span class="text-gray-900 ">1
-                        Month</span><span class="px-2 py-0.5 bg-black text-white text-xs rounded-full">Popular</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-center">
-                    <div class="text-gray-900">360<span class="text-sm text-gray-500 mr-1">EGP</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-center">
-                    <div
-                      class="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm">
-                      <i class="fa-solid fa-arrow-trend-down w-4 h-4"></i>20%
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-center">
-                    <div class="text-lg text-gray-900">12,000<span class="text-sm text-gray-500 mr-1">EGP</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-center">
-                    <div class="text-green-600">1,500<span class="text-xs mr-1">EGP</span></div>
-                  </td>
-                  <td class="px-6 py-4 text-center"><button
-                      class="px-4 py-2 rounded-lg transition-all font-medium bg-gradient-to-r from-black to-[#404040] text-white shadow-lg scale-105"><i
-                        class="fa-solid fa-check w-5 h-5"></i></button>
-                  </td>
-                </tr>
-                <tr
-                  class="border-b border-gray-200 cursor-pointer transition-all hover:bg-gray-50 opacity-100 transform-none">
-                  <td class="px-6 py-4">
-                    <div class="flex items-center gap-2"><span class="text-gray-900 ">3 Months</span></div>
-                  </td>
-                  <td class="px-6 py-4 text-center">
-                    <div class="text-gray-900">338<span class="text-sm text-gray-500 mr-1">EGP</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-center">
-                    <div
-                      class="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm">
-                      <i class="fa-solid fa-arrow-trend-down w-4 h-4"></i>25%
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-center">
-                    <div class="text-lg text-gray-900">34,200<span class="text-sm text-gray-500 mr-1">EGP</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-center">
-                    <div class="text-green-600">6,300<span class="text-xs mr-1">EGP</span></div>
-                  </td>
-                  <td class="px-6 py-4 text-center"><button
-                      class="px-4 py-2 rounded-lg transition-all font-medium bg-black text-white hover:bg-[#404040] hover:shadow-md"><span
-                        class="text-sm">Select</span></button></td>
-                </tr>
-                <tr
-                  class="border-b border-gray-200 cursor-pointer transition-all hover:bg-gray-50 opacity-100 transform-none">
-                  <td class="px-6 py-4">
-                    <div class="flex items-center gap-2"><span class="text-gray-900 ">6 Months</span></div>
-                  </td>
-                  <td class="px-6 py-4 text-center">
-                    <div class="text-gray-900">315<span class="text-sm text-gray-500 mr-1">EGP</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-center">
-                    <div
-                      class="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm">
-                      <i class="fa-solid fa-arrow-trend-down w-4 h-4"></i>30%
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-center">
-                    <div class="text-lg text-gray-900">64,800<span class="text-sm text-gray-500 mr-1">EGP</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-center">
-                    <div class="text-green-600">16,200<span class="text-xs mr-1">EGP</span></div>
-                  </td>
-                  <td class="px-6 py-4 text-center"><button
-                      class="px-4 py-2 rounded-lg transition-all font-medium bg-black text-white hover:bg-[#404040] hover:shadow-md"><span
-                        class="text-sm">Select</span></button></td>
-                </tr>
-                <tr
-                  class="border-b border-gray-200 cursor-pointer transition-all hover:bg-gray-50 opacity-100 transform-none">
-                  <td class="px-6 py-4">
-                    <div class="flex items-center gap-2"><span class="text-gray-900 ">1 Year</span></div>
-                  </td>
-                  <td class="px-6 py-4 text-center">
-                    <div class="text-gray-900">293<span class="text-sm text-gray-500 mr-1">EGP</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-center">
-                    <div
-                      class="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm">
-                      <i class="fa-solid fa-arrow-trend-down w-4 h-4"></i>35%
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-center">
-                    <div class="text-lg text-gray-900">130,000<span class="text-sm text-gray-500 mr-1">EGP</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-center">
-                    <div class="text-green-600">34,250<span class="text-xs mr-1">EGP</span></div>
-                  </td>
-                  <td class="px-6 py-4 text-center"><button
-                      class="px-4 py-2 rounded-lg transition-all font-medium bg-black text-white hover:bg-[#404040] hover:shadow-md"><span
-                        class="text-sm">Select</span></button></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="bg-gradient-to-r from-black/5 to-transparent px-6 py-4 border-t-2 border-gray-100">
-            <div class="flex items-start gap-3"><i
-                class="fa-solid fa-wand-magic-sparkles w-5 h-5 text-black shrink-0 mt-0.5"></i>
-              <div>
-                <p class="text-sm text-gray-700 mb-2">💎 The longer you book, the more
-                  you save!</p>
-                <div class="flex flex-wrap gap-3 text-xs text-gray-600"><span>✓ All
-                    utilities included</span><span>✓ Negotiable</span><span>✓
-                    Flexible payment</span></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="mt-6 sm:mt-8">
-        <div class="bg-white rounded-2xl shadow-lg overflow-hidden border-2 border-gray-100">
-          <div class="bg-gradient-to-r from-[#de5806] to-[#470e03] px-4 sm:px-6 py-4 sm:py-5">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-2 sm:gap-3">
-                <div class="p-1.5 sm:p-2 bg-white/20 rounded-lg">
-                  <i class="fa-solid fa-calendar-days w-4 h-4 sm:w-6 sm:h-6 text-white"></i>
-                </div>
-                <div>
-                  <h3 class="text-lg sm:text-xl text-white">Availability Calendar</h3>
-                  <p class="text-xs sm:text-sm text-white/80 mt-0.5">Check available dates for booking</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="grid grid-cols-3 gap-2 sm:gap-4 p-3 sm:p-4 bg-gray-50 border-b-2 border-gray-100">
-            <div class="text-center">
-              <div class="flex items-center justify-center gap-1 mb-1">
-                <i class="fa-solid fa-check-circle w-3 h-3 sm:w-4 sm:h-4 text-green-600"></i>
-                <span class="text-lg sm:text-2xl text-green-600">{{ availableCount }}</span>
-              </div>
-              <div class="text-xs text-gray-600">Available</div>
-            </div>
-            <div class="text-center">
-              <div class="flex items-center justify-center gap-1 mb-1">
-                <i class="fa-solid fa-times-circle w-3 h-3 sm:w-4 sm:h-4 text-red-600"></i>
-                <span class="text-lg sm:text-2xl text-red-600">{{ occupiedCount }}</span>
-              </div>
-              <div class="text-xs text-gray-600">Occupied</div>
-            </div>
-            <div class="text-center">
-              <div class="flex items-center justify-center gap-1 mb-1">
-                <i class="fa-solid fa-clock w-3 h-3 sm:w-4 sm:h-4 text-yellow-600"></i>
-                <span class="text-lg sm:text-2xl text-yellow-600">{{ pendingCount }}</span>
-              </div>
-              <div class="text-xs text-gray-600">Pending</div>
-            </div>
-          </div>
-          <div class="flex items-center justify-between px-3 sm:px-6 py-3 sm:py-4 bg-white border-b-2 border-gray-100">
-            <button (click)="previousMonth()" class="p-1.5 sm:p-2 hover:bg-gray-100 rounded-lg transition-colors">
-              <i class="fa-solid fa-chevron-left w-4 h-4 sm:w-5 sm:h-5 text-gray-700"></i>
-            </button>
-            <h4 class="text-sm sm:text-base text-gray-900 font-medium">{{ getMonthName() }}</h4>
-            <button (click)="nextMonth()" class="p-1.5 sm:p-2 hover:bg-gray-100 rounded-lg transition-colors">
-              <i class="fa-solid fa-chevron-right w-4 h-4 sm:w-5 sm:h-5 text-gray-700"></i>
-            </button>
-          </div>
-          <div class="p-3 sm:p-6">
-            <div class="grid grid-cols-7 gap-1 sm:gap-2 mb-2">
-              <div class="text-center text-xs text-gray-600 py-1 sm:py-2">Sun</div>
-              <div class="text-center text-xs text-gray-600 py-1 sm:py-2">Mon</div>
-              <div class="text-center text-xs text-gray-600 py-1 sm:py-2">Tue</div>
-              <div class="text-center text-xs text-gray-600 py-1 sm:py-2">Wed</div>
-              <div class="text-center text-xs text-gray-600 py-1 sm:py-2">Thu</div>
-              <div class="text-center text-xs text-gray-600 py-1 sm:py-2">Fri</div>
-              <div class="text-center text-xs text-gray-600 py-1 sm:py-2">Sat</div>
-            </div>
-            <div class="grid grid-cols-7 gap-1 sm:gap-2">
-              <div 
-                *ngFor="let day of calendarDays" 
-                [class]="getDayClasses(day)"
-                (click)="onDateClick(day)">
-                <div class="text-xs sm:text-sm">{{ day.date }}</div>
-                <div *ngIf="day.isToday" class="absolute -top-0.5 sm:-top-1 -right-0.5 sm:-right-1 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-[#de5806] rounded-full">
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="bg-gray-50 px-6 py-4 border-t-2 border-gray-100">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
-              <div class="flex items-center gap-2">
-                <div class="w-4 h-4 bg-green-50 border-2 border-green-200 rounded">
-                </div><span class="text-gray-700">Available</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <div class="w-4 h-4 bg-red-50 border-2 border-red-200 rounded"></div>
-                <span class="text-gray-700">Occupied</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <div class="w-4 h-4 bg-yellow-50 border-2 border-yellow-200 rounded">
-                </div><span class="text-gray-700">Pending</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <div class="w-4 h-4 bg-gray-50 border-2 border-gray-200 rounded"></div>
-                <span class="text-gray-700">Past</span>
-              </div>
-            </div>
-            <div class="mt-3 text-xs text-gray-600 flex items-center gap-2"><i
-                class="fa-solid fa-info-circle w-4 h-4 text-[#de5806]"></i><span>Click
-                on any date to view booking details</span></div>
-          </div>
-        </div>
-      </div>
+      <!-- Gallery Component -->
+      <app-unit-gallery
+        [images]="galleryImages"
+        [title]="displayTitle"
+        [currentIndex]="currentImageIndex"
+        (imageClick)="openImageModal()"
+        (indexChange)="currentImageIndex = $event"
+      />
 
-      <!-- Day Details Modal -->
-      <div *ngIf="showDayDetails" 
-           class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-           (click)="closeDayDetails()">
-        <div class="bg-white rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl"
-             (click)="$event.stopPropagation()">
-          <div class="flex justify-between items-center mb-4">
-            <h3 class="text-lg font-semibold text-gray-900">
-              {{ selectedDay?.fullDate | date:'EEEE, MMMM d, yyyy' }}
-            </h3>
-            <button (click)="closeDayDetails()" 
-                    class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-              <i class="fa-solid fa-times w-4 h-4 text-gray-500"></i>
-            </button>
-          </div>
-          
-          <div class="space-y-4">
-            <!-- Status Badge -->
-            <div class="flex items-center gap-3">
-              <div class="flex items-center gap-2">
-                <div [ngClass]="{
-                  'w-3 h-3 rounded-full': true,
-                  'bg-green-500': selectedDay?.status === 'available',
-                  'bg-red-500': selectedDay?.status === 'occupied',
-                  'bg-yellow-500': selectedDay?.status === 'pending',
-                  'bg-gray-400': selectedDay?.status === 'past'
-                }"></div>
-                <span class="font-medium" [ngClass]="{
-                  'text-green-700': selectedDay?.status === 'available',
-                  'text-red-700': selectedDay?.status === 'occupied',
-                  'text-yellow-700': selectedDay?.status === 'pending',
-                  'text-gray-600': selectedDay?.status === 'past'
-                }">{{ getDayStatusText(selectedDay!) }}</span>
-              </div>
-            </div>
-            
-            <!-- Details based on status -->
-            <div class="bg-gray-50 rounded-lg p-4">
-              <ng-container [ngSwitch]="selectedDay?.status">
-                
-                <!-- Available -->
-                <div *ngSwitchCase="'available'" class="space-y-3">
-                  <div class="flex items-center gap-2 text-green-700">
-                    <i class="fa-solid fa-check-circle w-4 h-4"></i>
-                    <span class="text-sm font-medium">This date is available for booking</span>
-                  </div>
-                  <button (click)="openBookingPopup(); closeDayDetails()"
-                          class="w-full px-4 py-2 bg-[#de5806] text-white rounded-lg hover:bg-[#c54d05] transition-colors">
-                    <i class="fa-solid fa-calendar-plus w-4 h-4 mr-2"></i>
-                    Book This Date
-                  </button>
-                </div>
-                
-                <!-- Occupied -->
-                <div *ngSwitchCase="'occupied'" class="space-y-3">
-                  <div class="flex items-center gap-2 text-red-700">
-                    <i class="fa-solid fa-times-circle w-4 h-4"></i>
-                    <span class="text-sm font-medium">This date is already booked</span>
-                  </div>
-                  <div class="text-xs text-gray-600">
-                    <p>• Booking ID: #BK-2024-001</p>
-                    <p>• Duration: 3 days</p>
-                    <p>• Guest: John Smith</p>
-                  </div>
-                </div>
-                
-                <!-- Pending -->
-                <div *ngSwitchCase="'pending'" class="space-y-3">
-                  <div class="flex items-center gap-2 text-yellow-700">
-                    <i class="fa-solid fa-clock w-4 h-4"></i>
-                    <span class="text-sm font-medium">Booking pending confirmation</span>
-                  </div>
-                  <div class="text-xs text-gray-600">
-                    <p>• Pending since: 2 hours ago</p>
-                    <p>• Expected confirmation: Within 24 hours</p>
-                  </div>
-                </div>
-                
-                <!-- Past -->
-                <div *ngSwitchCase="'past'" class="space-y-3">
-                  <div class="flex items-center gap-2 text-gray-600">
-                    <i class="fa-solid fa-history w-4 h-4"></i>
-                    <span class="text-sm font-medium">This date has passed</span>
-                  </div>
-                </div>
-                
-              </ng-container>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl p-6 border-2 border-gray-300">
-        <div class="flex items-center gap-2 mb-4"><i class="fa-solid fa-wand-magic-sparkles w-5 h-5 text-[#808080]"></i>
-          <h2 class="text-gray-900">Smart AI Analysis</h2>
-        </div>
-        <div class="space-y-4">
-          <div class="flex items-start gap-3"><i class="fa-solid fa-arrow-trend-up w-5 h-5 text-green-600 mt-0.5"></i>
-            <div>
-              <div class="text-gray-900 mb-1">Fair Price</div>
-              <p class="text-gray-600 text-sm">Price is 8% below market average for similar
-                units in the same area</p>
-            </div>
-          </div>
-          <div class="flex items-start gap-3"><i class="fa-solid fa-check-circle w-5 h-5 text-[#808080] mt-0.5"></i>
-            <div>
-              <div class="text-gray-900 mb-1">Excellent Location</div>
-              <p class="text-gray-600 text-sm">Close to schools, malls, and transportation -
-                Location rating: 9/10</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="bg-white rounded-2xl p-6 shadow-sm">
-        <div class="flex items-center justify-between mb-4">
-          <h2 class="text-gray-900">Location</h2><button
-            class="flex items-center gap-2 text-[#808080] hover:text-black text-sm transition-colors"><i
-              class="fa-solid fa-diamond-turn-right w-4 h-4"></i>Get Directions</button>
-        </div>
-        <div class="relative h-80 bg-gray-100 rounded-xl overflow-hidden mb-4">
-          <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
-            <div class="text-center"><i class="fa-solid fa-map-marker-alt w-16 h-16 text-[#808080] mx-auto mb-3"></i>
-              <p class="text-gray-700">Interactive Map (LeafletJS)</p>
-              <p class="text-gray-500 text-sm mt-2">Lat: 30.0444, Lng: 31.2357</p>
-            </div>
-          </div>
-        </div>
-        <div>
-          <h3 class="text-gray-900 mb-3">Nearby Places</h3>
-          <div class="space-y-2">
-            <div class="flex items-center justify-between px-4 py-3 bg-gray-50 rounded-lg">
-              <div class="flex items-center gap-3"><i class="fa-solid fa-map-marker-alt w-4 h-4 text-[#808080]"></i>
-                <div>
-                  <div class="text-gray-900 text-sm">Cairo Festival City</div>
-                  <div class="text-gray-500 text-xs">Mall</div>
-                </div>
-              </div>
-              <div class="text-gray-600 text-sm">2 km</div>
-            </div>
-            <div class="flex items-center justify-between px-4 py-3 bg-gray-50 rounded-lg">
-              <div class="flex items-center gap-3"><i class="fa-solid fa-map-marker-alt w-4 h-4 text-[#808080]"></i>
-                <div>
-                  <div class="text-gray-900 text-sm">American University</div>
-                  <div class="text-gray-500 text-xs">University</div>
-                </div>
-              </div>
-              <div class="text-gray-600 text-sm">3.5 km</div>
-            </div>
-            <div class="flex items-center justify-between px-4 py-3 bg-gray-50 rounded-lg">
-              <div class="flex items-center gap-3"><i class="fa-solid fa-map-marker-alt w-4 h-4 text-[#808080]"></i>
-                <div>
-                  <div class="text-gray-900 text-sm">El Salam Hospital</div>
-                  <div class="text-gray-500 text-xs">Hospital</div>
-                </div>
-              </div>
-              <div class="text-gray-600 text-sm">1.5 km</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <!-- Unit Info Component -->
+      <app-unit-info
+        [title]="displayTitle || 'Luxury Furnished Apartment - Fifth Settlement'"
+        [location]="displayLocation || 'Fifth Settlement, New Cairo'"
+        [bedrooms]="bedrooms || 3"
+        [bathrooms]="bathrooms || 2"
+        [area]="area || '180 sqm'"
+        [rating]="rating || 4.8"
+        [reviews]="reviews || 24"
+        [floor]="floor || 5"
+        [furnished]="furnished !== null ? furnished : true"
+        [yearBuilt]="yearBuilt"
+        [description]="
+          descriptionText ||
+          'Luxury apartment in a prime location with all amenities and services. Super luxury finishing, wonderful view, close to all services and transportation. The apartment is fully furnished with modern furniture and appliances.'
+        "
+        [amenities]="
+          amenities.length
+            ? amenities
+            : [
+                'Central AC',
+                'Fully Equipped Kitchen',
+                'Swimming Pool',
+                'Gym',
+                '24/7 Security',
+                'Parking',
+                'Private Garden',
+                'Spacious Balcony',
+              ]
+        "
+      />
+      <!-- Pricing Table Component -->
+      <app-pricing-table
+        [finalPricing]="unitData?.finalPricing"
+        [currency]="pricingCurrency"
+        (priceSelected)="onPriceSelected($event)"
+      />
+
+      <app-availability-calendar (dateClicked)="onDateClick($event)"></app-availability-calendar>
+
+      <!-- Day Details Modal Component -->
+      <app-day-details-modal
+        [show]="showDayDetails"
+        [selectedDay]="selectedDay"
+        (close)="closeDayDetails()"
+        (bookDate)="openBookingPopup()"
+      />
+
+      <!-- AI Analysis Component -->
+      <app-ai-analysis [aiAnalysis]="unitData?.aiAnalysis" />
+
+      <!-- Location Map Component -->
+      <app-location-map
+        [nearbyLandmarks]="unitData?.aiAnalysis?.nearbyLandmarks"
+        [coordinates]="locationCoordinates"
+        [locationAddress]="locationAddress"
+        [locationArea]="locationArea"
+        [locationCity]="locationCity"
+        [locationCountry]="locationCountry"
+        [latitude]="locationLat || 30.0444"
+        [longitude]="locationLng || 31.2357"
+        [propertyName]="displayTitle"
+        [propertyImage]="heroImage"
+      />
     </div>
     <div class="lg:col-span-1">
-      <div class="sticky top-4 sm:top-24 space-y-4 sm:space-y-6">
-        <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-lg">
-          <div class="mb-4 sm:mb-6">
-            <div class="text-2xl sm:text-3xl text-black mb-1">{{ priceDisplay || '12 EGP' }}</div>
-            <div class="text-gray-500 text-sm sm:text-base">{{ pricePeriodLabel || 'Monthly' }}</div>
-          </div>
-          <button class="w-full px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-[#de5806] to-[#470e03] text-white rounded-xl hover:shadow-lg transition-all mb-2 sm:mb-3 flex items-center justify-center gap-2 text-sm sm:text-base">
-            <i class="fa-solid fa-calendar-days w-4 h-4 sm:w-5 sm:h-5"></i>Book Now
-          </button>
-          <div class="text-center text-xs sm:text-sm text-gray-600">
-            {{ freeCancellationHours ? 'Free cancellation within ' + freeCancellationHours + ' hours' : 'Free cancellation within 24 hours' }}
-          </div>
-        </div>
-        <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-sm">
-          <h3 class="text-gray-900 mb-3 sm:mb-4 text-base sm:text-lg">Owner Information</h3>
-          <button class="w-full">
-            <div class="flex items-center gap-3 mb-3 sm:mb-4 p-2 sm:p-3 rounded-xl hover:bg-gray-50 transition-colors cursor-pointer">
-              <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-[#de5806] to-[#470e03] rounded-full flex items-center justify-center ring-2 ring-[#de5806]/20">
-                <i class="fa-solid fa-user w-4 h-4 sm:w-6 sm:h-6 text-white"></i>
-              </div>
-              <div class="flex-1 text-left">
-                <div class="text-gray-900 flex items-center gap-2 text-sm sm:text-base">
-                  {{ ownerInfo?.name || 'Ahmed Mohamed' }}
-                  <i class="fa-solid fa-check-circle w-3 h-3 sm:w-4 sm:h-4 text-green-600"></i>
-                </div>
-                <div class="text-gray-500 text-xs sm:text-sm">Owner</div>
-              </div>
-              <div class="text-[#de5806]">
-                <i class="fa-solid fa-arrow-right w-4 h-4 sm:w-5 sm:h-5"></i>
-              </div>
-            </div>
-          </button>
-          <div class="grid grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4 pb-3 sm:pb-4 border-b border-gray-200">
-            <div>
-              <div class="text-gray-500 text-xs mb-1">Properties Listed</div>
-              <div class="text-gray-900 text-sm sm:text-base">{{ ownerInfo?.properties_listed || 12 }}</div>
-            </div>
-            <div>
-              <div class="text-gray-500 text-xs mb-1">Response Rate</div>
-              <div class="text-gray-900 text-sm sm:text-base">{{ ownerInfo?.response_rate_percent ? ownerInfo?.response_rate_percent + '%' : '95%' }}</div>
-            </div>
-          </div>
-          <div class="space-y-2 sm:space-y-3">
-            <button class="w-full flex items-center justify-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors text-sm sm:text-base">
-              <i class="fa-solid fa-phone w-4 h-4 sm:w-5 sm:h-5 text-[#808080]"></i>
-              <span class="text-gray-900">Show Number</span>
-            </button>
-            <button class="w-full flex items-center justify-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors text-sm sm:text-base">
-              <i class="fa-solid fa-envelope w-4 h-4 sm:w-5 sm:h-5 text-[#808080]"></i>
-              <span class="text-gray-900">Contact Form</span>
-            </button>
-          </div>
-        </div>
-        <div class="bg-gray-100 rounded-2xl p-4 sm:p-6 border border-gray-300">
-          <div class="flex items-start gap-2 sm:gap-3">
-            <i class="fa-solid fa-shield-alt w-5 h-5 sm:w-6 sm:h-6 text-gray-600 flex-shrink-0 mt-0.5"></i>
-            <div>
-              <div class="text-gray-900 mb-1 sm:mb-2 text-sm sm:text-base">Safety Tips</div>
-              <ul class="text-xs sm:text-sm text-gray-600 space-y-1">
-                <li *ngFor="let tip of (safetyTips.length ? safetyTips : ['Don\'t pay before viewing', 'Verify official documents', 'Use secure payment methods'])">• {{ tip }}</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
+      <!-- Booking Sidebar Component -->
+      <app-booking-sidebar
+        [priceDisplay]="priceDisplay || '12 EGP'"
+        [pricePeriod]="pricePeriodLabel || 'Monthly'"
+        [cancellationPolicy]="
+          freeCancellationHours
+            ? 'Free cancellation within ' + freeCancellationHours + ' hours'
+            : 'Free cancellation within 24 hours'
+        "
+        [owner]="ownerInfo"
+        [safetyTips]="safetyTips.length ? safetyTips : defaultSafetyTips"
+        (bookNow)="openBookingPopup()"
+      />
     </div>
   </div>
 
-  <!-- Image Modal -->
-  <div *ngIf="showImageModal" 
-       class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90"
-       (click)="closeImageModal()"
-       (keydown.escape)="closeImageModal()"
-       (keydown.arrowLeft)="previousImage()"
-       (keydown.arrowRight)="nextImage()"
-       tabindex="0">
-    <div class="relative max-w-4xl max-h-full mx-4" (click)="$event.stopPropagation()">
-      <img [src]="galleryImages[currentImageIndex]" 
-           [alt]="'Gallery image ' + (currentImageIndex + 1)"
-           class="max-w-full max-h-[90vh] object-contain rounded-lg">
-      
-      <!-- Close button -->
-      <button (click)="closeImageModal()" 
-              class="absolute top-2 sm:top-4 right-2 sm:right-4 p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors">
-        <i class="fa-solid fa-times w-4 h-4 sm:w-5 sm:h-5"></i>
-      </button>
-      
-      <!-- Navigation arrows -->
-      <button *ngIf="galleryImages.length > 1"
-              (click)="previousImage()"
-              class="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors">
-        <i class="fa-solid fa-chevron-left w-4 h-4 sm:w-6 sm:h-6"></i>
-      </button>
-      <button *ngIf="galleryImages.length > 1"
-              (click)="nextImage()"
-              class="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors">
-        <i class="fa-solid fa-chevron-right w-4 h-4 sm:w-6 sm:h-6"></i>
-      </button>
-      
-      <!-- Image counter -->
-      <div class="absolute bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2 px-3 sm:px-4 py-1 sm:py-2 bg-black/70 text-white text-xs sm:text-sm rounded-lg">
-        {{ currentImageIndex + 1 }} of {{ galleryImages.length }}
-      </div>
-      
-      <!-- Navigation hint -->
-      <div class="absolute top-2 sm:top-4 left-2 sm:left-4 px-2 sm:px-3 py-1 bg-black/50 text-white text-xs rounded-lg hidden sm:block">
-        Use ← → keys or click arrows
-      </div>
-    </div>
-  </div>
+  <!-- Image Modal Component -->
+  <app-image-modal
+    [show]="showImageModal"
+    [images]="galleryImages"
+    [currentIndex]="currentImageIndex"
+    (close)="closeImageModal()"
+    (indexChange)="currentImageIndex = $event"
+  />
 </div>

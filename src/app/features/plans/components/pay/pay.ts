@@ -4,12 +4,11 @@ import { PaymentService, PaymentMethod } from '../../services/payment.service';
 import { PaymentMethodComponent } from './component/payment-method/payment-method';
 import { CardComponent } from './component/card/card';
 import { WalletComponent } from './component/wallet/wallet';
-import { BankComponent } from './component/bank/bank';
 
 @Component({
   selector: 'app-pay',
   standalone: true,
-  imports: [CommonModule, PaymentMethodComponent, CardComponent, WalletComponent, BankComponent],
+  imports: [CommonModule, PaymentMethodComponent, CardComponent, WalletComponent],
   templateUrl: './pay.html',
   styleUrl: './pay.scss',
 })
@@ -34,6 +33,7 @@ export class Pay implements OnInit {
     if (!data) return '';
     return data.billing === 'yearly' ? data.plan.periodLabelYearly : data.plan.periodLabelMonthly;
   });
+  subscriptionId = computed(() => this.paymentData()?.subscriptionId || '');
 
   constructor(private paymentService: PaymentService) {}
 
@@ -46,6 +46,11 @@ export class Pay implements OnInit {
     this.paymentService.setPaymentMethod(method);
     // Move to step 2 immediately
     this.currentStep.set(2);
+  }
+
+  goBack() {
+    this.currentStep.set(1);
+    this.selectedMethod.set(null);
   }
 
   closePayment() {

@@ -5,10 +5,10 @@ export const environment: Environment = {
   api: {
     baseUrl: 'https://api.homigo-eg.com/api/v1',
     timeout: 30000,
-    retryAttempts: 1
+    retryAttempts: 1,
   },
   features: {
     enableLogging: false,
-    enableDebugMode: false
-  }
+    enableDebugMode: false,
+  },
 };

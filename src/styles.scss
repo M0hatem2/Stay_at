@@ -5,6 +5,175 @@
 @import "flyonui/variants.css";
 @import "@fortawesome/fontawesome-free/css/all.min.css";
 @import "aos/dist/aos.css";
+@import "ngx-toastr/toastr";
+
+/* ========================================
+   🎨 تخصيص استايل ngx-toastr
+   ======================================== */
+
+/* تخصيص الـ Toast Container */
+.toast-container {
+  .ngx-toastr {
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    padding: 16px 20px;
+    font-family: inherit;
+    backdrop-filter: blur(10px);
+    
+    /* إضافة أنيميشن */
+    animation: slideIn 0.3s ease-out;
+  }
+
+  /* تخصيص عنوان Toast */
+  .toast-title {
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+
+  /* تخصيص رسالة Toast */
+  .toast-message {
+    font-size: 13px;
+    opacity: 0.95;
+    line-height: 1.5;
+  }
+
+  /* تخصيص زر الإغلاق */
+  .toast-close-button {
+    font-size: 20px;
+    font-weight: 300;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+/* ✅ Success Toast - أخضر */
+.toast-success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  border-left: 4px solid #047857;
+  
+  .toast-progress {
+    background-color: rgba(255, 255, 255, 0.7) !important;
+  }
+}
+
+/* ❌ Error Toast - أحمر */
+.toast-error {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+  border-left: 4px solid #b91c1c;
+  
+  .toast-progress {
+    background-color: rgba(255, 255, 255, 0.7) !important;
+  }
+}
+
+/* ⚠️ Warning Toast - برتقالي */
+.toast-warning {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+  border-left: 4px solid #b45309;
+  color: #ffffff !important;
+  
+  .toast-progress {
+    background-color: rgba(255, 255, 255, 0.7) !important;
+  }
+}
+
+/* ℹ️ Info Toast - أزرق */
+.toast-info {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+  border-left: 4px solid #1d4ed8;
+  
+  .toast-progress {
+    background-color: rgba(255, 255, 255, 0.7) !important;
+  }
+}
+
+/* أنيميشن دخول Toast */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* تخصيص شريط التقدم */
+.toast-progress {
+  height: 4px;
+  opacity: 0.8;
+}
+
+/* استايل مخصص للـ RTL (العربي) */
+[dir="rtl"] .toast-container {
+  .ngx-toastr {
+    border-left: none;
+    border-right: 4px solid;
+  }
+}
+
+/* ========================================
+   🎨 استايلات بديلة (اختياري)
+   يمكنك إلغاء التعليق لاستخدامها
+   ======================================== */
+
+/* استايل Minimal - بسيط وأنيق */
+/*
+.toast-container .ngx-toastr {
+  background-color: #ffffff;
+  color: #1f2937;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.toast-success {
+  border-left-color: #10b981 !important;
+  .toast-title { color: #10b981; }
+}
+
+.toast-error {
+  border-left-color: #ef4444 !important;
+  .toast-title { color: #ef4444; }
+}
+
+.toast-warning {
+  border-left-color: #f59e0b !important;
+  .toast-title { color: #f59e0b; }
+}
+
+.toast-info {
+  border-left-color: #3b82f6 !important;
+  .toast-title { color: #3b82f6; }
+}
+*/
+
+/* استايل Dark Mode */
+/*
+.dark .toast-container .ngx-toastr {
+  background-color: #1f2937;
+  color: #f9fafb;
+  border: 1px solid #374151;
+}
+*/
+
+/* استايل مع أيقونات أكبر */
+/*
+.toast-container .ngx-toastr {
+  padding-left: 60px;
+  
+  &:before {
+    font-size: 24px;
+    line-height: 24px;
+    margin-top: -12px;
+  }
+}
+*/
 
 [data-aos] {
   pointer-events: none;

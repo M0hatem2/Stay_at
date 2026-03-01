@@ -1,0 +1,38 @@
+<div class="min-h-screen bg-gray-50 ltr" dir="ltr">
+  <!-- Header Section -->
+  <app-favorites-header
+    [totalFavorites]="totalFavorites()"
+    [totalUnits]="totalUnits()"
+    [totalProjects]="totalProjects()"
+  ></app-favorites-header>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Filter Section -->
+    <app-favorites-filter
+      [totalFavorites]="totalFavorites()"
+      [totalUnits]="totalUnits()"
+      [totalProjects]="totalProjects()"
+      [activeFilter]="activeFilter()"
+      [sortBy]="sortBy()"
+      (filterChange)="onFilterChange($event)"
+      (sortChange)="onSortChange($event)"
+    ></app-favorites-filter>
+
+    <!-- Content Section -->
+    <div *ngIf="totalFavorites() === 0; else favoritesContent">
+      <app-favorites-empty-state
+        (browseProperties)="onBrowseProperties()"
+      ></app-favorites-empty-state>
+    </div>
+
+    <ng-template #favoritesContent>
+      <app-favorites-list
+        [favorites]="filteredFavorites"
+        [loading]="loading()"
+        (removeFavorite)="onRemoveFavorite($event)"
+        (viewDetails)="onViewDetails($event)"
+      ></app-favorites-list>
+    </ng-template>
+  </div>
+</div>
