@@ -5,10 +5,10 @@ import { AuthService } from '../services/auth.service';
 
 export const languageInterceptor: HttpInterceptorFn = (req, next) => {
   console.log('🚀 LanguageInterceptor (Functional) - intercept() called for:', req.url);
-  
+
   const languageService = inject(LanguageService);
   const authService = inject(AuthService);
-  
+
   const currentLanguage = languageService.getCurrentLanguage();
   const token = authService.getToken();
 
@@ -26,7 +26,7 @@ export const languageInterceptor: HttpInterceptorFn = (req, next) => {
 
   // طباعة جميع الهيدرز للتأكد
   console.log('📋 Request Headers:');
-  clonedRequest.headers.keys().forEach(key => {
+  clonedRequest.headers.keys().forEach((key) => {
     console.log(`  ${key}: ${clonedRequest.headers.get(key)}`);
   });
 

@@ -1,12 +1,17 @@
 import { Injectable } from '@angular/core';
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse } from '@angular/common/http';
+import {
+  HttpInterceptor,
+  HttpRequest,
+  HttpHandler,
+  HttpEvent,
+  HttpErrorResponse,
+} from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
-  
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       retry(environment.api.retryAttempts || 1), // Retry failed requests
@@ -16,12 +21,12 @@ export class ErrorInterceptor implements HttpInterceptor {
             url: error.url,
             status: error.status,
             message: error.message,
-            error: error.error
+            error: error.error,
           });
         }
 
         let errorMessage = 'An unexpected error occurred';
-        
+
         switch (error.status) {
           case 0:
             errorMessage = 'Network error. Please check your internet connection.';
@@ -33,7 +38,7 @@ export class ErrorInterceptor implements HttpInterceptor {
             errorMessage = 'Unauthorized. Please log in again.';
             break;
           case 403:
-            errorMessage = 'Access forbidden. You don\'t have permission to perform this action.';
+            errorMessage = "Bearer forbidden. You don't have permission to perform this action.";
             break;
           case 404:
             errorMessage = 'The requested resource was not found.';
@@ -64,9 +69,9 @@ export class ErrorInterceptor implements HttpInterceptor {
           message: errorMessage,
           status: error.status,
           errors: error.error?.errors || {},
-          originalError: error
+          originalError: error,
         }));
-      })
+      }),
     );
   }
 }

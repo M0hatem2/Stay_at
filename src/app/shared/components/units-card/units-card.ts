@@ -18,7 +18,7 @@ export class UnitsCard {
   @Output() propertyClick = new EventEmitter<PropertyCardData>();
 
   private isApiProperty(prop: PropertyCardData): prop is ApiProperty {
-    return '_id' in prop && 'gallery' in prop;
+    return '_id' in prop && ('gallery' in prop || 'thumbnail' in prop || 'targetId' in prop);
   }
 
   private isProperty(prop: PropertyCardData): prop is Property {
@@ -30,15 +30,28 @@ export class UnitsCard {
   }
 
   get image(): string {
+    // ===== API Property =====
     if (this.isApiProperty(this.property)) {
-      return this.property.gallery?.[0]?.secure_url || '';
+      // thumbnail (الأولوية)
+      const thumbnail = this.property.thumbnail?.secure_url;
+      if (thumbnail) return thumbnail;
+
+      // gallery fallback
+      const galleryImage = this.property.gallery?.[0]?.secure_url;
+      if (galleryImage) return galleryImage;
     }
+
+    // ===== Property Details =====
     if (this.isPropertyDetails(this.property)) {
-      return this.property.main_image;
+      return this.property.main_image || '';
     }
+
+    // ===== Simple Property =====
     if (this.isProperty(this.property)) {
-      return this.property.image;
+      return this.property.image || '';
     }
+
+    // ===== fallback =====
     return '';
   }
 
@@ -50,6 +63,10 @@ export class UnitsCard {
   }
 
   get verified(): boolean {
+    // دعم isTrusted من API الجديد
+    if ('isTrusted' in this.property && typeof this.property.isTrusted === 'boolean') {
+      return this.property.isTrusted;
+    }
     if (this.isPropertyDetails(this.property)) {
       return this.property.verified || false;
     }
@@ -74,6 +91,11 @@ export class UnitsCard {
 
   get title(): string {
     if (this.isApiProperty(this.property)) {
+      // دعم title من API الجديد
+      if ('title' in this.property && this.property.title) {
+        return this.property.title;
+      }
+      // دعم name القديم
       return this.property.name || '';
     }
     if (this.isProperty(this.property)) {
@@ -136,8 +158,13 @@ export class UnitsCard {
 
   get area(): string {
     // دعم الحقول المباشرة من Unit API
-    if ('area' in this.property && typeof this.property.area === 'string') {
-      return this.property.area;
+    if ('area' in this.property) {
+      if (typeof this.property.area === 'number') {
+        return `${this.property.area} sqm`;
+      }
+      if (typeof this.property.area === 'string') {
+        return this.property.area;
+      }
     }
     if (this.isPropertyDetails(this.property)) {
       if (this.property.specs?.area_sqm) {
@@ -151,6 +178,11 @@ export class UnitsCard {
   }
 
   get price(): string {
+    // دعم displayPrice من API الجديد
+    if ('displayPrice' in this.property && typeof this.property.displayPrice === 'number') {
+      const currency = 'currency' in this.property ? this.property.currency : 'EGP';
+      return `${this.property.displayPrice.toLocaleString()} ${currency}`;
+    }
     // دعم الحقول المباشرة من Unit API
     if ('price' in this.property && typeof this.property.price === 'string') {
       return this.property.price;
@@ -166,10 +198,10 @@ export class UnitsCard {
     return '';
   }
 
-  get priceType(): 'monthly' | 'daily' | 'sale' | undefined {
+  get priceType(): 'total' | 'monthly' | 'daily' | undefined {
     // دعم الحقول المباشرة من Unit API
     if ('priceType' in this.property) {
-      return this.property.priceType as 'monthly' | 'daily' | 'sale' | undefined;
+      return this.property.priceType as 'total' | 'monthly' | 'daily' | undefined;
     }
     if (this.isProperty(this.property)) {
       return this.property.priceType;
@@ -185,6 +217,10 @@ export class UnitsCard {
   }
 
   get rating(): number | undefined {
+    // دعم rating من API الجديد
+    if ('rating' in this.property && typeof this.property.rating === 'number') {
+      return this.property.rating;
+    }
     if (this.isProperty(this.property)) {
       return this.property.rating;
     }
@@ -210,6 +246,14 @@ export class UnitsCard {
       return this.property.facilitiesAndServices || [];
     }
     return [];
+  }
+
+  get furnished(): boolean {
+    // دعم furnished من API الجديد
+    if ('furnished' in this.property && typeof this.property.furnished === 'boolean') {
+      return this.property.furnished;
+    }
+    return false;
   }
 
   get propertyId(): string {

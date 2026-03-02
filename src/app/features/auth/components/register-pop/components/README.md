@@ -184,7 +184,7 @@ onFileSelected(event: Event): void
 // In parent component
 import { RealEstateDeveloper } from './components/real-estate-developer/real-estate-developer';
 
-// Access child component
+// Bearer child component
 @ViewChild(RealEstateDeveloper) developerComponent!: RealEstateDeveloper;
 
 // Check if valid

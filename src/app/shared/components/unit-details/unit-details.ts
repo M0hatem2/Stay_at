@@ -8,7 +8,7 @@ import { ApiProperty } from '../../../core/models/api-property.model';
 import { Subscription } from 'rxjs';
 import { UnitService, Unit } from '../../../features/rent/services/unit.service';
 import { PropertyService } from '../../../features/all-properties/services/property.service';
-import { UnitGalleryComponent } from './components/unit-gallery';
+import { UnitGalleryComponent } from '../unit-gallery';
 import { UnitInfoComponent } from './components/unit-info';
 import { BookingSidebarComponent } from './components/booking-sidebar';
 import { AiAnalysisComponent } from './components/ai-analysis';
@@ -156,10 +156,14 @@ export class UnitDetails implements OnInit, OnDestroy {
       next: (response: any) => {
         console.log('🏠 Property Details Response:', response);
 
-        // Handle property response format
-        if (response.property) {
+        // Handle property response format - API returns property directly without wrapper
+        if (response._id) {
+          // Response is the property object itself
+          this.apiProperty = response;
+          this.unitData = this.mapPropertyToUnit(response);
+        } else if (response.property) {
+          // Response has property wrapper
           this.apiProperty = response.property;
-          // Map property data to unitData structure for compatibility
           this.unitData = this.mapPropertyToUnit(response.property);
         }
 
@@ -174,6 +178,16 @@ export class UnitDetails implements OnInit, OnDestroy {
   }
 
   private mapPropertyToUnit(property: any): Unit {
+    console.log('🔄 Mapping Property to Unit:', property);
+
+    // Calculate unit area from price per meter if available
+    let calculatedArea = 0;
+    if (property.salePricing?.basePrice && property.salePricing?.pricePerMeter) {
+      calculatedArea = Math.round(
+        property.salePricing.basePrice / property.salePricing.pricePerMeter,
+      );
+    }
+
     // Map property structure to unit structure
     return {
       _id: property._id,
@@ -185,6 +199,7 @@ export class UnitDetails implements OnInit, OnDestroy {
       gallery: property.gallery || [],
       documents: property.documents || [],
       facilitiesAndServices: property.facilitiesAndServices || [],
+      nearbyLandmarks: property.nearbyLandmarks || [],
       project: property.project,
       owner: property.owner,
       status: property.status,
@@ -195,7 +210,7 @@ export class UnitDetails implements OnInit, OnDestroy {
       ownerId: property.ownerId,
       unitNumber: '',
       purpose: 'sale_and_rent',
-      unitArea: 0,
+      unitArea: calculatedArea,
       bedrooms: 0,
       bathrooms: 0,
       floorNumber: property.floorsCount || 0,
@@ -203,26 +218,31 @@ export class UnitDetails implements OnInit, OnDestroy {
       maxGuests: 0,
       isFeatured: property.isFeatured || false,
       listingPrice: {
-        salePrice: 0,
+        salePrice: property.salePricing?.basePrice || 0,
         rentPrice: 0,
         rentPeriod: 'daily',
-        currency: 'EGP',
+        currency: property.salePricing?.currency || 'EGP',
       },
+      // Map saleAnalysis to aiAnalysis structure
       aiAnalysis: {
         priceEvaluation: {
-          status: '',
-          marketComparison: '',
-          isGoodDeal: false,
+          status: property.saleAnalysis?.priceAnalysis?.status || '',
+          marketComparison: property.saleAnalysis?.priceAnalysis?.status || '',
+          isGoodDeal: property.saleAnalysis?.priceAnalysis?.priceDiffPercent <= 0,
         },
         locationEvaluation: {
-          rating: 0,
+          rating: property.saleAnalysis?.investmentAnalysis?.investmentScore || 0,
           pros: [],
-          description: '',
+          description: property.saleAnalysis?.summary || '',
         },
-        nearbyLandmarks: [],
-        summary: '',
-        lastUpdated: '',
+        nearbyLandmarks: property.nearbyLandmarks || [],
+        summary: property.saleAnalysis?.summary || '',
+        lastUpdated: property.saleAnalysis?.lastUpdated || '',
+        smartInsights: property.saleAnalysis?.smartInsights || [],
       },
+      // Add salePricing for property details
+      salePricing: property.salePricing,
+      saleAnalysis: property.saleAnalysis,
     } as Unit;
   }
 
@@ -277,13 +297,7 @@ export class UnitDetails implements OnInit, OnDestroy {
       return this.property.images.gallery;
     }
     // Fallback gallery for demo
-    return [
-      'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1200&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1200&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1200&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1200&h=800&fit=crop',
-    ];
+    return [];
   }
 
   get isManaged(): boolean {
@@ -385,6 +399,7 @@ export class UnitDetails implements OnInit, OnDestroy {
 
   get pricingCurrency(): string {
     return (
+      this.unitData?.salePricing?.currency ||
       this.unitData?.finalPricing?.currency ||
       this.unitData?.listingPrice?.currency ||
       this.property?.pricing?.currency ||
@@ -398,11 +413,19 @@ export class UnitDetails implements OnInit, OnDestroy {
       return `${this.selectedPrice.toLocaleString('ar-EG')} ${this.pricingCurrency}`;
     }
 
+    // Check for sale pricing first (for properties)
+    if (this.unitData?.salePricing?.basePrice) {
+      return `${this.unitData.salePricing.basePrice.toLocaleString('ar-EG')} ${this.pricingCurrency}`;
+    }
+
     if (this.unitData?.finalPricing?.price) {
       return `${this.unitData.finalPricing.price.toLocaleString('ar-EG')} ${this.pricingCurrency}`;
     }
     if (this.unitData?.listingPrice?.rentPrice) {
       return `${this.unitData.listingPrice.rentPrice.toLocaleString('ar-EG')} ${this.pricingCurrency}`;
+    }
+    if (this.unitData?.listingPrice?.salePrice) {
+      return `${this.unitData.listingPrice.salePrice.toLocaleString('ar-EG')} ${this.pricingCurrency}`;
     }
     if (this.property?.pricing?.sidebar_display_price) {
       const price = this.property.pricing.sidebar_display_price;
@@ -415,6 +438,11 @@ export class UnitDetails implements OnInit, OnDestroy {
   }
 
   get pricePeriodLabel(): string {
+    // For sale properties, show empty or "للبيع"
+    if (this.unitData?.salePricing) {
+      return '';
+    }
+
     if (this.unitData?.finalPricing?.rentType) {
       const rentType = this.unitData.finalPricing.rentType;
       return rentType === 'daily'
@@ -448,6 +476,13 @@ export class UnitDetails implements OnInit, OnDestroy {
           : 'For Sale';
     }
     return '';
+  }
+
+  get pricePerMeter(): string | null {
+    if (this.unitData?.salePricing?.pricePerMeter) {
+      return `${this.unitData.salePricing.pricePerMeter.toLocaleString('ar-EG')} ${this.pricingCurrency}/م²`;
+    }
+    return null;
   }
 
   get freeCancellationHours(): number | null {

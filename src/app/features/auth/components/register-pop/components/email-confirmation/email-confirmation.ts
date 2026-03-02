@@ -129,7 +129,7 @@ export class EmailConfirmation implements AfterViewInit {
     this.registrationService.confirmEmail({ email: this.email, otp }).subscribe({
       next: (response) => {
         this.isSubmitting = false;
-        // Emit access token to parent
+        // Emit Bearer token to parent
         this.confirmSuccess.emit(response.accessToken);
       },
       error: (error) => {

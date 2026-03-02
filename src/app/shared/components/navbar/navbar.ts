@@ -34,16 +34,18 @@ export class Navbar {
 
   get dashboardRoute(): string {
     const role = this.authService.getRole();
+    console.log('🔍 Dashboard route for role:', role);
+
     switch (role) {
       case 'system_admin':
         return '/dashboard/system_admin';
-      case 'broker':
+      case 'real_estate_broker':
         return '/dashboard/real_estate_broker';
-      case 'developer':
+      case 'real_estate_developer':
         return '/dashboard/real_estate_developer';
-      case 'seeker':
+      case 'property_seeker':
         return '/dashboard/property_seeker';
-      case 'owner':
+      case 'property_owner':
         return '/dashboard/property_owner';
       default:
         return '/home';

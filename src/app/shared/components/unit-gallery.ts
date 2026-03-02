@@ -38,36 +38,41 @@ import { CommonModule } from '@angular/common';
             <i class="fa-solid fa-share-nodes w-4 h-4 sm:w-5 sm:h-5 text-gray-700"></i>
           </button>
         </div>
-        <button
-          *ngIf="images.length > 1"
-          (click)="previousImage()"
-          class="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors"
-        >
-          <i class="fa-solid fa-chevron-left w-4 h-4"></i>
-        </button>
-        <button
-          *ngIf="images.length > 1"
-          (click)="nextImage()"
-          class="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors"
-        >
-          <i class="fa-solid fa-chevron-right w-4 h-4"></i>
-        </button>
+        @if (images.length > 1) {
+          <button
+            (click)="previousImage()"
+            class="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors"
+          >
+            <i class="fa-solid fa-chevron-left w-4 h-4"></i>
+          </button>
+          <button
+            (click)="nextImage()"
+            class="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors"
+          >
+            <i class="fa-solid fa-chevron-right w-4 h-4"></i>
+          </button>
+        }
         <div
           class="absolute bottom-2 sm:bottom-4 right-2 sm:right-4 px-2 py-1 bg-black/70 text-white text-xs rounded-lg"
         >
           {{ currentIndex + 1 }} / {{ images.length }}
         </div>
       </div>
-      <div class="p-2 sm:p-4 grid grid-cols-4 gap-2 sm:gap-3 overflow-x-auto">
-        <button
-          *ngFor="let image of images; let i = index"
-          (click)="selectImage(i)"
-          class="relative h-16 sm:h-20 flex-shrink-0 rounded-lg overflow-hidden transition-all hover:scale-105"
-          [class.ring-2]="i === currentIndex"
-          [class.ring-black]="i === currentIndex"
-        >
-          <img [src]="image" alt="Gallery image {{ i + 1 }}" class="w-full h-full object-cover" />
-        </button>
+      <div class="p-2 sm:p-4   gap-2 sm:gap-3 overflow-x-scroll flex">
+        @for (image of images; track $index) {
+          <button
+            (click)="selectImage($index)"
+            class="relative h-16 sm:h-20 flex-shrink-0 rounded-lg overflow-hidden transition-all hover:scale-105"
+            [class.ring-2]="$index === currentIndex"
+            [class.ring-black]="$index === currentIndex"
+          >
+            <img
+              [src]="image"
+              alt="Gallery image {{ $index + 1 }}"
+              class="w-full h-full object-cover"
+            />
+          </button>
+        }
       </div>
     </div>
   `,
@@ -76,7 +81,7 @@ export class UnitGalleryComponent {
   @Input() images: string[] = [];
   @Input() title: string = '';
   @Input() currentIndex: number = 0;
-  
+
   @Output() imageClick = new EventEmitter<void>();
   @Output() indexChange = new EventEmitter<number>();
 

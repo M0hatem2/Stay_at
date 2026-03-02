@@ -41,14 +41,19 @@
               ]
         "
       />
-      <!-- Pricing Table Component -->
-      <app-pricing-table
-        [finalPricing]="unitData?.finalPricing"
-        [currency]="pricingCurrency"
-        (priceSelected)="onPriceSelected($event)"
-      />
+      <!-- Pricing Table Component - Only for rent units -->
+      @if (unitData?.finalPricing) {
+        <app-pricing-table
+          [finalPricing]="unitData!.finalPricing!"
+          [currency]="pricingCurrency"
+          (priceSelected)="onPriceSelected($event)"
+        />
+      }
 
-      <app-availability-calendar (dateClicked)="onDateClick($event)"></app-availability-calendar>
+      <!-- Availability Calendar - Only for rent units -->
+      @if (unitData?.finalPricing) {
+        <app-availability-calendar (dateClicked)="onDateClick($event)"></app-availability-calendar>
+      }
 
       <!-- Day Details Modal Component -->
       <app-day-details-modal
@@ -60,6 +65,70 @@
 
       <!-- AI Analysis Component -->
       <app-ai-analysis [aiAnalysis]="unitData?.aiAnalysis" />
+
+      <!-- Payment Plans - Only for sale properties -->
+      @if (unitData?.salePricing?.plans && unitData!.salePricing!.plans.length > 0) {
+        <div class="bg-white rounded-2xl p-6 shadow-sm">
+          <h2 class="text-xl text-gray-900 mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-credit-card text-[#de5806]"></i>
+            خطط الدفع المتاحة
+          </h2>
+          <div class="space-y-4">
+            @for (plan of unitData!.salePricing!.plans; track plan._id) {
+              <div
+                class="border border-gray-200 rounded-xl p-4 hover:border-[#de5806] transition-colors"
+              >
+                <div class="flex items-start justify-between mb-3">
+                  <div>
+                    <h3 class="text-lg text-gray-900 mb-1">{{ plan.name_ar || plan.name_en }}</h3>
+                    <span
+                      class="inline-block px-3 py-1 text-xs rounded-full"
+                      [class.bg-green-100]="plan.saleType === 'cash'"
+                      [class.text-green-700]="plan.saleType === 'cash'"
+                      [class.bg-blue-100]="plan.saleType === 'installment'"
+                      [class.text-blue-700]="plan.saleType === 'installment'"
+                    >
+                      {{ plan.saleType === 'cash' ? 'كاش' : 'تقسيط' }}
+                    </span>
+                  </div>
+                </div>
+                @if (plan.saleType === 'installment') {
+                  <div class="grid grid-cols-2 gap-3 text-sm">
+                    @if (plan.downPaymentPercent) {
+                      <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-percent text-gray-400"></i>
+                        <span class="text-gray-600">مقدم:</span>
+                        <span class="text-gray-900">{{ plan.downPaymentPercent }}%</span>
+                      </div>
+                    }
+                    @if (plan.years) {
+                      <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-calendar text-gray-400"></i>
+                        <span class="text-gray-600">المدة:</span>
+                        <span class="text-gray-900">{{ plan.years }} سنة</span>
+                      </div>
+                    }
+                    @if (plan.interestRate) {
+                      <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-chart-line text-gray-400"></i>
+                        <span class="text-gray-600">الفائدة:</span>
+                        <span class="text-gray-900">{{ plan.interestRate * 100 }}%</span>
+                      </div>
+                    }
+                    @if (plan.discountPercent) {
+                      <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-tag text-green-600"></i>
+                        <span class="text-gray-600">خصم:</span>
+                        <span class="text-green-600">{{ plan.discountPercent }}%</span>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      }
 
       <!-- Location Map Component -->
       <app-location-map
@@ -80,6 +149,7 @@
       <app-booking-sidebar
         [priceDisplay]="priceDisplay || '12 EGP'"
         [pricePeriod]="pricePeriodLabel || 'Monthly'"
+        [pricePerMeter]="pricePerMeter"
         [cancellationPolicy]="
           freeCancellationHours
             ? 'Free cancellation within ' + freeCancellationHours + ' hours'

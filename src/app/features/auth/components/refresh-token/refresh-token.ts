@@ -43,7 +43,7 @@ export class RefreshTokenComponent implements OnInit {
 
         if (response.accessToken) {
           this.authService.setAccessToken(response.accessToken);
-          this.successMessage = 'Access token refreshed successfully!';
+          this.successMessage = 'Bearer token refreshed successfully!';
 
           // Redirect to dashboard after successful refresh
           setTimeout(() => {

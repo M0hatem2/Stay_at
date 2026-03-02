@@ -8,7 +8,7 @@ export interface Property {
   bathrooms: number;
   area: string;
   price: number;
-  priceType: 'monthly' | 'daily' | 'sale';
+  priceType: 'total' | 'monthly' | 'daily';
   image: string;
   isManaged: boolean;
   isVerified: boolean;

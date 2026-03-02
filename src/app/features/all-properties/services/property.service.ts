@@ -44,10 +44,10 @@ export interface Property {
 
 export interface PropertyResponse {
   message: string;
-  properties: {
+  results: {
     data: Property[];
     pages: number;
-    currentPage: number;
+    currentPage: string | number;
     totalItems: number;
     itemsPerPage: number;
     nextPage: number | null;
@@ -104,7 +104,7 @@ export class PropertyService {
     console.log('  - language:', currentLanguage);
     console.log('  - params:', params.toString());
 
-    return this.http.get<PropertyResponse>(`${this.baseUrl}/property`, {
+    return this.http.get<PropertyResponse>(`${this.baseUrl}/public/search/units-and-properties`, {
       params,
       headers,
     });

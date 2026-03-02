@@ -91,12 +91,12 @@
           @if (price && price !== 'undefined') {
             <div class="text-2xl text-black">{{ price }} EGP</div>
             <div class="text-gray-500 text-sm">
-              @if (priceType) {
-                {{
-                  priceType === 'monthly' ? 'monthly' : priceType === 'daily' ? 'daily' : 'for sale'
-                }}
-              } @else {
-                للبيع
+              @if (priceType === 'monthly') {
+                monthly
+              } @else if (priceType === 'daily') {
+                daily
+              } @else if (priceType === 'total') {
+                total
               }
             </div>
           }

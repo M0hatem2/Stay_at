@@ -3,10 +3,11 @@ import { Router } from '@angular/router';
 import { ProjectsHeader } from '../components/projects-header/projects-header';
 import { ProjectsData } from '../components/projects-data/projects-data';
 import { Projects } from '../components/projects/projects';
+import { YouDeveloper } from "../components/you-developer/you-developer";
 
 @Component({
   selector: 'app-projects-page',
-  imports: [ProjectsHeader, ProjectsData, Projects],
+  imports: [ProjectsHeader, ProjectsData, Projects, YouDeveloper],
   templateUrl: './projects.page.html',
   styleUrl: './projects.page.scss',
 })

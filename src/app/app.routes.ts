@@ -10,6 +10,7 @@ import { ProjectsPage } from './features/projects/pages/projects.page';
 import { AboutPage } from './features/about/pages/about.page';
 import { UnitDetails } from './shared/components/unit-details/unit-details';
 import { BuyUnitDetails } from './shared/components/buy-unit-details/buy-unit-details';
+import { ProjectsDetails } from './shared/components/projects-details/projects-details';
 import { BrokerDashboardComponent } from './features/dashbords/broker/broker-dashboard.component';
 import { DeveloperDashboardComponent } from './features/dashbords/developer/developer-dashboard.component';
 import { OwnerDashboardComponent } from './features/dashbords/owner/owner-dashboard.component';
@@ -37,7 +38,7 @@ export const routes: Routes = [
       { path: 'buy', component: BuyPage },
       {
         path: 'projects/:id',
-        component: BuyUnitDetails,
+        component: ProjectsDetails,
         data: { prerender: false },
       },
       { path: 'projects', component: ProjectsPage },
@@ -65,17 +66,17 @@ export const routes: Routes = [
       {
         path: 'dashboard/real_estate_broker',
         component: BrokerDashboardComponent,
-        data: { prerender: false },
+        // data: { prerender: false },
       },
       {
         path: 'dashboard/real_estate_developer',
         component: DeveloperDashboardComponent,
-        data: { prerender: false },
+        // data: { prerender: false },
       },
       {
         path: 'dashboard/property_owner',
         component: OwnerDashboardComponent,
-        data: { prerender: false },
+        // data: { prerender: false },
       },
       {
         path: 'dashboard/property_owner/add-property',
@@ -83,12 +84,12 @@ export const routes: Routes = [
           import('./features/dashbords/add-new-property/add-new-property').then(
             (m) => m.AddNewProperty,
           ),
-        data: { prerender: false },
+        // data: { prerender: false },
       },
       {
         path: 'dashboard/property_seeker',
         component: SeekerDashboardComponent,
-        data: { prerender: false },
+        // data: { prerender: false },
       },
     ],
   },
@@ -100,7 +101,7 @@ export const routes: Routes = [
         path: '',
         loadChildren: () =>
           import('./features/dashbords/admin/admin.routes').then((m) => m.adminRoutes),
-        data: { prerender: false },
+        // data: { prerender: false },
       },
     ],
   },

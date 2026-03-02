@@ -44,7 +44,7 @@ export class ApiService {
       .pipe(
         timeout(timeoutMs || this.defaultTimeout),
         retry(this.retryAttempts),
-        catchError(this.handleError.bind(this))
+        catchError(this.handleError.bind(this)),
       );
   }
 
@@ -54,12 +54,17 @@ export class ApiService {
   post<T>(endpoint: string, data: any, timeoutMs?: number): Observable<T> {
     const url = `${this.baseUrl}${endpoint}`;
 
+    if (environment.features.enableLogging) {
+      console.log('📤 ApiService.post() - Sending POST request to:', url);
+      console.log('📦 Body:', data);
+    }
+
     return this.http
       .post<T>(url, data)
       .pipe(
         timeout(timeoutMs || this.defaultTimeout),
         retry(this.retryAttempts),
-        catchError(this.handleError.bind(this))
+        catchError(this.handleError.bind(this)),
       );
   }
 

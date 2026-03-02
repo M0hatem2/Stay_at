@@ -34,19 +34,36 @@ export interface PropertyLocation {
 export interface ApiProperty {
   _id: string;
   slug: string;
-  status: 'active' | 'inactive' | 'pending';
-  ownerType: 'real_estate_developer' | 'broker' | 'owner';
-  ownerId: string;
+  status?: 'active' | 'inactive' | 'pending';
+  ownerType?: 'real_estate_developer' | 'broker' | 'owner';
+  ownerId?: string;
   projectId?: string;
+  targetId?: string;
+  targetType?: 'unit' | 'project' | 'property';
   location: PropertyLocation;
   isFeatured: boolean;
-  gallery: GalleryItem[];
-  documents: DocumentItem[];
-  floorsCount: number;
-  name: string;
-  description: string;
+  isTrusted?: boolean;
+  gallery?: GalleryItem[];
+  thumbnail?: {
+    secure_url: string;
+  };
+  documents?: DocumentItem[];
+  floorsCount?: number;
+  name?: string;
+  title?: string;
+  description?: string;
   type: string;
-  facilitiesAndServices: string[];
+  facilitiesAndServices?: string[];
+  area?: number;
+  bedrooms?: number;
+  bathrooms?: number;
+  furnished?: boolean;
+  displayPrice?: number;
+  currency?: string;
+  priceType?: 'total' | 'monthly' | 'daily';
+  purpose?: 'sale' | 'rent' | 'sale_and_rent';
+  rating?: number;
+  createdAt?: string;
 }
 
 export interface PaginationInfo {

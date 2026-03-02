@@ -1,13 +1,109 @@
-<div class="bg-gradient-to-br from-black via-gray-900 to-[#C4A962] text-white py-20">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+<div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24 gradient-primary-header ">
+  <div class="text-center mb-10 sm:mb-12 lg:mb-16">
+    <!-- Badge -->
+    <div
+      class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full mb-4 sm:mb-6"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="lucide lucide-building w-4 h-4 sm:w-5 sm:h-5"
+        aria-hidden="true"
+      >
+        <path d="M12 10h.01"></path>
+        <path d="M12 14h.01"></path>
+        <path d="M12 6h.01"></path>
+        <path d="M16 10h.01"></path>
+        <path d="M16 14h.01"></path>
+        <path d="M16 6h.01"></path>
+        <path d="M8 10h.01"></path>
+        <path d="M8 14h.01"></path>
+        <path d="M8 6h.01"></path>
+        <path d="M9 22v-3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"></path>
+        <rect x="4" y="2" width="16" height="20" rx="2"></rect>
+      </svg>
+      <span class="text-sm sm:text-base">Best Real Estate Projects in Egypt</span>
+    </div>
 
-    <h1 class="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
-      Developers Projects
+    <!-- Title -->
+    <h1 class="mb-4 sm:mb-6 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
+      Developer Projects
     </h1>
 
-    <p class="text-white/85 max-w-2xl mx-auto text-lg md:text-xl leading-relaxed">
-      Explore the latest real estate projects from Egypt’s leading development companies.
+    <!-- Description -->
+    <p class="text-white/90 text-base sm:text-lg lg:text-xl max-w-2xl mx-auto leading-relaxed px-4">
+      Discover the latest real estate projects from Egypt's leading development companies
     </p>
+  </div>
 
+  <!-- Search Bar -->
+  <div class="max-w-3xl mx-auto">
+    <div
+      class="bg-white rounded-2xl shadow-2xl p-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-2"
+    >
+      <!-- Search Input -->
+      <div class="flex-1 flex items-center gap-3 px-4 py-2 sm:py-0">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-search w-5 h-5 text-gray-400 flex-shrink-0"
+          aria-hidden="true"
+        >
+          <path d="m21 21-4.34-4.34"></path>
+          <circle cx="11" cy="11" r="8"></circle>
+        </svg>
+        <input
+          type="text"
+          placeholder="Search for project, developer, or location..."
+          class="flex-1 py-3 text-gray-900 placeholder-gray-400 focus:outline-none text-sm sm:text-base"
+          value=""
+        />
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-2">
+        <button
+          class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 sm:px-6 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors text-sm sm:text-base"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-funnel w-4 h-4 sm:w-5 sm:h-5"
+            aria-hidden="true"
+          >
+            <path
+              d="M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z"
+            ></path>
+          </svg>
+          <span>Filter</span>
+        </button>
+        <button
+          class="flex-1 sm:flex-none px-6 sm:px-8 py-3 bg-gradient-to-r from-[#de5806] to-[#470e03] text-white rounded-xl hover:shadow-lg transition-all text-sm sm:text-base font-medium"
+        >
+          Search
+        </button>
+      </div>
+    </div>
   </div>
 </div>

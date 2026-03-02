@@ -1,0 +1,11 @@
+export { PropertyDetailsComponent } from './property-details.component';
+export { DescriptionComponent } from './description.component';
+export { FeaturesComponent } from './features.component';
+export { CompoundFeaturesComponent } from './compound-features.component';
+export { PaymentPlansComponent } from './payment-plans.component';
+export { InvestmentAnalysisComponent } from './investment-analysis.component';
+export { DocumentsTaxesComponent } from './documents-taxes.component';
+export { NearbyPlacesComponent } from './nearby-places.component';
+export { SimilarPropertiesComponent } from './similar-properties.component';
+export { SidebarComponent } from './sidebar.component';
+export { ImageModalComponent } from './image-modal.component';

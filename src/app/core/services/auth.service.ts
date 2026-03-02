@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -9,7 +10,10 @@ import { environment } from '../../../environments/environment';
 export class AuthService {
   private baseUrl = environment.api.baseUrl;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object,
+  ) {}
 
   // Sign up with email confirmation
   signUp(userData: any): Observable<any> {
@@ -79,38 +83,63 @@ export class AuthService {
   }
 
   getAccessToken(): string | null {
-    return localStorage.getItem('accessToken');
+    if (!isPlatformBrowser(this.platformId)) {
+      return null;
+    }
+    const token = localStorage.getItem('accessToken');
+    console.log('🔑 AuthService.getAccessToken():', token ? 'Token found' : 'No token');
+    return token;
   }
 
   setAccessToken(accessToken: string): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+    console.log('💾 AuthService.setAccessToken() - Saving token');
     localStorage.setItem('accessToken', accessToken);
   }
 
   getRefreshToken(): string | null {
+    if (!isPlatformBrowser(this.platformId)) {
+      return null;
+    }
     return localStorage.getItem('refreshToken');
   }
 
   setRefreshToken(refreshToken: string): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
     localStorage.setItem('refreshToken', refreshToken);
   }
 
   clearTokens(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+    console.log('🗑️ AuthService.clearTokens() - Removing tokens');
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
   }
 
   isAuthenticated(): boolean {
-    return !!this.getAccessToken();
+    const hasToken = !!this.getAccessToken();
+    console.log('🔍 AuthService.isAuthenticated():', hasToken);
+    return hasToken;
   }
 
   getRole(): string | null {
+    if (!isPlatformBrowser(this.platformId)) {
+      return null;
+    }
     const token = this.getAccessToken();
     if (token) {
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
+        console.log('👤 AuthService.getRole():', payload.role);
         return payload.role;
       } catch (error) {
-        console.error('Error decoding token:', error);
+        console.error('❌ Error decoding token:', error);
         return null;
       }
     }

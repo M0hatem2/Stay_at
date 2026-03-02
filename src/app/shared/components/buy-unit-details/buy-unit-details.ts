@@ -1,31 +1,102 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { PaymentPlansSelector } from '../payment-plans-selector/payment-plans-selector';
 import { MOCK_PROPERTY_DATA, PropertyDetails } from '../../../core/models/property-details.model';
 import { Property } from '../../../core/models/property.model';
 import { ApiProperty } from '../../../core/models/api-property.model';
 import { PropertyCardData } from '../units-card/units-card';
 import { Project } from '../../../core/models/project.model';
+import { UnitService } from '../../../features/rent/services/unit.service';
+import { Subscription } from 'rxjs';
+import { UnitGalleryComponent } from '../unit-gallery';
+import {
+  PropertyDetailsComponent,
+  DescriptionComponent,
+  FeaturesComponent,
+  CompoundFeaturesComponent,
+  PaymentPlansComponent,
+  InvestmentAnalysisComponent,
+  DocumentsTaxesComponent,
+  NearbyPlacesComponent,
+  SimilarPropertiesComponent,
+  SidebarComponent,
+  ImageModalComponent,
+} from './components';
 
 @Component({
   selector: 'app-buy-unit-details',
   imports: [
     CommonModule,
+    UnitGalleryComponent,
+    PropertyDetailsComponent,
+    DescriptionComponent,
+    FeaturesComponent,
+    CompoundFeaturesComponent,
+    PaymentPlansComponent,
+    InvestmentAnalysisComponent,
+    DocumentsTaxesComponent,
+    NearbyPlacesComponent,
+    SimilarPropertiesComponent,
+    SidebarComponent,
+    ImageModalComponent,
   ],
   templateUrl: './buy-unit-details.html',
   styleUrl: './buy-unit-details.scss',
 })
 export class BuyUnitDetails implements OnInit, OnDestroy {
   propertyData: PropertyDetails = this.cloneMock();
+  unitData: any = null; // البيانات من الـ API
+  isLoading = false;
+  errorMessage = '';
 
   // Image Gallery Properties
   selectedImageIndex: number = 0;
   isImageModalOpen: boolean = false;
 
-  constructor(private router: Router) {}
+  private routeSubscription: Subscription | undefined;
+  private unitService = inject(UnitService);
+
+  constructor(
+    public router: Router,
+    private route: ActivatedRoute,
+  ) {}
 
   ngOnInit(): void {
+    // الحصول على ID من الـ route
+    this.routeSubscription = this.route.paramMap.subscribe((params) => {
+      const id = params.get('id');
+      if (id) {
+        this.loadUnitDetails(id);
+      } else {
+        // Fallback to old navigation state method
+        this.loadFromNavigationState();
+      }
+    });
+  }
+
+  private loadUnitDetails(id: string): void {
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    this.unitService.getUnitByIdForSale(id).subscribe({
+      next: (response: any) => {
+        console.log('🏠 Buy Unit Details Response:', response);
+        this.unitData = response;
+        this.mapApiDataToPropertyData(response);
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('❌ Error loading unit details:', error);
+        this.errorMessage = 'حدث خطأ أثناء تحميل تفاصيل الوحدة';
+        this.isLoading = false;
+        // Fallback to navigation state if API fails
+        this.loadFromNavigationState();
+      },
+    });
+  }
+
+  private loadFromNavigationState(): void {
     const navigation = this.router.getCurrentNavigation();
     const navState = navigation?.extras.state as
       | { property?: PropertyCardData | Project }
@@ -37,18 +108,191 @@ export class BuyUnitDetails implements OnInit, OnDestroy {
     }
 
     if (typeof window !== 'undefined') {
-      const histState =
-        (window.history?.state as { property?: PropertyCardData | Project }) || {};
+      const histState = (window.history?.state as { property?: PropertyCardData | Project }) || {};
       if (histState?.property) {
         this.applyPropertyOverrides(histState.property);
       }
     }
   }
 
+  private mapApiDataToPropertyData(data: any): void {
+    const pd = this.propertyData;
+
+    // Basic Info
+    if (data.title) pd.title = data.title;
+    if (data.description) pd.description = data.description;
+    if (data.isTrusted != null) pd.verified = data.isTrusted;
+    if (data.viewsCount != null) pd.views = data.viewsCount;
+
+    // Gallery
+    if (data.gallery?.length) {
+      pd.gallery = data.gallery.map((img: any) => img.secure_url);
+      pd.main_image = pd.gallery[0];
+    }
+
+    // Location
+    if (data.location) {
+      pd.location = {
+        full: `${data.location.area}, ${data.location.city}`,
+        area: data.location.area,
+        city: data.location.city,
+      };
+    }
+
+    // Specs
+    if (data.unitType) pd.specs.property_type = data.unitType;
+    if (data.bedrooms != null) pd.specs.bedrooms = data.bedrooms;
+    if (data.bathrooms != null) pd.specs.bathrooms = data.bathrooms;
+    if (data.unitArea != null) pd.specs.area_sqm = data.unitArea;
+    if (data.floorNumber != null) pd.specs.floor = String(data.floorNumber);
+    if (data.furnished != null) pd.specs.finishing = data.furnished ? 'Furnished' : 'Unfurnished';
+
+    // Project/Compound
+    if (data.project?.name) {
+      pd.specs.compound = data.project.name;
+      if (data.project.expectedDeliveryDate) {
+        pd.specs.delivery = new Date(data.project.expectedDeliveryDate).getFullYear().toString();
+      }
+    }
+
+    // Price
+    if (data.salePricing) {
+      const basePrice = data.salePricing.basePrice;
+      const currency = data.salePricing.currency || 'EGP';
+      pd.price.display = `${basePrice.toLocaleString()} ${currency}`;
+      pd.sidebar.price_display = pd.price.display;
+
+      if (data.salePricing.pricePerMeter) {
+        pd.price.per_sqm = `${data.salePricing.pricePerMeter.toLocaleString()} ${currency}/sqm`;
+        pd.sidebar.per_sqm = `${data.salePricing.pricePerMeter.toLocaleString()}`;
+      }
+
+      // Payment Plans
+      if (data.salePricing.plans?.length) {
+        pd.payment_plans = data.salePricing.plans.map((plan: any, index: number) => ({
+          id: `plan_${index}`,
+          name: plan.name_ar || plan.name_en,
+          type: plan.saleType === 'cash' ? 'cash' : 'installment',
+          down_payment: plan.downPaymentPercent
+            ? `${plan.downPaymentPercent}%`
+            : plan.saleType === 'cash'
+              ? '100%'
+              : '0%',
+          years: plan.years || 0,
+          monthly_payment: this.calculateMonthlyPayment(
+            basePrice,
+            plan.downPaymentPercent || 0,
+            plan.years || 0,
+            plan.interestRate || 0,
+          ),
+          total_price: basePrice,
+          selected: index === 0,
+        }));
+      }
+    }
+
+    // Features
+    if (data.facilitiesAndServices?.length) {
+      pd.features = data.facilitiesAndServices;
+    }
+
+    // Compound Features (from project)
+    if (data.project?.featuresAndServices?.length) {
+      pd.compound_features = data.project.featuresAndServices;
+    }
+
+    // Nearby Places
+    if (data.nearbyLandmarks?.length) {
+      pd.nearby_places = data.nearbyLandmarks.map((landmark: any) => ({
+        name: landmark.name,
+        type: landmark.type,
+        distance_km: parseFloat(landmark.distance) || 0,
+        travel_time: '',
+      }));
+    }
+
+    // Investment Analysis
+    if (data.saleAnalysis) {
+      pd.price_investment_analysis = {
+        price_per_sqm: data.salePricing?.pricePerMeter
+          ? `${data.salePricing.pricePerMeter.toLocaleString()} ${data.salePricing.currency || 'EGP'}/sqm`
+          : '',
+        comparison_to_area_average:
+          data.saleAnalysis.priceAnalysis?.status || 'No comparison available',
+        expected_rental_yield: data.saleAnalysis.investmentAnalysis?.rentalYield
+          ? `${data.saleAnalysis.investmentAnalysis.rentalYield}%`
+          : '0%',
+        expected_rental_annual_return: data.saleAnalysis.investmentAnalysis?.annualRentIncome
+          ? `${data.saleAnalysis.investmentAnalysis.annualRentIncome.toLocaleString()} ${data.salePricing?.currency || 'EGP'}`
+          : '0 EGP',
+        expected_appreciation: data.saleAnalysis.investmentAnalysis?.appreciationRate
+          ? `${data.saleAnalysis.investmentAnalysis.appreciationRate}%`
+          : '0%',
+        payback_period_years: data.saleAnalysis.investmentAnalysis?.paybackPeriod || 0,
+      };
+
+      // AI Insights
+      if (data.saleAnalysis.smartInsights?.length) {
+        pd.ai_insights = data.saleAnalysis.smartInsights.map((insight: string) => ({
+          title: 'Smart Insight',
+          detail: insight,
+        }));
+      }
+    }
+
+    // Agent/Owner
+    if (data.owner) {
+      pd.agent = {
+        name: data.owner.name,
+        verified: true,
+        title: data.owner.role,
+        rating: 4.8,
+        reviews_count: 0,
+        sold_count: data.owner.stats?.soldCount || 0,
+        listed_count: data.owner.stats?.listedCount || 0,
+        response_rate: '95%',
+        response_time: '2 hours',
+      };
+    }
+
+    // Documents
+    if (data.documents?.length) {
+      pd.documents = data.documents.map((doc: any) => ({
+        name: doc.original_filename || 'Document',
+        status: 'Available',
+      }));
+    }
+  }
+
+  private calculateMonthlyPayment(
+    totalPrice: number,
+    downPaymentPercent: number,
+    years: number,
+    interestRate: number,
+  ): string {
+    if (years === 0) return '0 EGP';
+
+    const downPayment = (totalPrice * downPaymentPercent) / 100;
+    const loanAmount = totalPrice - downPayment;
+    const months = years * 12;
+
+    if (interestRate === 0) {
+      return `${Math.round(loanAmount / months).toLocaleString()} EGP`;
+    }
+
+    const monthlyRate = interestRate / 12;
+    const monthlyPayment =
+      (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, months)) /
+      (Math.pow(1 + monthlyRate, months) - 1);
+
+    return `${Math.round(monthlyPayment).toLocaleString()} EGP`;
+  }
+
   ngOnDestroy(): void {
     if (this.isImageModalOpen) {
       document.removeEventListener('keydown', this.handleKeydown.bind(this));
     }
+    this.routeSubscription?.unsubscribe();
   }
 
   get galleryImages(): string[] {
@@ -77,6 +321,10 @@ export class BuyUnitDetails implements OnInit, OnDestroy {
     return this.selectedImageIndex;
   }
 
+  set currentImageIndex(value: number) {
+    this.selectedImageIndex = value;
+  }
+
   // Image Gallery Methods
 
   closeImageModal(): void {
@@ -100,23 +348,14 @@ export class BuyUnitDetails implements OnInit, OnDestroy {
     }
   }
 
-  selectImage(index: number): void {
-    this.selectedImageIndex = index;
-  }
-
-  openImageModal(): void;
-  openImageModal(index: number): void;
-  openImageModal(index?: number): void {
-    if (index !== undefined) {
-      this.selectedImageIndex = index;
-    }
+  openImageModal(): void {
     this.isImageModalOpen = true;
     document.addEventListener('keydown', this.handleKeydown.bind(this));
   }
 
   private handleKeydown(event: KeyboardEvent): void {
     if (!this.isImageModalOpen) return;
-    
+
     switch (event.key) {
       case 'Escape':
         this.closeImageModal();
@@ -312,7 +551,10 @@ export class BuyUnitDetails implements OnInit, OnDestroy {
 
   private splitLocation(full: string): { area: string; city: string } {
     if (!full) return { area: '', city: '' };
-    const parts = full.split(/,|\u060C/).map((item) => item.trim()).filter(Boolean);
+    const parts = full
+      .split(/,|\u060C/)
+      .map((item) => item.trim())
+      .filter(Boolean);
     return { area: parts[0] || '', city: parts[1] || '' };
   }
 

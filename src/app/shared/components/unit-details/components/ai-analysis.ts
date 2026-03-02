@@ -18,6 +18,7 @@ interface AIAnalysis {
   priceEvaluation?: PriceEvaluation;
   locationEvaluation?: LocationEvaluation;
   summary?: string;
+  smartInsights?: string[];
 }
 
 @Component({
@@ -73,8 +74,7 @@ interface AIAnalysis {
                   {{ aiAnalysis.locationEvaluation.description }}
                 </p>
                 @if (
-                  aiAnalysis.locationEvaluation.pros &&
-                  aiAnalysis.locationEvaluation.pros.length
+                  aiAnalysis.locationEvaluation.pros && aiAnalysis.locationEvaluation.pros.length
                 ) {
                   <ul class="mt-2 space-y-1">
                     @for (pro of aiAnalysis.locationEvaluation.pros; track pro) {
@@ -96,6 +96,24 @@ interface AIAnalysis {
               <div>
                 <div class="text-gray-900 mb-1">AI Summary</div>
                 <p class="text-gray-600 text-sm">{{ aiAnalysis.summary }}</p>
+              </div>
+            </div>
+          }
+
+          <!-- Smart Insights -->
+          @if (aiAnalysis.smartInsights && aiAnalysis.smartInsights.length) {
+            <div class="flex items-start gap-3">
+              <i class="fa-solid fa-brain w-5 h-5 text-purple-600 mt-0.5"></i>
+              <div class="flex-1">
+                <div class="text-gray-900 mb-2">Smart Insights</div>
+                <ul class="space-y-2">
+                  @for (insight of aiAnalysis.smartInsights; track insight) {
+                    <li class="text-gray-600 text-sm flex items-start gap-2">
+                      <i class="fa-solid fa-circle text-purple-600 text-xs mt-1.5"></i>
+                      <span>{{ insight }}</span>
+                    </li>
+                  }
+                </ul>
               </div>
             </div>
           }

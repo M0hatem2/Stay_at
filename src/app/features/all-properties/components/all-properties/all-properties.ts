@@ -42,16 +42,16 @@ export class AllProperties implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private propertyService: PropertyService,
-    private languageService: LanguageService
+    private languageService: LanguageService,
   ) {}
 
   ngOnInit(): void {
     // Listen to query params for search
-    this.routeSubscription = this.route.queryParams.subscribe(params => {
+    this.routeSubscription = this.route.queryParams.subscribe((params) => {
       this.searchQuery = params['search'] || '';
       this.loadProperties();
     });
-    
+
     // الاشتراك في تغييرات اللغة لإعادة تحميل البيانات
     this.languageSubscription = this.languageService.currentLanguage$
       .pipe(skip(1))
@@ -74,25 +74,31 @@ export class AllProperties implements OnInit, OnDestroy {
       next: (response) => {
         console.log('📦 Properties Response:', response);
         console.log('🔍 Search Query:', this.searchQuery);
-        
-        this.properties = response.properties.data as unknown as ApiProperty[];
+        console.log('📊 Data:', response.results.data);
+
+        this.properties = response.results.data as unknown as ApiProperty[];
         this.paginationInfo = {
-          data: response.properties.data as unknown as ApiProperty[],
-          pages: response.properties.pages,
-          currentPage: response.properties.currentPage,
-          totalItems: response.properties.totalItems,
-          itemsPerPage: response.properties.itemsPerPage,
-          nextPage: response.properties.nextPage,
-          previousPage: response.properties.previousPage
+          data: response.results.data as unknown as ApiProperty[],
+          pages: response.results.pages,
+          currentPage:
+            typeof response.results.currentPage === 'string'
+              ? parseInt(response.results.currentPage)
+              : response.results.currentPage,
+          totalItems: response.results.totalItems,
+          itemsPerPage: response.results.itemsPerPage,
+          nextPage: response.results.nextPage,
+          previousPage: response.results.previousPage,
         };
-        this.totalResults = response.properties.totalItems;
+        this.totalResults = response.results.totalItems;
         this.isLoading = false;
+
+        console.log('✅ Properties loaded:', this.properties.length);
       },
       error: (error) => {
         console.error('❌ Error loading properties:', error);
         this.errorMessage = 'حدث خطأ أثناء تحميل العقارات';
         this.isLoading = false;
-      }
+      },
     });
   }
 
@@ -130,11 +136,60 @@ export class AllProperties implements OnInit, OnDestroy {
   }
 
   onPropertyClick(property: PropertyCardData): void {
-    // التوجه إلى صفحة تفاصيل العقار مع تمرير بيانات العقار
-    const id = '_id' in property ? property._id : property.id;
-    this.router.navigate(['/property', id], {
-      state: { property: property },
-    });
+    console.log('🔍 Property clicked:', property);
+
+    // Check if this is a search result with targetId and targetType
+    if ('targetId' in property && 'targetType' in property) {
+      const apiProperty = property as ApiProperty;
+      const targetId = apiProperty.targetId;
+      const targetType = apiProperty.targetType;
+
+      console.log('📍 Target ID:', targetId);
+      console.log('📍 Target Type:', targetType);
+
+      // Navigate based on targetType
+      if (targetType === 'property' || targetType === 'project') {
+        // Navigate to property details
+        this.router.navigate(['/property', targetId], {
+          state: { property: property },
+        });
+      } else if (targetType === 'unit') {
+        // Check priceType to determine if it's rent or sale
+        const priceType = apiProperty.priceType;
+        const purpose = apiProperty.purpose;
+
+        console.log('💰 Price Type:', priceType);
+        console.log('🎯 Purpose:', purpose);
+
+        // Determine route based on purpose and priceType
+        if (purpose === 'sale_and_rent') {
+          // Check priceType to decide
+          if (priceType === 'daily' || priceType === 'monthly') {
+            this.router.navigate(['/rent', targetId], {
+              state: { property: property },
+            });
+          } else if (priceType === 'total') {
+            this.router.navigate(['/buy', targetId], {
+              state: { property: property },
+            });
+          }
+        } else if (purpose === 'rent') {
+          this.router.navigate(['/rent', targetId], {
+            state: { property: property },
+          });
+        } else if (purpose === 'sale') {
+          this.router.navigate(['/buy', targetId], {
+            state: { property: property },
+          });
+        }
+      }
+    } else {
+      // Fallback to old behavior
+      const id = '_id' in property ? property._id : property.id;
+      this.router.navigate(['/property', id], {
+        state: { property: property },
+      });
+    }
   }
 
   toggleFilters() {

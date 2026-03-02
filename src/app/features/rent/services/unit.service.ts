@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { LanguageService } from '../../../core/services/language.service';
+import { ApiProperty } from '../../../core/models/api-property.model';
 
 export interface UnitLocation {
   country: string;
@@ -55,6 +56,7 @@ export interface AIAnalysis {
   nearbyLandmarks: NearbyLandmark[];
   summary: string;
   lastUpdated: string;
+  smartInsights?: string[];
 }
 
 export interface Unit {
@@ -83,6 +85,53 @@ export interface Unit {
   description: string;
   unitType: string;
   facilitiesAndServices: string[];
+  nearbyLandmarks?: NearbyLandmark[];
+  project?: any;
+  owner?: {
+    type: string;
+    name: string;
+    role: string;
+    contact: {
+      phoneNumber: string;
+      email: string;
+    };
+    stats?: {
+      listedCount: number;
+      soldCount: number;
+    };
+  };
+  salePricing?: {
+    _id: string;
+    basePrice: number;
+    pricePerMeter: number;
+    currency: string;
+    plans: Array<{
+      name_ar: string;
+      name_en: string;
+      saleType: string;
+      downPaymentPercent?: number;
+      years?: number;
+      interestRate?: number;
+      discountPercent?: number;
+      _id: string;
+    }>;
+    negotiable: boolean;
+    status: string;
+  };
+  saleAnalysis?: {
+    priceAnalysis: {
+      pricePerMeter: number;
+      priceDiffPercent: number;
+      status: string;
+    };
+    investmentAnalysis: {
+      appreciationRate: number;
+      investmentScore: number;
+    };
+    summary: string;
+    lastUpdated: string;
+    smartInsights: string[];
+  };
   finalPricing?: {
     _id: string;
     targetType: string;
@@ -107,15 +156,6 @@ export interface Unit {
     deletedAt?: string;
     deletedBy?: string;
   };
-  owner?: {
-    type: string;
-    name: string;
-    role: string;
-    contact: {
-      phoneNumber: string;
-      email: string;
-    };
-  };
 }
 
 export interface UnitFilters {
@@ -139,10 +179,10 @@ export interface UnitFilters {
 
 export interface UnitsResponse {
   message: string;
-  units: {
-    data: Unit[];
+  results: {
+    data: ApiProperty[];
     pages: number;
-    currentPage: number;
+    currentPage: string | number;
     totalItems: number;
     itemsPerPage: number;
     nextPage: number | null;
@@ -151,23 +191,23 @@ export interface UnitsResponse {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UnitService {
   private baseUrl = environment.api.baseUrl;
 
   constructor(
     private http: HttpClient,
-    private languageService: LanguageService
+    private languageService: LanguageService,
   ) {}
 
   getUnits(filters: UnitFilters = {}): Observable<UnitsResponse> {
     const currentLanguage = this.languageService.getCurrentLanguage();
-    
+
     let params = new HttpParams();
-    
+
     // إضافة الفلاتر كـ query parameters
-    Object.keys(filters).forEach(key => {
+    Object.keys(filters).forEach((key) => {
       const value = filters[key as keyof UnitFilters];
       if (value !== undefined && value !== null && value !== '') {
         params = params.set(key, value.toString());
@@ -178,7 +218,7 @@ export class UnitService {
     const headers = {
       'Accept-Language': currentLanguage,
       'Content-Language': currentLanguage,
-      'X-Language': currentLanguage
+      'X-Language': currentLanguage,
     };
 
     console.log('🏠 UnitService - getUnits() called with:');
@@ -186,22 +226,34 @@ export class UnitService {
     console.log('  - language:', currentLanguage);
     console.log('  - params:', params.toString());
     console.log('  - headers:', headers);
-    
-    return this.http.get<UnitsResponse>(`${this.baseUrl}/unit/rent`, { 
+
+    return this.http.get<UnitsResponse>(`${this.baseUrl}/public/search/units-and-properties`, {
       params,
-      headers 
+      headers,
     });
   }
 
   getUnitById(id: string): Observable<any> {
     const currentLanguage = this.languageService.getCurrentLanguage();
-    
+
     const headers = {
       'Accept-Language': currentLanguage,
       'Content-Language': currentLanguage,
-      'X-Language': currentLanguage
+      'X-Language': currentLanguage,
     };
 
     return this.http.get(`${this.baseUrl}/unit/${id}/rent`, { headers });
+  }
+
+  getUnitByIdForSale(id: string): Observable<any> {
+    const currentLanguage = this.languageService.getCurrentLanguage();
+
+    const headers = {
+      'Accept-Language': currentLanguage,
+      'Content-Language': currentLanguage,
+      'X-Language': currentLanguage,
+    };
+
+    return this.http.get(`${this.baseUrl}/unit/${id}/sale`, { headers });
   }
 }

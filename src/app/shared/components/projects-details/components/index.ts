@@ -1,0 +1,9 @@
+export { ProjectHeaderComponent } from './project-header.component';
+export { MasterplanComponent } from './masterplan.component';
+export { UnitTypesComponent } from './unit-types.component';
+export { AmenitiesComponent } from './amenities.component';
+export { ProjectPaymentPlansComponent } from './project-payment-plans.component';
+export { ProjectGalleryComponent } from './project-gallery.component';
+export { QuickInfoComponent } from './quick-info.component';
+export { ContactFormComponent } from './contact-form.component';
+export { ActionButtonsComponent } from './action-buttons.component';

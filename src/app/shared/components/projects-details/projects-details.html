@@ -1,0 +1,43 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="lg:col-span-2 space-y-6">
+      <app-project-header
+        [projectName]="projectName"
+        [developer]="developer"
+        [location]="location"
+        [description]="description"
+      >
+      </app-project-header>
+
+      <app-masterplan [masterplanImage]="masterplanImage"></app-masterplan>
+
+      <app-unit-types [unitTypes]="unitTypes"></app-unit-types>
+
+      <app-amenities [amenities]="amenities"></app-amenities>
+
+      <app-project-payment-plans [paymentPlans]="paymentPlans"></app-project-payment-plans>
+
+      <app-project-gallery [galleryImages]="galleryImages"></app-project-gallery>
+    </div>
+
+    <div class="lg:col-span-1">
+      <div class="sticky top-24 space-y-6">
+        <app-quick-info
+          [deliveryDate]="deliveryDate"
+          [totalUnits]="totalUnits"
+          [availableUnits]="availableUnits"
+        >
+        </app-quick-info>
+
+        <app-contact-form [unitTypes]="unitTypeNames"></app-contact-form>
+
+        <app-action-buttons
+          (requestCall)="onRequestCall()"
+          (bookVisit)="onBookVisit()"
+          (getBrochure)="onGetBrochure()"
+        >
+        </app-action-buttons>
+      </div>
+    </div>
+  </div>
+</div>

@@ -20,6 +20,9 @@ interface OwnerInfo {
         <div class="mb-4 sm:mb-6">
           <div class="text-2xl sm:text-3xl text-black mb-1">{{ priceDisplay }}</div>
           <div class="text-gray-500 text-sm sm:text-base">{{ pricePeriod }}</div>
+          @if (pricePerMeter) {
+            <div class="text-gray-600 text-xs sm:text-sm mt-1">{{ pricePerMeter }}</div>
+          }
         </div>
         <button
           (click)="bookNow.emit()"
@@ -103,6 +106,7 @@ interface OwnerInfo {
 export class BookingSidebarComponent {
   @Input() priceDisplay: string = '';
   @Input() pricePeriod: string = '';
+  @Input() pricePerMeter: string | null = null;
   @Input() cancellationPolicy: string = 'Free cancellation within 24 hours';
   @Input() owner: OwnerInfo | null = null;
   @Input() safetyTips: string[] = [

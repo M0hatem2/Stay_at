@@ -7,7 +7,7 @@ import { UnitsCard, PropertyCardData } from '../../../../shared/components/units
 import { Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { skip } from 'rxjs/operators';
-import { UnitService, Unit, UnitFilters } from '../../services/unit.service';
+import { UnitService, UnitFilters } from '../../services/unit.service';
 import { LanguageService } from '../../../../core/services/language.service';
 import { ApiProperty } from '../../../../core/models/api-property.model';
 
@@ -26,17 +26,17 @@ export class Rent implements OnInit, OnDestroy {
   showFilters = false;
   isLoading = false;
   errorMessage = '';
-  
-  units: Unit[] = [];
+
+  units: ApiProperty[] = [];
   totalResults = 0;
   currentPage = 1;
   itemsPerPage = 10;
-  
+
   // Filters
   filters: UnitFilters = {
     purpose: 'rent',
     page: 1,
-    limit: 10
+    limit: 10,
   };
 
   // Filter form values
@@ -48,20 +48,20 @@ export class Rent implements OnInit, OnDestroy {
     bathrooms: null as number | null,
     furnished: null as boolean | null,
     isVerified: null as boolean | null,
-    rentPeriod: [] as string[]
+    rentPeriod: [] as string[],
   };
-  
+
   private languageSubscription: Subscription | null = null;
 
   constructor(
     private router: Router,
     private unitService: UnitService,
-    private languageService: LanguageService
+    private languageService: LanguageService,
   ) {}
 
   ngOnInit(): void {
     this.loadUnits();
-    
+
     // الاشتراك في تغييرات اللغة لإعادة تحميل البيانات
     this.languageSubscription = this.languageService.currentLanguage$
       .pipe(skip(1))
@@ -81,26 +81,28 @@ export class Rent implements OnInit, OnDestroy {
     this.unitService.getUnits(this.filters).subscribe({
       next: (response) => {
         console.log('🏠 Units Response:', response);
-        console.log('🏠 Units Data Sample:', response.units.data[0]);
-        
+        console.log('🏠 Units Data Sample:', response.results.data[0]);
+
+        // البيانات تأتي بشكل ApiProperty مباشرة من الـ API
         if (append) {
-          // إضافة النتائج الجديدة إلى القائمة الموجودة
-          this.units = [...this.units, ...response.units.data];
+          this.units = [...this.units, ...(response.results.data as unknown as ApiProperty[])];
         } else {
-          // استبدال القائمة بالكامل
-          this.units = response.units.data;
+          this.units = response.results.data as unknown as ApiProperty[];
         }
-        
-        this.totalResults = response.units.totalItems;
-        this.currentPage = response.units.currentPage;
-        this.itemsPerPage = response.units.itemsPerPage;
+
+        this.totalResults = response.results.totalItems;
+        this.currentPage =
+          typeof response.results.currentPage === 'string'
+            ? parseInt(response.results.currentPage)
+            : response.results.currentPage;
+        this.itemsPerPage = response.results.itemsPerPage;
         this.isLoading = false;
       },
       error: (error) => {
         console.error('❌ Error loading units:', error);
         this.errorMessage = 'حدث خطأ أثناء تحميل الوحدات';
         this.isLoading = false;
-      }
+      },
     });
   }
 
@@ -111,7 +113,7 @@ export class Rent implements OnInit, OnDestroy {
 
   onApplyFilters(): void {
     const newFilters: Partial<UnitFilters> = {
-      page: 1
+      page: 1,
     };
 
     if (this.filterForm.priceFrom) {
@@ -153,13 +155,13 @@ export class Rent implements OnInit, OnDestroy {
       bathrooms: null,
       furnished: null,
       isVerified: null,
-      rentPeriod: []
+      rentPeriod: [],
     };
 
     this.filters = {
       purpose: 'rent',
       page: 1,
-      limit: 10
+      limit: 10,
     };
 
     this.loadUnits();
@@ -171,7 +173,7 @@ export class Rent implements OnInit, OnDestroy {
         this.filterForm.unitType.push(unitType);
       }
     } else {
-      this.filterForm.unitType = this.filterForm.unitType.filter(type => type !== unitType);
+      this.filterForm.unitType = this.filterForm.unitType.filter((type) => type !== unitType);
     }
   }
 
@@ -181,7 +183,7 @@ export class Rent implements OnInit, OnDestroy {
         this.filterForm.rentPeriod.push(period);
       }
     } else {
-      this.filterForm.rentPeriod = this.filterForm.rentPeriod.filter(p => p !== period);
+      this.filterForm.rentPeriod = this.filterForm.rentPeriod.filter((p) => p !== period);
     }
   }
 
@@ -215,77 +217,59 @@ export class Rent implements OnInit, OnDestroy {
   }
 
   viewPropertyDetails(property: PropertyCardData) {
-    const id = '_id' in property ? property._id : 
-               'slug' in property && property.slug ? property.slug :
-               'id' in property && property.id != null ? String(property.id) : 'details';
-    
-    this.router.navigate(['/rent', id], {
-      state: { property },
-    });
-  }
+    // Check if this is an ApiProperty with targetType and targetId
+    if ('targetType' in property && 'targetId' in property) {
+      const apiProp = property as ApiProperty;
 
-  // Convert Unit to ApiProperty for compatibility with units-card component
-  convertUnitToApiProperty(unit: Unit): ApiProperty & { bedrooms?: number; bathrooms?: number; area?: string; price?: string; priceType?: 'monthly' | 'daily' | 'sale' } {
-    return {
-      _id: unit._id,
-      slug: unit.slug,
-      status: unit.status as 'active' | 'inactive' | 'pending',
-      ownerType: unit.ownerType as 'real_estate_developer' | 'broker' | 'owner',
-      ownerId: unit.ownerId,
-      projectId: unit.projectId,
-      location: {
-        country: unit.location.country,
-        city: unit.location.city,
-        area: unit.location.area,
-        address: unit.location.address,
-        coordinates: {
-          type: unit.location.coordinates.type,
-          coordinates: [unit.location.coordinates.coordinates[0], unit.location.coordinates.coordinates[1]]
+      if (apiProp.targetType === 'unit' && apiProp.targetId) {
+        // Check the purpose and priceType to determine the correct route
+        const purpose = apiProp.purpose || 'rent';
+        const priceType = apiProp.priceType || 'daily';
+
+        // If purpose is sale_and_rent, check priceType
+        if (purpose === 'sale_and_rent') {
+          // If priceType is daily or monthly, it's for rent
+          if (priceType === 'daily' || priceType === 'monthly') {
+            this.router.navigate(['/rent', apiProp.targetId]);
+            return;
+          }
+          // Otherwise (total), it's for sale
+          this.router.navigate(['/rent', apiProp.targetId]);
+          return;
         }
-      },
-      isFeatured: unit.isFeatured,
-      gallery: unit.gallery.map(item => ({
-        public_id: item.public_id,
-        secure_url: item.secure_url,
-        format: item.format,
-        resource_type: item.resource_type,
-        original_filename: item.original_filename,
-        _id: item._id
-      })),
-      documents: unit.documents.map(item => ({
-        public_id: item.public_id,
-        secure_url: item.secure_url,
-        format: item.format,
-        resource_type: item.resource_type,
-        original_filename: item.original_filename,
-        _id: item._id
-      })),
-      floorsCount: unit.floorNumber || 1,
-      name: unit.title,
-      description: unit.description,
-      type: unit.unitType,
-      facilitiesAndServices: unit.facilitiesAndServices,
-      // إضافة الحقول المطلوبة للكارد
-      bedrooms: unit.bedrooms,
-      bathrooms: unit.bathrooms,
-      area: `${unit.unitArea} م²`,
-      price: unit.listingPrice.rentPrice.toLocaleString('ar-EG'),
-      priceType: this.mapRentPeriodToPriceType(unit.listingPrice.rentPeriod)
-    };
-  }
 
-  // تحويل فترة الإيجار إلى نوع السعر
-  private mapRentPeriodToPriceType(rentPeriod: string): 'monthly' | 'daily' | 'sale' {
-    switch (rentPeriod.toLowerCase()) {
-      case 'day':
-      case 'daily':
-        return 'daily';
-      case 'month':
-      case 'monthly':
-        return 'monthly';
-      default:
-        return 'monthly';
+        // If purpose is rent, go to rent
+        if (purpose === 'rent') {
+          this.router.navigate(['/rent', apiProp.targetId]);
+          return;
+        }
+
+        // If purpose is sale, go to buy
+        if (purpose === 'sale') {
+          this.router.navigate(['/buy', apiProp.targetId]);
+          return;
+        }
+
+        // Default to rent
+        this.router.navigate(['/rent', apiProp.targetId]);
+        return;
+      } else if (apiProp.targetType === 'project' && apiProp.targetId) {
+        // Navigate to project details
+        this.router.navigate(['/projects', apiProp.targetId]);
+        return;
+      }
     }
-  }
 
+    // Fallback to _id or slug
+    const id =
+      '_id' in property
+        ? property._id
+        : 'slug' in property && property.slug
+          ? property.slug
+          : 'id' in property && property.id != null
+            ? String(property.id)
+            : 'details';
+
+    this.router.navigate(['/rent', id]);
+  }
 }
