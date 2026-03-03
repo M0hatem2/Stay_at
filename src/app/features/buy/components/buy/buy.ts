@@ -88,8 +88,7 @@ export class Buy implements OnInit, OnDestroy {
 
     this.unitService.getUnits(this.apiFilters).subscribe({
       next: (response) => {
-        console.log('🏠 Buy Units Response:', response);
-
+ 
         if (append) {
           this.units = [...this.units, ...(response.results.data as unknown as ApiProperty[])];
         } else {
@@ -126,8 +125,7 @@ export class Buy implements OnInit, OnDestroy {
   onSortChange(value: string): void {
     this.sortOption = value as any;
     // TODO: Implement API-based sorting
-    console.log('Sort changed to:', value);
-  }
+   }
 
   clearFilters(): void {
     this.filters = {
@@ -152,8 +150,7 @@ export class Buy implements OnInit, OnDestroy {
 
   applyFiltersAndSort(): void {
     // TODO: Convert UI filters to API filters and reload
-    console.log('Applying filters:', this.filters);
-    this.loadUnits();
+     this.loadUnits();
   }
 
   onPropertyClick(property: PropertyCardData): void {

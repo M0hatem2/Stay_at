@@ -50,8 +50,7 @@ export class AddNewProperty {
 
   submitForm() {
     // Handle form submission
-    console.log('Form submitted successfully!');
-    // You can add your form submission logic here
+     // You can add your form submission logic here
     // For now, we'll just show the success message
     this.currentStep = this.totalSteps + 1;
   }

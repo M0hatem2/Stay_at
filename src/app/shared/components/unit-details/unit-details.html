@@ -51,8 +51,11 @@
       }
 
       <!-- Availability Calendar - Only for rent units -->
-      @if (unitData?.finalPricing) {
-        <app-availability-calendar (dateClicked)="onDateClick($event)"></app-availability-calendar>
+      @if (unitData) {
+        <app-availability-calendar
+          [unitId]="unitData?._id"
+          (dateRangeSelected)="onDateRangeSelected($event)"
+        ></app-availability-calendar>
       }
 
       <!-- Day Details Modal Component -->
@@ -157,6 +160,7 @@
         "
         [owner]="ownerInfo"
         [safetyTips]="safetyTips.length ? safetyTips : defaultSafetyTips"
+        [hasSelectedDates]="!!selectedDateRange"
         (bookNow)="openBookingPopup()"
       />
     </div>
@@ -170,4 +174,20 @@
     (close)="closeImageModal()"
     (indexChange)="currentImageIndex = $event"
   />
+
+  <!-- Booking Popup -->
+  @if (showBookingPopup) {
+    <div
+      class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      (click)="closeBookingPopup()"
+    >
+      <div (click)="$event.stopPropagation()">
+        <app-book-the-apartment
+          [selectedStartDate]="selectedDateRange?.startDate"
+          [selectedEndDate]="selectedDateRange?.endDate"
+          (closePopup)="closeBookingPopup()"
+        />
+      </div>
+    </div>
+  }
 </div>

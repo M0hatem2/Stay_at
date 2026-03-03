@@ -17,13 +17,11 @@ export class ScrollAnimateDirective implements AfterViewInit {
   ngAfterViewInit() {
     if (!isPlatformBrowser(this.platformId)) return;
 
-    console.log('ScrollAnimateDirective initialized for:', this.el.nativeElement);
-
+ 
     const element = this.el.nativeElement;
 
     const activate = () => {
-      console.log('Animation triggered for:', element); // <---- هنا نتأكد
-      this.renderer.addClass(element, this.animationClass);
+       this.renderer.addClass(element, this.animationClass);
       this.renderer.setStyle(element, 'animation-delay', this.animationDelay);
     };
 

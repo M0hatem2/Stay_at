@@ -17,12 +17,12 @@ import { DayDetailsModalComponent } from './components/day-details-modal';
 import { ImageModalComponent } from './components/image-modal';
 import { PricingTableComponent } from './components/pricing-table';
 import { AvailabilityCalendarComponent } from './components/availability-calendar/availability-calendar';
+import { BookTheApartment } from "../book-the-apartment/book-the-apartment";
 
 @Component({
   selector: 'app-unit-details',
   imports: [
     CommonModule,
-
     UnitGalleryComponent,
     UnitInfoComponent,
     BookingSidebarComponent,
@@ -32,7 +32,8 @@ import { AvailabilityCalendarComponent } from './components/availability-calenda
     ImageModalComponent,
     PricingTableComponent,
     AvailabilityCalendarComponent,
-  ],
+    BookTheApartment
+],
   templateUrl: './unit-details.html',
   styleUrl: './unit-details.scss',
 })
@@ -55,6 +56,9 @@ export class UnitDetails implements OnInit, OnDestroy {
   // Selected day for modal
   selectedDay: any | null = null;
   showDayDetails = false;
+
+  // Selected date range from calendar
+  selectedDateRange: { startDate: Date; endDate: Date } | null = null;
 
   // Selected pricing
   selectedPrice: number | null = null;
@@ -623,6 +627,25 @@ export class UnitDetails implements OnInit, OnDestroy {
     this.selectedDay = day;
     this.showDayDetails = true;
     console.log('Date clicked:', day.fullDate, 'Status:', day.status);
+  }
+
+  onDateRangeSelected(range: { startDate: Date; endDate: Date }): void {
+    console.log('📅 Date range selected:', range);
+
+    // حفظ النطاق المحدد
+    this.selectedDateRange = range;
+
+    // حساب عدد الأيام
+    const days = Math.ceil(
+      (range.endDate.getTime() - range.startDate.getTime()) / (1000 * 60 * 60 * 24),
+    );
+    console.log('📊 Number of days:', days);
+
+    // إذا كان هناك سعر محدد، احسب السعر الإجمالي
+    if (this.selectedPrice) {
+      const totalPrice = this.selectedPrice * days;
+      console.log('💰 Total price:', totalPrice, this.pricingCurrency);
+    }
   }
 
   closeDayDetails(): void {

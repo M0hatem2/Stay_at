@@ -82,8 +82,7 @@ export class PropertyService {
 
     // If search query exists, use search endpoint
     if (search && search.trim()) {
-      console.log('🔍 PropertyService - Using search endpoint with query:', search);
-
+ 
       const searchBody = {
         query: search.trim(),
         page,
@@ -97,12 +96,7 @@ export class PropertyService {
 
     // Otherwise use regular get endpoint
     const params = new HttpParams().set('page', page.toString()).set('limit', limit.toString());
-
-    console.log('🏠 PropertyService - getProperties() called with:');
-    console.log('  - page:', page);
-    console.log('  - limit:', limit);
-    console.log('  - language:', currentLanguage);
-    console.log('  - params:', params.toString());
+ 
 
     return this.http.get<PropertyResponse>(`${this.baseUrl}/public/search/units-and-properties`, {
       params,
@@ -118,11 +112,7 @@ export class PropertyService {
       'Content-Language': currentLanguage,
       'X-Language': currentLanguage,
     };
-
-    console.log('🏠 PropertyService - getPropertyById() called with:');
-    console.log('  - id:', id);
-    console.log('  - language:', currentLanguage);
-
+ 
     return this.http.get(`${this.baseUrl}/property/${id}`, { headers });
   }
 

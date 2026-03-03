@@ -57,22 +57,18 @@ export class SignInComponent {
       this.errorMessage = '';
       this.authService.signIn(this.signInForm.value).subscribe({
         next: (response: any) => {
-          console.log('✅ Sign in successful:', response);
-          this.isLoading = false;
+           this.isLoading = false;
 
           if (response.accessToken) {
             // Save tokens
-            console.log('💾 Saving accessToken...');
-            this.authService.setAccessToken(response.accessToken);
+             this.authService.setAccessToken(response.accessToken);
             if (response.refreshToken) {
-              console.log('💾 Saving refreshToken...');
-              this.authService.setRefreshToken(response.refreshToken);
+               this.authService.setRefreshToken(response.refreshToken);
             }
 
             // Verify token was saved
             const savedToken = this.authService.getAccessToken();
-            console.log('🔍 Verification - Token saved?', savedToken ? 'YES' : 'NO');
-
+ 
             // Navigate based on role
             this.navigateBasedOnRole(response.role);
           } else {
@@ -89,8 +85,7 @@ export class SignInComponent {
   }
 
   private navigateBasedOnRole(role: string) {
-    console.log('🔄 Navigating based on role:', role);
-
+ 
     switch (role) {
       case 'system_admin':
         this.router.navigate(['/dashboard/system_admin']);

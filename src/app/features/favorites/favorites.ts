@@ -108,13 +108,11 @@ export class Favorites {
 
   onViewDetails(item: FavoriteItem) {
     // Navigate to property details
-    console.log('View details for:', item);
-  }
+   }
 
   onBrowseProperties() {
     // Navigate to properties page
-    console.log('Browse properties');
-  }
+   }
 
   get filteredFavorites(): FavoriteItem[] {
     let filtered = this.favorites();

@@ -87,16 +87,14 @@ export class AuthService {
       return null;
     }
     const token = localStorage.getItem('accessToken');
-    console.log('🔑 AuthService.getAccessToken():', token ? 'Token found' : 'No token');
-    return token;
+     return token;
   }
 
   setAccessToken(accessToken: string): void {
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
-    console.log('💾 AuthService.setAccessToken() - Saving token');
-    localStorage.setItem('accessToken', accessToken);
+     localStorage.setItem('accessToken', accessToken);
   }
 
   getRefreshToken(): string | null {
@@ -117,15 +115,13 @@ export class AuthService {
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
-    console.log('🗑️ AuthService.clearTokens() - Removing tokens');
-    localStorage.removeItem('accessToken');
+     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
   }
 
   isAuthenticated(): boolean {
     const hasToken = !!this.getAccessToken();
-    console.log('🔍 AuthService.isAuthenticated():', hasToken);
-    return hasToken;
+     return hasToken;
   }
 
   getRole(): string | null {
@@ -136,8 +132,7 @@ export class AuthService {
     if (token) {
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
-        console.log('👤 AuthService.getRole():', payload.role);
-        return payload.role;
+         return payload.role;
       } catch (error) {
         console.error('❌ Error decoding token:', error);
         return null;

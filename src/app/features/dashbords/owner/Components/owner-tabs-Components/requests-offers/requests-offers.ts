@@ -223,7 +223,7 @@ export class RequestsOffersComponent implements OnInit {
         (request) =>
           request.user.name.toLowerCase().includes(searchLower) ||
           request.property.title.toLowerCase().includes(searchLower) ||
-          request.property.location.toLowerCase().includes(searchLower)
+          request.property.location.toLowerCase().includes(searchLower),
       );
     }
 
@@ -235,7 +235,7 @@ export class RequestsOffersComponent implements OnInit {
     // Property filter
     if (this.selectedProperty !== 'all') {
       filtered = filtered.filter(
-        (request) => request.property.id === parseInt(this.selectedProperty)
+        (request) => request.property.id === parseInt(this.selectedProperty),
       );
     }
 
@@ -270,7 +270,7 @@ export class RequestsOffersComponent implements OnInit {
         (offer) =>
           offer.user.name.toLowerCase().includes(searchLower) ||
           offer.property.title.toLowerCase().includes(searchLower) ||
-          offer.property.location.toLowerCase().includes(searchLower)
+          offer.property.location.toLowerCase().includes(searchLower),
       );
     }
 
@@ -381,35 +381,19 @@ export class RequestsOffersComponent implements OnInit {
     return status;
   }
 
-  acceptRequest(id: number): void {
-    console.log('Accept request:', id);
-  }
+  acceptRequest(id: number): void {}
 
-  rejectRequest(id: number): void {
-    console.log('Reject request:', id);
-  }
+  rejectRequest(id: number): void {}
 
-  makeCounterOffer(id: number): void {
-    console.log('Make counter offer for request:', id);
-  }
+  makeCounterOffer(id: number): void {}
 
-  acceptOffer(id: number): void {
-    console.log('Accept offer:', id);
-  }
+  acceptOffer(id: number): void {}
 
-  rejectOffer(id: number): void {
-    console.log('Reject offer:', id);
-  }
+  rejectOffer(id: number): void {}
 
-  viewDetails(id: number): void {
-    console.log('View request details:', id);
-  }
+  viewDetails(id: number): void {}
 
-  viewOfferDetails(id: number): void {
-    console.log('View offer details:', id);
-  }
+  viewOfferDetails(id: number): void {}
 
-  createNewOffer(): void {
-    console.log('Create new offer');
-  }
+  createNewOffer(): void {}
 }

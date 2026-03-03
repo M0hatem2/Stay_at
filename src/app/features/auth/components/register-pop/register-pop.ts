@@ -76,8 +76,7 @@ export class RegisterPopComponent implements AfterViewInit {
         HSStaticMethods.autoInit();
       }
     } catch (error) {
-      console.log('Stepper auto-init not available, using manual controls');
-    }
+     }
   }
 
   closeModal(): void {
@@ -272,22 +271,13 @@ export class RegisterPopComponent implements AfterViewInit {
   }
 
   private completeAdminProfile(): void {
-    console.log('Admin Component:', this.adminComponent);
-    console.log('Is Form Valid:', this.adminComponent?.isFormValid());
-
+ 
     if (this.adminComponent) {
-      console.log('Form Value:', this.adminComponent.adminForm.value);
-      console.log('Form Valid:', this.adminComponent.adminForm.valid);
-      console.log('Form Errors:', this.adminComponent.adminForm.errors);
-
+    
       // Check each field
       Object.keys(this.adminComponent.adminForm.controls).forEach((key) => {
         const control = this.adminComponent!.adminForm.get(key);
-        console.log(`Field ${key}:`, {
-          value: control?.value,
-          valid: control?.valid,
-          errors: control?.errors,
-        });
+       
       });
     }
 

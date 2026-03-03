@@ -21,7 +21,6 @@ export class AuthInterceptor implements HttpInterceptor {
   ) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    console.log('🔐 AuthInterceptor - intercept() called for:', request.url);
 
     // Clone the request to add headers
     let modifiedRequest = request;
@@ -30,22 +29,18 @@ export class AuthInterceptor implements HttpInterceptor {
     if (isPlatformBrowser(this.platformId)) {
       const token = this.authService.getAccessToken();
       if (token) {
-        console.log('🔑 Adding Authorization header with token');
         modifiedRequest = request.clone({
           setHeaders: {
             Authorization: `Bearer ${token}`,
           },
         });
-      } else {
-        console.log('⚠️ No token found, skipping Authorization header');
-      }
+      }  
     }
 
     return next.handle(modifiedRequest).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
-          console.error('❌ 401 Unauthorized - redirecting to login');
-          // Handle unauthorized access
+           // Handle unauthorized access
           this.authService.clearTokens();
           this.router.navigate(['/auth/login']);
         }

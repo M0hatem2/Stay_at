@@ -1,5 +1,6 @@
 <div class="mt-6 sm:mt-8">
   <div class="bg-white rounded-2xl shadow-lg overflow-hidden border-2 border-gray-100">
+    <!-- Header -->
     <div class="bg-gradient-to-r from-[#de5806] to-[#470e03] px-4 sm:px-6 py-4 sm:py-5">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2 sm:gap-3">
@@ -8,34 +9,43 @@
           </div>
           <div>
             <h3 class="text-lg sm:text-xl text-white">Availability Calendar</h3>
-            <p class="text-xs sm:text-sm text-white/80 mt-0.5">Check available dates for booking</p>
+            <p class="text-xs sm:text-sm text-white/80 mt-0.5">
+              @if (selectedStartDate && selectedEndDate) {
+                <span
+                  >{{ selectedStartDate | date: 'MMM d' }} -
+                  {{ selectedEndDate | date: 'MMM d, y' }}</span
+                >
+              } @else if (selectedStartDate) {
+                <span>Select end date</span>
+              } @else {
+                <span>Select your dates</span>
+              }
+            </p>
           </div>
         </div>
+        @if (selectedStartDate) {
+          <button
+            (click)="clearSelection()"
+            class="px-3 py-1.5 bg-white/20 hover:bg-white/30 text-white text-sm rounded-lg transition-colors"
+          >
+            <i class="fa-solid fa-times mr-1"></i>Clear
+          </button>
+        }
       </div>
     </div>
-    <div class="grid grid-cols-3 gap-2 sm:gap-4 p-3 sm:p-4 bg-gray-50 border-b-2 border-gray-100">
+
+    <!-- Stats -->
+    <div class="grid grid-cols-1 gap-2 sm:gap-4 p-3 sm:p-4 bg-gray-50 border-b-2 border-gray-100">
       <div class="text-center">
         <div class="flex items-center justify-center gap-1 mb-1">
           <i class="fa-solid fa-check-circle w-3 h-3 sm:w-4 sm:h-4 text-green-600"></i>
           <span class="text-lg sm:text-2xl text-green-600">{{ availableCount }}</span>
         </div>
-        <div class="text-xs text-gray-600">Available</div>
-      </div>
-      <div class="text-center">
-        <div class="flex items-center justify-center gap-1 mb-1">
-          <i class="fa-solid fa-times-circle w-3 h-3 sm:w-4 sm:h-4 text-red-600"></i>
-          <span class="text-lg sm:text-2xl text-red-600">{{ occupiedCount }}</span>
-        </div>
-        <div class="text-xs text-gray-600">Occupied</div>
-      </div>
-      <div class="text-center">
-        <div class="flex items-center justify-center gap-1 mb-1">
-          <i class="fa-solid fa-clock w-3 h-3 sm:w-4 sm:h-4 text-yellow-600"></i>
-          <span class="text-lg sm:text-2xl text-yellow-600">{{ pendingCount }}</span>
-        </div>
-        <div class="text-xs text-gray-600">Pending</div>
+        <div class="text-xs text-gray-600">Available Days This Month</div>
       </div>
     </div>
+
+    <!-- Month Navigation -->
     <div
       class="flex items-center justify-between px-3 sm:px-6 py-3 sm:py-4 bg-white border-b-2 border-gray-100"
     >
@@ -53,30 +63,51 @@
         <i class="fa-solid fa-chevron-right w-4 h-4 sm:w-5 sm:h-5 text-gray-700"></i>
       </button>
     </div>
+
+    <!-- Calendar -->
     <div class="p-3 sm:p-6">
-      <div class="grid grid-cols-7 gap-1 sm:gap-2 mb-2">
-        <div class="text-center text-xs text-gray-600 py-1 sm:py-2">Sun</div>
-        <div class="text-center text-xs text-gray-600 py-1 sm:py-2">Mon</div>
-        <div class="text-center text-xs text-gray-600 py-1 sm:py-2">Tue</div>
-        <div class="text-center text-xs text-gray-600 py-1 sm:py-2">Wed</div>
-        <div class="text-center text-xs text-gray-600 py-1 sm:py-2">Thu</div>
-        <div class="text-center text-xs text-gray-600 py-1 sm:py-2">Fri</div>
-        <div class="text-center text-xs text-gray-600 py-1 sm:py-2">Sat</div>
-      </div>
-      <div class="grid grid-cols-7 gap-1 sm:gap-2">
-        <div
-          *ngFor="let day of calendarDays"
-          [class]="getDayClasses(day)"
-          (click)="onDateClick(day)"
-        >
-          <div class="text-xs sm:text-sm">{{ day.date }}</div>
-          <div
-            *ngIf="day.isToday"
-            class="absolute -top-0.5 sm:-top-1 -right-0.5 sm:-right-1 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-[#de5806] rounded-full"
-          ></div>
+      <!-- Loading State -->
+      @if (isLoading) {
+        <div class="flex justify-center items-center py-12">
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#de5806]"></div>
         </div>
-      </div>
+      }
+
+      <!-- Error State -->
+      @if (errorMessage && !isLoading) {
+        <div class="bg-red-50 border border-red-200 rounded-xl p-4 text-center">
+          <i class="fas fa-exclamation-circle text-red-500 text-2xl mb-2"></i>
+          <p class="text-red-600 text-sm">{{ errorMessage }}</p>
+        </div>
+      }
+
+      <!-- Calendar Grid -->
+      @if (!isLoading && !errorMessage) {
+        <div class="grid grid-cols-7 gap-1 sm:gap-2 mb-2">
+          <div class="text-center text-xs text-gray-600 py-1 sm:py-2">Sun</div>
+          <div class="text-center text-xs text-gray-600 py-1 sm:py-2">Mon</div>
+          <div class="text-center text-xs text-gray-600 py-1 sm:py-2">Tue</div>
+          <div class="text-center text-xs text-gray-600 py-1 sm:py-2">Wed</div>
+          <div class="text-center text-xs text-gray-600 py-1 sm:py-2">Thu</div>
+          <div class="text-center text-xs text-gray-600 py-1 sm:py-2">Fri</div>
+          <div class="text-center text-xs text-gray-600 py-1 sm:py-2">Sat</div>
+        </div>
+        <div class="grid grid-cols-7 gap-1 sm:gap-2">
+          @for (day of calendarDays; track day.fullDate) {
+            <div [class]="getDayClasses(day)" (click)="onDateClick(day)">
+              <div class="text-xs sm:text-sm">{{ day.date }}</div>
+              @if (day.isToday && !day.isSelected) {
+                <div
+                  class="absolute -top-0.5 sm:-top-1 -right-0.5 sm:-right-1 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-500 rounded-full"
+                ></div>
+              }
+            </div>
+          }
+        </div>
+      }
     </div>
+
+    <!-- Legend -->
     <div class="bg-gray-50 px-6 py-4 border-t-2 border-gray-100">
       <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
         <div class="flex items-center gap-2">
@@ -84,21 +115,21 @@
           <span class="text-gray-700">Available</span>
         </div>
         <div class="flex items-center gap-2">
-          <div class="w-4 h-4 bg-red-50 border-2 border-red-200 rounded"></div>
-          <span class="text-gray-700">Occupied</span>
+          <div class="w-4 h-4 bg-gray-100 border-2 border-gray-200 rounded"></div>
+          <span class="text-gray-700">Unavailable</span>
         </div>
         <div class="flex items-center gap-2">
-          <div class="w-4 h-4 bg-yellow-50 border-2 border-yellow-200 rounded"></div>
-          <span class="text-gray-700">Pending</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <div class="w-4 h-4 bg-gray-50 border-2 border-gray-200 rounded"></div>
+          <div class="w-4 h-4 bg-gray-50 border-2 border-gray-200 rounded opacity-60"></div>
           <span class="text-gray-700">Past</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="w-4 h-4 bg-[#de5806] border-2 border-[#de5806] rounded"></div>
+          <span class="text-gray-700">Selected</span>
         </div>
       </div>
       <div class="mt-3 text-xs text-gray-600 flex items-center gap-2">
-        <i class="fa-solid fa-info-circle w-4 h-4 text-[#de5806]"></i
-        ><span>Click on any date to view booking details</span>
+        <i class="fa-solid fa-info-circle w-4 h-4 text-[#de5806]"></i>
+        <span>Click to select start date, then click again to select end date</span>
       </div>
     </div>
   </div>

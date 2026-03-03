@@ -26,10 +26,25 @@ interface OwnerInfo {
         </div>
         <button
           (click)="bookNow.emit()"
-          class="w-full px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-[#de5806] to-[#470e03] text-white rounded-xl hover:shadow-lg transition-all mb-2 sm:mb-3 flex items-center justify-center gap-2 text-sm sm:text-base"
+          [disabled]="!hasSelectedDates"
+          [class.opacity-50]="!hasSelectedDates"
+          [class.cursor-not-allowed]="!hasSelectedDates"
+          [class.hover:shadow-lg]="hasSelectedDates"
+          class="w-full px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-[#de5806] to-[#470e03] text-white rounded-xl transition-all mb-2 sm:mb-3 flex items-center justify-center gap-2 text-sm sm:text-base disabled:cursor-not-allowed"
         >
-          <i class="fa-solid fa-calendar-days w-4 h-4 sm:w-5 sm:h-5"></i>Book Now
+          <i class="fa-solid fa-calendar-days w-4 h-4 sm:w-5 sm:h-5"></i>
+          @if (hasSelectedDates) {
+            <span>Book Now</span>
+          } @else {
+            <span>Select Dates First</span>
+          }
         </button>
+        @if (!hasSelectedDates) {
+          <div class="text-center text-xs text-orange-600 mb-2">
+            <i class="fa-solid fa-info-circle mr-1"></i>
+            Please select dates from the calendar below
+          </div>
+        }
         <div class="text-center text-xs sm:text-sm text-gray-600">
           {{ cancellationPolicy }}
         </div>
@@ -114,6 +129,7 @@ export class BookingSidebarComponent {
     'Verify official documents',
     'Use secure payment methods',
   ];
+  @Input() hasSelectedDates: boolean = false;
 
   @Output() bookNow = new EventEmitter<void>();
 }

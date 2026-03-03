@@ -14,7 +14,6 @@ export class ApiService {
 
   constructor(private http: HttpClient) {
     if (environment.features.enableLogging) {
-      console.log('ApiService initialized with baseUrl:', this.baseUrl);
     }
   }
 
@@ -24,9 +23,6 @@ export class ApiService {
   postFormData<T>(endpoint: string, formData: FormData, timeoutMs?: number): Observable<T> {
     const url = `${this.baseUrl}${endpoint}`;
 
-    if (environment.features.enableLogging) {
-      console.log('Sending FormData to:', url);
-    }
 
     return this.http
       .post<T>(url, formData)
@@ -54,10 +50,7 @@ export class ApiService {
   post<T>(endpoint: string, data: any, timeoutMs?: number): Observable<T> {
     const url = `${this.baseUrl}${endpoint}`;
 
-    if (environment.features.enableLogging) {
-      console.log('📤 ApiService.post() - Sending POST request to:', url);
-      console.log('📦 Body:', data);
-    }
+    
 
     return this.http
       .post<T>(url, data)

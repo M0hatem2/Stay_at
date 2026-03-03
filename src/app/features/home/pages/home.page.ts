@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { HomeHeader } from '../components/home-header/home-header';
-import { HomeFeaturedUnits } from '../components/home-featured-units/home-featured-units';
-import { HomeTopAreas } from '../components/home-top-areas/home-top-areas';
+ import { HomeTopAreas } from '../components/home-top-areas/home-top-areas';
 import { HomeWhyStayAt } from '../components/home-why-stay-at/home-why-stay-at';
 import { HomeWhoAreYou } from '../components/home-who-are-you/home-who-are-you';
 import { HomeHowDoesStayAtWork } from '../components/home-how-does-stay-at-work/home-how-does-stay-at-work';
@@ -10,6 +9,7 @@ import { HomeReport } from '../components/home-report/home-report';
 import { HomeOurCustomersSay } from "../components/home-our-customers-say/home-our-customers-say";
 import { DownloadTheAppNow } from "../components/download-the-app-now/download-the-app-now";
 import { NotLoggedInComponent } from "../../../shared/components/not-logged-in/not-logged-in";
+import { HomeFeaturedUnits } from '../components/home-featured-units/home-featured-units';
 
 @Component({
   selector: 'app-home-page',

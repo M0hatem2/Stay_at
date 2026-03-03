@@ -21,13 +21,11 @@ export class LanguageService {
 
   getCurrentLanguage(): string {
     const currentLang = this.currentLanguageSubject.value;
-    console.log('🌍 LanguageService - getCurrentLanguage():', currentLang);
-    return currentLang;
+     return currentLang;
   }
 
   setLanguage(language: string): void {
-    console.log('🔄 LanguageService - setLanguage():', language);
-    localStorage.setItem(this.LANGUAGE_KEY, language);
+     localStorage.setItem(this.LANGUAGE_KEY, language);
     this.currentLanguageSubject.next(language);
     this.applyLanguageDirection(language);
   }

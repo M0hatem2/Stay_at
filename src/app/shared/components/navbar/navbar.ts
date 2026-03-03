@@ -34,8 +34,7 @@ export class Navbar {
 
   get dashboardRoute(): string {
     const role = this.authService.getRole();
-    console.log('🔍 Dashboard route for role:', role);
-
+ 
     switch (role) {
       case 'system_admin':
         return '/dashboard/system_admin';
@@ -126,8 +125,7 @@ export class Navbar {
 
   toggleLanguage(): void {
     const newLanguage = this.currentLanguage === 'ar' ? 'en' : 'ar';
-    console.log('🔄 Navbar - toggleLanguage() from', this.currentLanguage, 'to', newLanguage);
-    this.languageService.setLanguage(newLanguage);
+     this.languageService.setLanguage(newLanguage);
   }
 
   get languageLabel(): string {
