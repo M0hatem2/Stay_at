@@ -1,4 +1,4 @@
-<div class="bg-white rounded-3xl p-8 w-full max-w-2xl my-8 shadow-xl relative">
+<div class="bg-white rounded-3xl p-8 w-full max-w-2xl my-8 shadow-xl relative max-h-[90vh] overflow-y-auto">
   <!-- Header -->
   <div class="flex items-center justify-between mb-8">
     <div class="flex items-center gap-3">
@@ -26,6 +26,8 @@
           <i class="fa-solid fa-user absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
           <input
             type="text"
+            [(ngModel)]="name"
+            name="name"
             class="w-full pl-10 p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-[#C4A962]"
             required
           />
@@ -38,6 +40,8 @@
           <i class="fa-solid fa-phone absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
           <input
             type="tel"
+            [(ngModel)]="mobileNumber"
+            name="mobileNumber"
             class="w-full pl-10 p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-[#C4A962]"
             required
           />
@@ -55,6 +59,8 @@
           ></i>
           <input
             type="email"
+            [(ngModel)]="email"
+            name="email"
             class="w-full pl-10 p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-[#C4A962]"
             required
           />
@@ -66,13 +72,13 @@
         <div class="relative">
           <i class="fa-solid fa-users absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
           <select
+            [(ngModel)]="numberOfGuests"
+            name="numberOfGuests"
             class="w-full pl-10 p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-[#C4A962]"
           >
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
+            @for (guest of guestOptions; track guest) {
+              <option [value]="guest">{{ guest }}</option>
+            }
           </select>
         </div>
       </div>
@@ -122,19 +128,109 @@
       </div>
     }
 
-    <!-- Duration -->
-    <div>
-      <label class="text-gray-500 text-sm mb-1 block">Rental Duration</label>
-      <div class="relative">
-        <i class="fa-solid fa-clock absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-        <select
-          class="w-full pl-10 p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-[#C4A962]"
-        >
-          <option>Daily</option>
-          <option>Weekly</option>
-          <option>Monthly</option>
-          <option>Yearly</option>
-        </select>
+    <!-- Rental & Payment -->
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="text-gray-500 text-sm mb-1 block">Rental Duration</label>
+        <div class="relative">
+          <i class="fa-solid fa-clock absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          <select
+            [(ngModel)]="rentalType"
+            name="rentalType"
+            class="w-full pl-10 p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-[#C4A962]"
+          >
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+            <option value="yearly">Yearly</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <label class="text-gray-500 text-sm mb-1 block">Payment Method</label>
+        <div class="relative">
+          <i
+            class="fa-solid fa-credit-card absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+          ></i>
+          <select
+            [(ngModel)]="paymentMethod"
+            name="paymentMethod"
+            class="w-full pl-10 p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-[#C4A962]"
+          >
+            <option value="card">Card</option>
+            <option value="wallet">Wallet</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Currency & Location -->
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="text-gray-500 text-sm mb-1 block">Currency</label>
+        <div class="relative">
+          <i
+            class="fa-solid fa-money-bill-wave absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+          ></i>
+          <input
+            type="text"
+            [(ngModel)]="currency"
+            name="currency"
+            class="w-full pl-10 p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-[#C4A962]"
+            required
+          />
+        </div>
+      </div>
+
+      <div>
+        <label class="text-gray-500 text-sm mb-1 block">City</label>
+        <div class="relative">
+          <i
+            class="fa-solid fa-city absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+          ></i>
+          <input
+            type="text"
+            [(ngModel)]="city"
+            name="city"
+            class="w-full pl-10 p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-[#C4A962]"
+            required
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="text-gray-500 text-sm mb-1 block">State</label>
+        <div class="relative">
+          <i
+            class="fa-solid fa-map absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+          ></i>
+          <input
+            type="text"
+            [(ngModel)]="state"
+            name="state"
+            class="w-full pl-10 p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-[#C4A962]"
+            required
+          />
+        </div>
+      </div>
+
+      <div>
+        <label class="text-gray-500 text-sm mb-1 block">Country</label>
+        <div class="relative">
+          <i
+            class="fa-solid fa-earth-africa absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+          ></i>
+          <input
+            type="text"
+            [(ngModel)]="country"
+            name="country"
+            class="w-full pl-10 p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-[#C4A962]"
+            required
+          />
+        </div>
       </div>
     </div>
 
@@ -142,19 +238,36 @@
     <div>
       <label class="text-gray-500 text-sm mb-1 block">Additional Message</label>
       <textarea
+        [(ngModel)]="message"
+        name="message"
         class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-[#C4A962]"
         rows="4"
         placeholder="Any special requests..."
       ></textarea>
     </div>
 
+    @if (submitError) {
+      <div class="bg-red-50 border border-red-200 rounded-xl p-3 flex items-center gap-2">
+        <i class="fa-solid fa-circle-exclamation text-red-600"></i>
+        <p class="text-sm text-red-700">{{ submitError }}</p>
+      </div>
+    }
+
+    @if (submitSuccess) {
+      <div class="bg-green-50 border border-green-200 rounded-xl p-3 flex items-center gap-2">
+        <i class="fa-solid fa-circle-check text-green-600"></i>
+        <p class="text-sm text-green-700">{{ submitSuccess }}</p>
+      </div>
+    }
+
     <!-- Submit -->
     <button
       type="submit"
-      class="w-full py-3 bg-black text-white rounded-2xl hover:gradient-primary-btn hover:text-black transition-all font-semibold flex items-center justify-center gap-2"
+      [disabled]="isSubmitting"
+      class="w-full py-3 bg-black text-white rounded-2xl hover:gradient-primary-btn hover:text-black transition-all font-semibold flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
     >
-      <i class="fa-solid fa-check"></i>
-      Confirm Booking
+      <i class="fa-solid" [class.fa-spinner]="isSubmitting" [class.fa-spin]="isSubmitting" [class.fa-check]="!isSubmitting"></i>
+      <span>{{ isSubmitting ? (paymentMethod === 'card' ? 'Redirecting to payment...' : 'Processing booking...') : 'Confirm Booking' }}</span>
     </button>
   </form>
 </div>

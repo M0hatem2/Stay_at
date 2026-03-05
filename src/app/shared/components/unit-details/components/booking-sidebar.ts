@@ -1,7 +1,9 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule, TitleCasePipe } from '@angular/common';
+import { Router } from '@angular/router';
 
 interface OwnerInfo {
+  id: string;
   name: string;
   type: string;
   role: string;
@@ -54,7 +56,7 @@ interface OwnerInfo {
       <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-sm">
         <h3 class="text-gray-900 mb-3 sm:mb-4 text-base sm:text-lg">Owner Information</h3>
         @if (owner) {
-          <button class="w-full">
+          <button class="w-full" type="button" (click)="openOwnerProfile()">
             <div
               class="flex items-center gap-3 mb-3 sm:mb-4 p-2 sm:p-3 rounded-xl hover:bg-gray-50 transition-colors cursor-pointer"
             >
@@ -79,18 +81,18 @@ interface OwnerInfo {
           </button>
           <div class="space-y-2 sm:space-y-3">
             <a
-              [href]="'tel:' + owner.phoneNumber"
-              class="w-full flex items-center justify-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors text-sm sm:text-base"
+              [href]="getPhoneLink()"
+              class="w-full flex items-center justify-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 bg-gray-200 text-black rounded-lg hover:from-green-600 hover:to-green-700 hover:shadow-lg transition-all text-sm sm:text-base"
             >
-              <i class="fa-solid fa-phone w-4 h-4 sm:w-5 sm:h-5 text-[#808080]"></i>
-              <span class="text-gray-900">{{ owner.phoneNumber }}</span>
+              <i class="fa-solid fa-phone w-4 h-4 sm:w-5 sm:h-5"></i>
+              <span>{{ owner.phoneNumber }}</span>
             </a>
             <a
-              [href]="'mailto:' + owner.email"
-              class="w-full flex items-center justify-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors text-sm sm:text-base"
+              [href]="getEmailLink()"
+              class="w-full flex items-center justify-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 bg-gray-200 text-black rounded-lg hover:from-blue-600 hover:to-blue-700 hover:shadow-lg transition-all text-sm sm:text-base"
             >
-              <i class="fa-solid fa-envelope w-4 h-4 sm:w-5 sm:h-5 text-[#808080]"></i>
-              <span class="text-gray-900 text-xs sm:text-sm truncate">{{ owner.email }}</span>
+              <i class="fa-solid fa-envelope w-4 h-4 sm:w-5 sm:h-5"></i>
+              <span class="truncate">{{ owner.email }}</span>
             </a>
           </div>
         } @else {
@@ -132,4 +134,37 @@ export class BookingSidebarComponent {
   @Input() hasSelectedDates: boolean = false;
 
   @Output() bookNow = new EventEmitter<void>();
+
+  constructor(private router: Router) {}
+
+  openOwnerProfile(): void {
+    if (!this.owner?.id) return;
+
+    const normalizedRole = this.owner.role?.toLowerCase?.() || '';
+    const roleSegment =
+      normalizedRole === 'property_seeker' || normalizedRole === 'seeker'
+        ? 'seeker'
+        : normalizedRole === 'real_estate_developer' || normalizedRole === 'developer'
+          ? 'developer'
+          : 'owner';
+
+    this.router.navigate(['/accounts-information', roleSegment, this.owner.id]);
+  }
+
+  getPhoneLink(): string {
+    if (!this.owner?.phoneNumber) return '#';
+    
+    // Remove any non-digit characters for the tel link
+    const cleanNumber = this.owner.phoneNumber.replace(/\D/g, '');
+    return `tel:${cleanNumber}`;
+  }
+
+  getEmailLink(): string {
+    if (!this.owner?.email) return '#';
+    
+    const subject = encodeURIComponent(`Booking Inquiry - Property Rental`);
+    const body = encodeURIComponent(`Hi ${this.owner.name},\n\nI'm interested in booking your property. Could you please provide more details about availability?\n\nThank you!`);
+    
+    return `mailto:${this.owner.email}?subject=${subject}&body=${body}`;
+  }
 }

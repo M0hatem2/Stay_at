@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ActivatedRoute, convertToParamMap } from '@angular/router';
 
 import { AccountsInformation } from './accounts-information';
 
@@ -8,9 +10,18 @@ describe('AccountsInformation', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AccountsInformation]
-    })
-    .compileComponents();
+      imports: [AccountsInformation, HttpClientTestingModule],
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            paramMap: {
+              subscribe: (fn: any) => fn(convertToParamMap({})),
+            },
+          },
+        },
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(AccountsInformation);
     component = fixture.componentInstance;

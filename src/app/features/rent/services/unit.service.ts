@@ -75,6 +75,10 @@ export interface Unit {
   floorNumber: number;
   furnished: boolean;
   maxGuests: number;
+  totalReviews?: number;
+  averageRating?: number;
+  viewsCount?: number;
+  isTrusted?: boolean;
   listingPrice: ListingPrice;
   isFeatured: boolean;
   gallery: UnitMedia[];
@@ -86,6 +90,14 @@ export interface Unit {
   unitType: string;
   facilitiesAndServices: string[];
   nearbyLandmarks?: NearbyLandmark[];
+  availabilities?: Array<{
+    _id: string;
+    startDate: string;
+    endDate: string;
+    status: string;
+    reason?: string;
+    id?: string;
+  }>;
   project?: any;
   owner?: {
     type: string;
@@ -155,6 +167,49 @@ export interface Unit {
     updatedBy?: string;
     deletedAt?: string;
     deletedBy?: string;
+  };
+  basePricing?: {
+    _id?: string;
+    purpose?: string;
+    rentType?: string;
+    price?: number;
+    tiers?: Array<{
+      minDays: number;
+      pricePerDay: number;
+      label: string;
+      _id?: string;
+    }>;
+    currency?: string;
+  };
+  seasonalPricing?: {
+    _id?: string;
+    seasonName?: string;
+    startDate?: string;
+    endDate?: string;
+    price?: number;
+    tiers?: Array<{
+      minDays: number;
+      pricePerDay: number;
+      label: string;
+      _id?: string;
+    }>;
+    currency?: string;
+    rentType?: string;
+  };
+  rentAnalysis?: {
+    priceEvaluation?: {
+      status?: string;
+      marketComparison?: string;
+      isGoodDeal?: boolean;
+    };
+    locationEvaluation?: {
+      rating?: number;
+      pros?: string[];
+      description?: string;
+    };
+    summary?: string;
+    lastUpdated?: string;
+    smartInsights?: string[];
   };
 }
 

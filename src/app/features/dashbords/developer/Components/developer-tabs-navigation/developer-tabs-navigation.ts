@@ -1,4 +1,11 @@
-import { Component, AfterViewInit, QueryList, ViewChildren, ElementRef } from '@angular/core';
+import {
+  Component,
+  AfterViewInit,
+  QueryList,
+  ViewChildren,
+  ElementRef,
+  HostListener,
+} from '@angular/core';
 import { DeveloperTabsService, Tab } from '../../services/developer-tabs.service';
 import { CommonModule } from '@angular/common';
 
@@ -44,7 +51,16 @@ export class DeveloperTabsNavigation implements AfterViewInit {
     return this.activeTab === tabId;
   }
 
+  @HostListener('window:resize')
+  onWindowResize(): void {
+    this.updateUnderline();
+  }
+
   updateUnderline() {
+    if (!this.tabRefs || this.tabRefs.length === 0) {
+      return;
+    }
+
     const activeTabEl = this.tabRefs.find((_, i) => this.tabs[i].id === this.activeTab);
     if (activeTabEl) {
       const rect = activeTabEl.nativeElement.getBoundingClientRect();

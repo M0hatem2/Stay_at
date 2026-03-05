@@ -1,5 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { PropertyDetails } from '../../../../core/models/property-details.model';
+
+type DocumentItem = PropertyDetails['documents'][number];
+type TaxItem = PropertyDetails['taxes_and_fees']['items'][number];
+type TaxesAndFees = PropertyDetails['taxes_and_fees'];
 
 @Component({
   selector: 'app-documents-taxes',
@@ -13,41 +18,21 @@ import { CommonModule } from '@angular/common';
           <h3 class="text-gray-900">Available Documents</h3>
         </div>
         <div class="space-y-3">
-          <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <div class="flex items-center gap-3">
-              <i class="fa-solid fa-file-lines w-5 h-5 text-[#de5806]"></i>
-              <span class="text-gray-700 text-sm">Preliminary Sales Contract</span>
+          @if (documents.length) {
+            @for (doc of documents; track doc.name + doc.status) {
+              <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div class="flex items-center gap-3">
+                  <i class="fa-solid fa-file-lines w-5 h-5 text-[#de5806]"></i>
+                  <span class="text-gray-700 text-sm">{{ valueOrDefault(doc.name, 'Document') }}</span>
+                </div>
+                <span class="text-xs text-green-600">{{ valueOrDefault(doc.status, 'Available') }}</span>
+              </div>
+            }
+          } @else {
+            <div class="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-4 text-sm text-gray-600">
+              No documents available for this unit yet.
             </div>
-            <span class="text-xs text-green-600">Available</span>
-          </div>
-          <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <div class="flex items-center gap-3">
-              <i class="fa-solid fa-check-circle w-5 h-5 text-[#de5806]"></i>
-              <span class="text-gray-700 text-sm">Building Permit</span>
-            </div>
-            <span class="text-xs text-green-600">Certified</span>
-          </div>
-          <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <div class="flex items-center gap-3">
-              <i class="fa-solid fa-check-circle w-5 h-5 text-[#de5806]"></i>
-              <span class="text-gray-700 text-sm">Completion Certificate</span>
-            </div>
-            <span class="text-xs text-green-600">Certified</span>
-          </div>
-          <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <div class="flex items-center gap-3">
-              <i class="fa-solid fa-building w-5 h-5 text-[#de5806]"></i>
-              <span class="text-gray-700 text-sm">Approved Layout</span>
-            </div>
-            <span class="text-xs text-green-600">Available</span>
-          </div>
-          <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <div class="flex items-center gap-3">
-              <i class="fa-solid fa-file-lines w-5 h-5 text-[#de5806]"></i>
-              <span class="text-gray-700 text-sm">Title Deed</span>
-            </div>
-            <span class="text-xs text-green-600">Ready to Transfer</span>
-          </div>
+          }
         </div>
       </div>
       <div class="bg-white rounded-2xl p-6 shadow-sm">
@@ -56,38 +41,25 @@ import { CommonModule } from '@angular/common';
           <h3 class="text-gray-900">Taxes & Fees</h3>
         </div>
         <div class="space-y-3">
-          <div class="p-3 bg-gray-50 rounded-lg">
-            <div class="flex items-center justify-between mb-1">
-              <span class="text-gray-700 text-sm">Registration Tax</span>
-              <span class="text-gray-900">52 EGP</span>
+          @if (taxItems.length) {
+            @for (tax of taxItems; track tax.name + tax.amount) {
+              <div class="p-3 bg-gray-50 rounded-lg">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-gray-700 text-sm">{{ valueOrDefault(tax.name, 'Fee') }}</span>
+                  <span class="text-gray-900">{{ valueOrDefault(tax.amount, 'N/A') }}</span>
+                </div>
+                <div class="text-xs text-gray-500">{{ valueOrDefault(tax.note, 'Details not available') }}</div>
+              </div>
+            }
+          } @else {
+            <div class="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-4 text-sm text-gray-600">
+              Taxes and fees are not available for this unit yet.
             </div>
-            <div class="text-xs text-gray-500">Of property value</div>
-          </div>
-          <div class="p-3 bg-gray-50 rounded-lg">
-            <div class="flex items-center justify-between mb-1">
-              <span class="text-gray-700 text-sm">Real Estate Registry</span>
-              <span class="text-gray-900">3 EGP</span>
-            </div>
-            <div class="text-xs text-gray-500">Fixed fees</div>
-          </div>
-          <div class="p-3 bg-gray-50 rounded-lg">
-            <div class="flex items-center justify-between mb-1">
-              <span class="text-gray-700 text-sm">Admin Fees</span>
-              <span class="text-gray-900">7 EGP</span>
-            </div>
-            <div class="text-xs text-gray-500">Documentation & procedures</div>
-          </div>
-          <div class="p-3 bg-gray-50 rounded-lg">
-            <div class="flex items-center justify-between mb-1">
-              <span class="text-gray-700 text-sm">Annual Maintenance (Est.)</span>
-              <span class="text-gray-900">12 EGP</span>
-            </div>
-            <div class="text-xs text-gray-500">Compound yearly fees</div>
-          </div>
+          }
           <div class="pt-3 border-t border-gray-200">
             <div class="flex items-center justify-between">
               <span class="text-gray-900">Total</span>
-              <span class="text-[#de5806] font-semibold">74 EGP</span>
+              <span class="text-[#de5806] font-semibold">{{ valueOrDefault(taxesAndFees?.total, 'N/A') }}</span>
             </div>
           </div>
         </div>
@@ -95,4 +67,17 @@ import { CommonModule } from '@angular/common';
     </div>
   `,
 })
-export class DocumentsTaxesComponent {}
+export class DocumentsTaxesComponent {
+  @Input() documents: DocumentItem[] = [];
+  @Input() taxesAndFees: TaxesAndFees | null = null;
+
+  get taxItems(): TaxItem[] {
+    return this.taxesAndFees?.items || [];
+  }
+
+  valueOrDefault(value: unknown, fallback: string = 'N/A'): string {
+    if (value === null || value === undefined) return fallback;
+    const text = String(value).trim();
+    return text ? text : fallback;
+  }
+}

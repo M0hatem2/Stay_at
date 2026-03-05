@@ -1,13 +1,13 @@
-<div class="text-sm font-medium text-center text-gray-600 border-b border-gray-200 relative overflow-x-auto">
-  <ul class="flex justify-center relative min-w-max ">
+<div class="relative overflow-x-auto border-b border-gray-200 text-gray-600">
+  <ul class="relative flex min-w-max items-center gap-1 px-2 sm:px-4 lg:px-6">
 
     <!-- Active underline animated -->
-    <span class="absolute bottom-0 h-1 bg-blue-600 rounded-full transition-all duration-300"
+    <span class="pointer-events-none absolute bottom-0 h-0.5 rounded-full bg-blue-600 transition-all duration-300 sm:h-1"
       [style.width.px]="activeTabWidth" [style.left.px]="activeTabLeft"></span>
 
-    <li class="me-2" *ngFor="let tab of tabs; let i = index" #tabRef>
+    <li class="shrink-0" *ngFor="let tab of tabs; let i = index" #tabRef>
       <button (click)="onTabClick(tab.id)"
-        class="tab-btn relative inline-block px-6 py-5 rounded-t-lg transition-colors duration-300 hover:text-blue-600 whitespace-nowrap "
+        class="tab-btn relative inline-flex whitespace-nowrap rounded-t-lg px-3 py-3 text-xs transition-colors duration-300 hover:text-blue-600 sm:px-4 sm:py-4 sm:text-sm lg:px-6 lg:py-5"
         [class.text-blue-600]="isActiveTab(tab.id)" [class.font-semibold]="isActiveTab(tab.id)">
         {{ tab.title }}
       </button>

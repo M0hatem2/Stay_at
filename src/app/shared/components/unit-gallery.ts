@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
     <div class="bg-white rounded-2xl overflow-hidden shadow-sm">
       <div class="relative h-64 sm:h-80 lg:h-96 bg-gray-200">
         <img
-          [src]="images[currentIndex] || images[0]"
+          [src]="displayImages[currentIndex] || displayImages[0]"
           [alt]="title"
           class="w-full h-full object-cover cursor-pointer"
           (click)="onImageClick()"
@@ -38,7 +38,7 @@ import { CommonModule } from '@angular/common';
             <i class="fa-solid fa-share-nodes w-4 h-4 sm:w-5 sm:h-5 text-gray-700"></i>
           </button>
         </div>
-        @if (images.length > 1) {
+        @if (displayImages.length > 1) {
           <button
             (click)="previousImage()"
             class="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors"
@@ -55,11 +55,18 @@ import { CommonModule } from '@angular/common';
         <div
           class="absolute bottom-2 sm:bottom-4 right-2 sm:right-4 px-2 py-1 bg-black/70 text-white text-xs rounded-lg"
         >
-          {{ currentIndex + 1 }} / {{ images.length }}
+          {{ currentIndex + 1 }} / {{ displayImages.length }}
         </div>
+        @if (!images.length) {
+          <div
+            class="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 px-2 py-1 bg-white/90 text-gray-700 text-xs rounded-lg"
+          >
+            No gallery images provided
+          </div>
+        }
       </div>
       <div class="p-2 sm:p-4   gap-2 sm:gap-3 overflow-x-scroll flex">
-        @for (image of images; track $index) {
+        @for (image of displayImages; track $index) {
           <button
             (click)="selectImage($index)"
             class="relative h-16 sm:h-20 flex-shrink-0 rounded-lg overflow-hidden transition-all hover:scale-105"
@@ -78,6 +85,9 @@ import { CommonModule } from '@angular/common';
   `,
 })
 export class UnitGalleryComponent {
+  private readonly fallbackImage =
+    'https://images.unsplash.com/photo-1560185007-5f0bb1866cab?w=1200&h=800&fit=crop';
+
   @Input() images: string[] = [];
   @Input() title: string = '';
   @Input() currentIndex: number = 0;
@@ -85,18 +95,28 @@ export class UnitGalleryComponent {
   @Output() imageClick = new EventEmitter<void>();
   @Output() indexChange = new EventEmitter<number>();
 
+  get displayImages(): string[] {
+    const validImages = this.images.filter(Boolean);
+    return validImages.length ? validImages : [this.fallbackImage];
+  }
+
   selectImage(index: number): void {
+    if (index < 0 || index >= this.displayImages.length) return;
     this.currentIndex = index;
     this.indexChange.emit(index);
   }
 
   previousImage(): void {
-    this.currentIndex = this.currentIndex === 0 ? this.images.length - 1 : this.currentIndex - 1;
+    const totalImages = this.displayImages.length;
+    if (totalImages <= 1) return;
+    this.currentIndex = this.currentIndex === 0 ? totalImages - 1 : this.currentIndex - 1;
     this.indexChange.emit(this.currentIndex);
   }
 
   nextImage(): void {
-    this.currentIndex = (this.currentIndex + 1) % this.images.length;
+    const totalImages = this.displayImages.length;
+    if (totalImages <= 1) return;
+    this.currentIndex = (this.currentIndex + 1) % totalImages;
     this.indexChange.emit(this.currentIndex);
   }
 

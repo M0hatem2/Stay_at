@@ -17,7 +17,7 @@ import { DayDetailsModalComponent } from './components/day-details-modal';
 import { ImageModalComponent } from './components/image-modal';
 import { PricingTableComponent } from './components/pricing-table';
 import { AvailabilityCalendarComponent } from './components/availability-calendar/availability-calendar';
-import { BookTheApartment } from "../book-the-apartment/book-the-apartment";
+import { BookTheApartment } from '../book-the-apartment/book-the-apartment';
 
 @Component({
   selector: 'app-unit-details',
@@ -32,8 +32,8 @@ import { BookTheApartment } from "../book-the-apartment/book-the-apartment";
     ImageModalComponent,
     PricingTableComponent,
     AvailabilityCalendarComponent,
-    BookTheApartment
-],
+    BookTheApartment,
+  ],
   templateUrl: './unit-details.html',
   styleUrl: './unit-details.scss',
 })
@@ -127,14 +127,20 @@ export class UnitDetails implements OnInit, OnDestroy {
   private loadUnitDetails(id: string): void {
     this.isLoading = true;
     this.errorMessage = '';
+    this.apiProperty = undefined;
+    this.property = undefined;
 
     this.unitService.getUnitById(id).subscribe({
       next: (response: any) => {
         console.log('🏠 Unit Details Response:', response);
 
-        // Handle both response formats: {unit: ...} or {property: ...}
+        // Handle response formats: {unit: ...}, {property: ...} or unit object directly
         if (response.unit) {
-          this.unitData = response.unit;
+          this.unitData = this.normalizeUnitData(response.unit);
+          console.log('Mapped Unit Data:', this.unitData);
+        } else if (response._id) {
+          this.unitData = this.normalizeUnitData(response);
+          console.log('Mapped Unit Data:', this.unitData);
         } else if (response.property) {
           // Convert property format to unit format
           this.apiProperty = response.property;
@@ -150,6 +156,141 @@ export class UnitDetails implements OnInit, OnDestroy {
         this.isLoading = false;
       },
     });
+  }
+
+  private normalizeUnitData(rawUnit: any): Unit {
+    const normalizedNearbyLandmarks = this.normalizeNearbyLandmarks(rawUnit?.nearbyLandmarks);
+    const normalizedAiAnalysis =
+      rawUnit?.aiAnalysis ||
+      this.mapRentAnalysisToAiAnalysis(rawUnit?.rentAnalysis, normalizedNearbyLandmarks);
+
+    const resolvedPricing = rawUnit?.finalPricing || this.resolveRentPricing(rawUnit);
+    const listingPrice = this.buildListingPrice(rawUnit, resolvedPricing);
+
+    return {
+      ...rawUnit,
+      gallery: Array.isArray(rawUnit?.gallery) ? rawUnit.gallery : [],
+      documents: Array.isArray(rawUnit?.documents) ? rawUnit.documents : [],
+      facilitiesAndServices: Array.isArray(rawUnit?.facilitiesAndServices)
+        ? rawUnit.facilitiesAndServices
+        : [],
+      nearbyLandmarks: normalizedNearbyLandmarks,
+      aiAnalysis: normalizedAiAnalysis,
+      finalPricing: resolvedPricing,
+      listingPrice,
+    } as Unit;
+  }
+
+  private resolveRentPricing(unit: any): Unit['finalPricing'] | undefined {
+    const activeSeasonalPricing = this.getActiveSeasonalPricing(unit?.seasonalPricing);
+
+    if (activeSeasonalPricing) {
+      return this.buildFinalPricing(activeSeasonalPricing, unit, 'seasonal');
+    }
+
+    if (unit?.basePricing) {
+      return this.buildFinalPricing(unit.basePricing, unit, 'base');
+    }
+
+    return undefined;
+  }
+
+  private getActiveSeasonalPricing(seasonalPricing: any): any | null {
+    if (!seasonalPricing?.startDate || !seasonalPricing?.endDate) {
+      return null;
+    }
+
+    const now = new Date();
+    const startDate = new Date(seasonalPricing.startDate);
+    const endDate = new Date(seasonalPricing.endDate);
+
+    if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime())) {
+      return null;
+    }
+
+    return now >= startDate && now <= endDate ? seasonalPricing : null;
+  }
+
+  private buildFinalPricing(
+    pricing: any,
+    unit: any,
+    source: 'seasonal' | 'base',
+  ): Unit['finalPricing'] {
+    const normalizedTiers = Array.isArray(pricing?.tiers)
+      ? pricing.tiers.map((tier: any) => ({
+          minDays: Number(tier?.minDays ?? 1),
+          pricePerDay: Number(tier?.pricePerDay ?? pricing?.price ?? 0),
+          label: tier?.label || `${tier?.minDays ?? 1} days or more`,
+          _id: tier?._id || '',
+        }))
+      : [];
+
+    return {
+      _id: pricing?._id || `${source}-${unit?._id || this.currentPropertyId || 'unit'}`,
+      targetType: 'unit',
+      targetId: unit?._id || this.currentPropertyId || '',
+      purpose: pricing?.purpose || 'rent',
+      rentType: pricing?.rentType || unit?.basePricing?.rentType || 'daily',
+      price: Number(pricing?.price ?? 0),
+      tiers: normalizedTiers,
+      currency: pricing?.currency || 'EGP',
+      isActive: true,
+      createdBy: '',
+      isDeleted: false,
+      createdAt: '',
+      updatedAt: '',
+      __v: 0,
+    } as Unit['finalPricing'];
+  }
+
+  private buildListingPrice(
+    unit: any,
+    pricing: Unit['finalPricing'] | undefined,
+  ): Unit['listingPrice'] {
+    return {
+      salePrice: Number(unit?.listingPrice?.salePrice ?? 0),
+      rentPrice: Number(unit?.listingPrice?.rentPrice ?? pricing?.price ?? unit?.basePricing?.price ?? 0),
+      rentPeriod:
+        unit?.listingPrice?.rentPeriod || pricing?.rentType || unit?.basePricing?.rentType || 'daily',
+      currency: unit?.listingPrice?.currency || pricing?.currency || unit?.basePricing?.currency || 'EGP',
+    };
+  }
+
+  private mapRentAnalysisToAiAnalysis(
+    rentAnalysis: any,
+    nearbyLandmarks: any[] = [],
+  ): Unit['aiAnalysis'] {
+    return {
+      priceEvaluation: {
+        status: rentAnalysis?.priceEvaluation?.status || '',
+        marketComparison:
+          rentAnalysis?.priceEvaluation?.marketComparison || rentAnalysis?.priceEvaluation?.status || '',
+        isGoodDeal: !!rentAnalysis?.priceEvaluation?.isGoodDeal,
+      },
+      locationEvaluation: {
+        rating: Number(rentAnalysis?.locationEvaluation?.rating ?? 0),
+        pros: Array.isArray(rentAnalysis?.locationEvaluation?.pros)
+          ? rentAnalysis.locationEvaluation.pros
+          : [],
+        description: rentAnalysis?.locationEvaluation?.description || '',
+      },
+      nearbyLandmarks,
+      summary: rentAnalysis?.summary || '',
+      lastUpdated: rentAnalysis?.lastUpdated || '',
+      smartInsights: Array.isArray(rentAnalysis?.smartInsights) ? rentAnalysis.smartInsights : [],
+    } as Unit['aiAnalysis'];
+  }
+
+  private normalizeNearbyLandmarks(nearbyLandmarks: any): any[] {
+    if (!Array.isArray(nearbyLandmarks)) {
+      return [];
+    }
+
+    return nearbyLandmarks.map((landmark: any) => ({
+      name: landmark?.name || '',
+      type: landmark?.type || '',
+      distance: landmark?.distance || '',
+    }));
   }
 
   private loadPropertyDetails(id: string): void {
@@ -203,7 +344,7 @@ export class UnitDetails implements OnInit, OnDestroy {
       gallery: property.gallery || [],
       documents: property.documents || [],
       facilitiesAndServices: property.facilitiesAndServices || [],
-      nearbyLandmarks: property.nearbyLandmarks || [],
+      nearbyLandmarks: this.normalizeNearbyLandmarks(property.nearbyLandmarks),
       project: property.project,
       owner: property.owner,
       status: property.status,
@@ -239,7 +380,7 @@ export class UnitDetails implements OnInit, OnDestroy {
           pros: [],
           description: property.saleAnalysis?.summary || '',
         },
-        nearbyLandmarks: property.nearbyLandmarks || [],
+        nearbyLandmarks: this.normalizeNearbyLandmarks(property.nearbyLandmarks),
         summary: property.saleAnalysis?.summary || '',
         lastUpdated: property.saleAnalysis?.lastUpdated || '',
         smartInsights: property.saleAnalysis?.smartInsights || [],
@@ -328,18 +469,20 @@ export class UnitDetails implements OnInit, OnDestroy {
   }
 
   get area(): string | null {
-    if (this.unitData?.unitArea) return `${this.unitData.unitArea} م²`;
+    if (this.unitData?.unitArea !== undefined && this.unitData?.unitArea !== null) {
+      return `${this.unitData.unitArea} sqm`;
+    }
     if (this.property?.area) return this.property.area;
     if (this.property?.stats?.area_sqm) return `${this.property.stats.area_sqm} sqm`;
     return null;
   }
 
   get rating(): number | null {
-    return this.property?.rating ?? this.property?.stats?.rating ?? null;
+    return this.unitData?.averageRating ?? this.property?.rating ?? this.property?.stats?.rating ?? null;
   }
 
   get reviews(): number | null {
-    return this.property?.reviews ?? this.property?.stats?.review_count ?? null;
+    return this.unitData?.totalReviews ?? this.property?.reviews ?? this.property?.stats?.review_count ?? null;
   }
 
   get floor(): string | number | null {
@@ -374,8 +517,10 @@ export class UnitDetails implements OnInit, OnDestroy {
 
   get pricingTable() {
     // استخدام finalPricing من Unit API
-    if (this.unitData?.finalPricing?.tiers) {
-      return this.unitData.finalPricing.tiers.map(
+    const pricing = this.effectivePricing;
+
+    if (pricing?.tiers?.length) {
+      return pricing.tiers.map(
         (tier: { minDays: number; pricePerDay: number; label: string }) => ({
           duration_label: tier.label,
           days: tier.minDays,
@@ -389,26 +534,48 @@ export class UnitDetails implements OnInit, OnDestroy {
     return this.property?.pricing?.pricing_table || [];
   }
 
+  get effectivePricing(): Unit['finalPricing'] | undefined {
+    if (this.unitData?.finalPricing) {
+      return this.unitData.finalPricing;
+    }
+
+    if (this.unitData?.basePricing) {
+      return this.buildFinalPricing(this.unitData.basePricing, this.unitData, 'base');
+    }
+
+    return undefined;
+  }
+
   private calculateDiscount(pricePerDay: number): number {
-    if (!this.unitData?.finalPricing?.price) return 0;
-    const basePrice = this.unitData.finalPricing.price;
+    if (!this.effectivePricing?.price) return 0;
+    const basePrice = this.effectivePricing.price;
     return Math.round(((basePrice - pricePerDay) / basePrice) * 100);
   }
 
   private calculateSavings(pricePerDay: number, days: number): number {
-    if (!this.unitData?.finalPricing?.price) return 0;
-    const basePrice = this.unitData.finalPricing.price;
+    if (!this.effectivePricing?.price) return 0;
+    const basePrice = this.effectivePricing.price;
     return (basePrice - pricePerDay) * days;
   }
 
   get pricingCurrency(): string {
-    return (
-      this.unitData?.salePricing?.currency ||
-      this.unitData?.finalPricing?.currency ||
-      this.unitData?.listingPrice?.currency ||
-      this.property?.pricing?.currency ||
-      'EGP'
-    );
+    const currencyCandidates = [
+      this.effectivePricing?.currency,
+      this.unitData?.basePricing?.currency,
+      this.unitData?.seasonalPricing?.currency,
+      this.unitData?.listingPrice?.currency,
+      this.unitData?.salePricing?.currency,
+      this.property?.pricing?.currency,
+    ];
+
+    const validCurrency = currencyCandidates.find((currency) => {
+      const normalized = String(currency || '')
+        .trim()
+        .toUpperCase();
+      return /^[A-Z]{3}$/.test(normalized);
+    });
+
+    return validCurrency ? String(validCurrency).trim().toUpperCase() : 'EGP';
   }
 
   get priceDisplay(): string {
@@ -422,8 +589,11 @@ export class UnitDetails implements OnInit, OnDestroy {
       return `${this.unitData.salePricing.basePrice.toLocaleString('ar-EG')} ${this.pricingCurrency}`;
     }
 
-    if (this.unitData?.finalPricing?.price) {
-      return `${this.unitData.finalPricing.price.toLocaleString('ar-EG')} ${this.pricingCurrency}`;
+    if (this.effectivePricing?.price) {
+      return `${this.effectivePricing.price.toLocaleString('ar-EG')} ${this.pricingCurrency}`;
+    }
+    if (this.unitData?.basePricing?.price) {
+      return `${this.unitData.basePricing.price.toLocaleString('ar-EG')} ${this.pricingCurrency}`;
     }
     if (this.unitData?.listingPrice?.rentPrice) {
       return `${this.unitData.listingPrice.rentPrice.toLocaleString('ar-EG')} ${this.pricingCurrency}`;
@@ -442,32 +612,19 @@ export class UnitDetails implements OnInit, OnDestroy {
   }
 
   get pricePeriodLabel(): string {
-    // For sale properties, show empty or "للبيع"
+    // For sale properties, no rent period label
     if (this.unitData?.salePricing) {
       return '';
     }
 
-    if (this.unitData?.finalPricing?.rentType) {
-      const rentType = this.unitData.finalPricing.rentType;
-      return rentType === 'daily'
-        ? 'يومياً'
-        : rentType === 'monthly'
-          ? 'شهرياً'
-          : rentType === 'yearly'
-            ? 'سنوياً'
-            : '';
+    if (this.effectivePricing?.rentType) {
+      return this.getRentPeriodLabel(this.effectivePricing.rentType);
+    }
+    if (this.unitData?.basePricing?.rentType) {
+      return this.getRentPeriodLabel(this.unitData.basePricing.rentType);
     }
     if (this.unitData?.listingPrice?.rentPeriod) {
-      const period = this.unitData.listingPrice.rentPeriod;
-      return period === 'day'
-        ? 'يومياً'
-        : period === 'week'
-          ? 'أسبوعياً'
-          : period === 'month'
-            ? 'شهرياً'
-            : period === 'year'
-              ? 'سنوياً'
-              : '';
+      return this.getRentPeriodLabel(this.unitData.listingPrice.rentPeriod);
     }
     if (this.property?.pricing?.sidebar_display_price?.period_label) {
       return this.property.pricing.sidebar_display_price.period_label;
@@ -482,9 +639,28 @@ export class UnitDetails implements OnInit, OnDestroy {
     return '';
   }
 
+  private getRentPeriodLabel(period: string): string {
+    const normalizedPeriod = period.toLowerCase();
+
+    if (normalizedPeriod === 'daily' || normalizedPeriod === 'day') {
+      return 'Daily';
+    }
+    if (normalizedPeriod === 'weekly' || normalizedPeriod === 'week') {
+      return 'Weekly';
+    }
+    if (normalizedPeriod === 'monthly' || normalizedPeriod === 'month') {
+      return 'Monthly';
+    }
+    if (normalizedPeriod === 'yearly' || normalizedPeriod === 'year') {
+      return 'Yearly';
+    }
+
+    return '';
+  }
+
   get pricePerMeter(): string | null {
     if (this.unitData?.salePricing?.pricePerMeter) {
-      return `${this.unitData.salePricing.pricePerMeter.toLocaleString('ar-EG')} ${this.pricingCurrency}/م²`;
+      return `${this.unitData.salePricing.pricePerMeter.toLocaleString('ar-EG')} ${this.pricingCurrency}/sqm`;
     }
     return null;
   }
@@ -507,6 +683,25 @@ export class UnitDetails implements OnInit, OnDestroy {
 
   get availabilityCurrentPeriod() {
     return this.property?.availability?.current_period;
+  }
+
+  get unitAvailabilityPeriods() {
+    return Array.isArray(this.unitData?.availabilities) ? this.unitData.availabilities : null;
+  }
+
+  get bookingRentalType(): 'daily' | 'weekly' | 'monthly' | 'yearly' {
+    const rentType =
+      this.effectivePricing?.rentType ||
+      this.unitData?.basePricing?.rentType ||
+      this.unitData?.listingPrice?.rentPeriod ||
+      'daily';
+    const normalized = rentType.toLowerCase();
+
+    if (normalized === 'day' || normalized === 'daily') return 'daily';
+    if (normalized === 'week' || normalized === 'weekly') return 'weekly';
+    if (normalized === 'month' || normalized === 'monthly') return 'monthly';
+    if (normalized === 'year' || normalized === 'yearly') return 'yearly';
+    return 'daily';
   }
 
   get smartAnalysis() {
@@ -559,12 +754,15 @@ export class UnitDetails implements OnInit, OnDestroy {
   }
 
   get nearbyPlaces() {
-    if (this.unitData?.aiAnalysis?.nearbyLandmarks) {
+    if (this.unitData?.aiAnalysis?.nearbyLandmarks?.length) {
       return this.unitData.aiAnalysis.nearbyLandmarks.map((landmark) => ({
         name: landmark.name,
         type: landmark.type,
         distance: landmark.distance,
       }));
+    }
+    if (this.unitData?.nearbyLandmarks?.length) {
+      return this.normalizeNearbyLandmarks(this.unitData.nearbyLandmarks);
     }
     return this.property?.location_details?.nearby_places || [];
   }
@@ -573,11 +771,12 @@ export class UnitDetails implements OnInit, OnDestroy {
     if (!this.unitData?.owner) return null;
 
     return {
+      id: this.unitData.ownerId || (this.unitData.owner as any)?._id || '',
       name: this.unitData.owner.name,
       type: this.unitData.owner.type,
       role: this.unitData.owner.role,
-      phoneNumber: this.unitData.owner.contact.phoneNumber,
-      email: this.unitData.owner.contact.email,
+      phoneNumber: this.unitData.owner.contact?.phoneNumber || '',
+      email: this.unitData.owner.contact?.email || '',
     };
   }
 

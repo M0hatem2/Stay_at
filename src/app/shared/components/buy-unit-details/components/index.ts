@@ -9,3 +9,5 @@ export { NearbyPlacesComponent } from './nearby-places.component';
 export { SimilarPropertiesComponent } from './similar-properties.component';
 export { SidebarComponent } from './sidebar.component';
 export { ImageModalComponent } from './image-modal.component';
+export { MakeOffer } from './make-offer/make-offer';
+export { ScheduleViewing } from './schedule-viewing/schedule-viewing';

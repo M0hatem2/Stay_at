@@ -11,6 +11,7 @@ import { AboutPage } from './features/about/pages/about.page';
 import { UnitDetails } from './shared/components/unit-details/unit-details';
 import { BuyUnitDetails } from './shared/components/buy-unit-details/buy-unit-details';
 import { ProjectsDetails } from './shared/components/projects-details/projects-details';
+import { AccountsInformation } from './shared/components/accounts-information/accounts-information';
 import { BrokerDashboardComponent } from './features/dashbords/broker/broker-dashboard.component';
 import { DeveloperDashboardComponent } from './features/dashbords/developer/developer-dashboard.component';
 import { OwnerDashboardComponent } from './features/dashbords/owner/owner-dashboard.component';
@@ -60,6 +61,10 @@ export const routes: Routes = [
         path: 'property/:id',
         component: UnitDetails,
         data: { prerender: false },
+      },
+      {
+        path: 'accounts-information/:role/:id',
+        component: AccountsInformation,
       },
 
       // Dashboard Routes

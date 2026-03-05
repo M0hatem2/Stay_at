@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
-import { PaymentPlansSelector } from '../payment-plans-selector/payment-plans-selector';
 import { MOCK_PROPERTY_DATA, PropertyDetails } from '../../../core/models/property-details.model';
 import { Property } from '../../../core/models/property.model';
 import { ApiProperty } from '../../../core/models/api-property.model';
@@ -24,6 +23,8 @@ import {
   ImageModalComponent,
 } from './components';
 
+type PaymentPlan = PropertyDetails['payment_plans'][number];
+
 @Component({
   selector: 'app-buy-unit-details',
   imports: [
@@ -45,10 +46,16 @@ import {
   styleUrl: './buy-unit-details.scss',
 })
 export class BuyUnitDetails implements OnInit, OnDestroy {
-  propertyData: PropertyDetails = this.cloneMock();
+  private readonly fallbackGalleryImage =
+    'https://images.unsplash.com/photo-1560185007-5f0bb1866cab?w=1200&h=800&fit=crop';
+
+  propertyData: PropertyDetails = this.createBasePropertyData();
   unitData: any = null; // البيانات من الـ API
   isLoading = false;
   errorMessage = '';
+  analysisSummary = 'Investment summary is not available yet.';
+  analysisLastUpdated = '';
+  ownerContact: { phoneNumber: string; email: string } = { phoneNumber: '', email: '' };
 
   // Image Gallery Properties
   selectedImageIndex: number = 0;
@@ -82,13 +89,14 @@ export class BuyUnitDetails implements OnInit, OnDestroy {
     this.unitService.getUnitByIdForSale(id).subscribe({
       next: (response: any) => {
         console.log('🏠 Buy Unit Details Response:', response);
-        this.unitData = response;
-        this.mapApiDataToPropertyData(response);
+        const unitPayload = this.extractUnitPayload(response);
+        this.unitData = unitPayload;
+        this.mapApiDataToPropertyData(unitPayload, response);
         this.isLoading = false;
       },
       error: (error) => {
         console.error('❌ Error loading unit details:', error);
-        this.errorMessage = 'حدث خطأ أثناء تحميل تفاصيل الوحدة';
+        this.errorMessage = 'Failed to load unit details';
         this.isLoading = false;
         // Fallback to navigation state if API fails
         this.loadFromNavigationState();
@@ -115,153 +123,236 @@ export class BuyUnitDetails implements OnInit, OnDestroy {
     }
   }
 
-  private mapApiDataToPropertyData(data: any): void {
-    const pd = this.propertyData;
+  private mapApiDataToPropertyData(data: any, rawResponse?: any): void {
+    const pd = this.createBasePropertyData();
+    const unit = data || {};
+    const response = rawResponse || {};
+    const currency = this.normalizeCurrency(unit?.salePricing?.currency);
+    const ownerPayload =
+      unit?.owner ||
+      response?.owner ||
+      response?.data?.owner ||
+      response?.result?.owner ||
+      response?.unit?.owner ||
+      response?.property?.owner;
 
-    // Basic Info
-    if (data.title) pd.title = data.title;
-    if (data.description) pd.description = data.description;
-    if (data.isTrusted != null) pd.verified = data.isTrusted;
-    if (data.viewsCount != null) pd.views = data.viewsCount;
+    this.analysisSummary = 'Investment summary is not available yet.';
+    this.analysisLastUpdated = '';
+    this.ownerContact = { phoneNumber: '', email: '' };
 
-    // Gallery
-    if (data.gallery?.length) {
-      pd.gallery = data.gallery.map((img: any) => img.secure_url);
-      pd.main_image = pd.gallery[0];
+    pd.id = unit?._id || unit?.id || null;
+    pd.title = this.safeText(unit?.title, pd.title);
+    pd.description = this.safeText(unit?.description, pd.description);
+    pd.verified = !!unit?.isTrusted;
+    pd.views = this.asNumber(unit?.viewsCount) ?? 0;
+
+    const gallery = this.mapGalleryUrls(unit?.gallery);
+    if (gallery.length) {
+      pd.gallery = gallery;
+      pd.main_image = gallery[0];
     }
 
-    // Location
-    if (data.location) {
-      pd.location = {
-        full: `${data.location.area}, ${data.location.city}`,
-        area: data.location.area,
-        city: data.location.city,
-      };
-    }
+    const area = this.safeText(unit?.location?.area, '');
+    const city = this.safeText(unit?.location?.city, '');
+    const address = this.safeText(unit?.location?.address, '');
+    const fullLocation = [area, city].filter(Boolean).join(', ');
+    pd.location = {
+      full: fullLocation || address || 'Location not specified',
+      area,
+      city,
+    };
 
-    // Specs
-    if (data.unitType) pd.specs.property_type = data.unitType;
-    if (data.bedrooms != null) pd.specs.bedrooms = data.bedrooms;
-    if (data.bathrooms != null) pd.specs.bathrooms = data.bathrooms;
-    if (data.unitArea != null) pd.specs.area_sqm = data.unitArea;
-    if (data.floorNumber != null) pd.specs.floor = String(data.floorNumber);
-    if (data.furnished != null) pd.specs.finishing = data.furnished ? 'Furnished' : 'Unfurnished';
+    pd.specs.property_type = this.toTitleCase(this.safeText(unit?.unitType, 'N/A'));
+    pd.specs.bedrooms = this.asNumber(unit?.bedrooms) ?? 0;
+    pd.specs.bathrooms = this.asNumber(unit?.bathrooms) ?? 0;
+    pd.specs.area_sqm = this.asNumber(unit?.unitArea) ?? 0;
+    pd.specs.floor = unit?.floorNumber != null ? String(unit.floorNumber) : 'N/A';
+    pd.specs.finishing =
+      typeof unit?.furnished === 'boolean' ? (unit.furnished ? 'Furnished' : 'Unfurnished') : 'N/A';
+    pd.specs.ownership = this.formatOwnerType(unit?.ownerType);
+    pd.specs.compound = this.safeText(unit?.project?.name, 'N/A');
 
-    // Project/Compound
-    if (data.project?.name) {
-      pd.specs.compound = data.project.name;
-      if (data.project.expectedDeliveryDate) {
-        pd.specs.delivery = new Date(data.project.expectedDeliveryDate).getFullYear().toString();
-      }
-    }
+    const deliveryYear = this.parseYear(unit?.project?.expectedDeliveryDate);
+    pd.specs.delivery = deliveryYear ? String(deliveryYear) : 'N/A';
+    pd.specs.year_built = this.parseYear(unit?.project?.startDate) || 0;
 
-    // Price
-    if (data.salePricing) {
-      const basePrice = data.salePricing.basePrice;
-      const currency = data.salePricing.currency || 'EGP';
-      pd.price.display = `${basePrice.toLocaleString()} ${currency}`;
+    const basePrice = this.asNumber(unit?.salePricing?.basePrice);
+    if (basePrice && basePrice > 0) {
+      pd.price.display = this.formatCurrency(basePrice, currency);
       pd.sidebar.price_display = pd.price.display;
+    }
 
-      if (data.salePricing.pricePerMeter) {
-        pd.price.per_sqm = `${data.salePricing.pricePerMeter.toLocaleString()} ${currency}/sqm`;
-        pd.sidebar.per_sqm = `${data.salePricing.pricePerMeter.toLocaleString()}`;
-      }
+    const pricePerMeter = this.asNumber(unit?.salePricing?.pricePerMeter);
+    if (pricePerMeter && pricePerMeter > 0) {
+      pd.price.per_sqm = `${pricePerMeter.toLocaleString()} ${currency}/sqm`;
+      pd.sidebar.per_sqm = `${pricePerMeter.toLocaleString()} ${currency}`;
+    }
 
-      // Payment Plans
-      if (data.salePricing.plans?.length) {
-        pd.payment_plans = data.salePricing.plans.map((plan: any, index: number) => ({
-          id: `plan_${index}`,
-          name: plan.name_ar || plan.name_en,
-          type: plan.saleType === 'cash' ? 'cash' : 'installment',
-          down_payment: plan.downPaymentPercent
-            ? `${plan.downPaymentPercent}%`
-            : plan.saleType === 'cash'
-              ? '100%'
-              : '0%',
-          years: plan.years || 0,
-          monthly_payment: this.calculateMonthlyPayment(
-            basePrice,
-            plan.downPaymentPercent || 0,
-            plan.years || 0,
-            plan.interestRate || 0,
-          ),
-          total_price: basePrice,
+    if (basePrice && basePrice > 0 && Array.isArray(unit?.salePricing?.plans)) {
+      pd.payment_plans = unit.salePricing.plans.map((plan: any, index: number) => {
+        const isCash = String(plan?.saleType || '').toLowerCase() === 'cash';
+        const downPaymentPercent =
+          typeof plan?.downPaymentPercent === 'number'
+            ? plan.downPaymentPercent
+            : isCash
+              ? 100
+              : 0;
+        const years = Number(plan?.years || 0);
+        const downPaymentAmount = Math.round((basePrice * downPaymentPercent) / 100);
+        const financedAmount = Math.max(basePrice - downPaymentAmount, 0);
+        const durationMonths = years > 0 ? Math.round(years * 12) : 0;
+        const monthlyInstallment =
+          !isCash && years > 0
+            ? this.calculateMonthlyPayment(basePrice, downPaymentPercent, years, plan?.interestRate || 0)
+            : undefined;
+        const finalPriceValue =
+          this.asNumber(plan?.finalPrice) ?? this.asNumber(plan?.totalPrice) ?? basePrice;
+
+        return {
+          name: this.safeText(plan?.name_ar || plan?.name_en, `Plan ${index + 1}`),
+          tag: index === 0 ? 'Best Deal' : undefined,
+          discount:
+            typeof plan?.discountPercent === 'number' ? `${plan.discountPercent.toFixed(0)}%` : undefined,
+          down_payment: `${downPaymentPercent}%`,
+          monthly: monthlyInstallment,
+          final_price: this.formatCurrency(finalPriceValue, currency),
+          note: isCash
+            ? 'Immediate payment with full amount.'
+            : `${downPaymentAmount.toLocaleString()} ${currency} down payment, then ${financedAmount.toLocaleString()} ${currency} over ${durationMonths} months`,
+          duration_months: durationMonths || undefined,
           selected: index === 0,
-        }));
-      }
+        };
+      });
     }
 
-    // Features
-    if (data.facilitiesAndServices?.length) {
-      pd.features = data.facilitiesAndServices;
+    const selectedPlan = pd.payment_plans.find((plan) => plan.selected) || pd.payment_plans[0];
+    if (selectedPlan) {
+      const summary = this.buildSelectedPlanSummary(selectedPlan);
+      pd.selected_plan_summary = summary;
+      pd.sidebar = {
+        ...pd.sidebar,
+        payment_plan_label: summary.name,
+        down_payment: summary.down_payment,
+        monthly: summary.monthly_installment,
+        duration: summary.duration,
+      };
     }
 
-    // Compound Features (from project)
-    if (data.project?.featuresAndServices?.length) {
-      pd.compound_features = data.project.featuresAndServices;
-    }
+    pd.features = this.normalizeTextList(unit?.facilitiesAndServices);
+    pd.compound_features = this.normalizeTextList(unit?.project?.featuresAndServices);
 
-    // Nearby Places
-    if (data.nearbyLandmarks?.length) {
-      pd.nearby_places = data.nearbyLandmarks.map((landmark: any) => ({
-        name: landmark.name,
-        type: landmark.type,
-        distance_km: parseFloat(landmark.distance) || 0,
-        travel_time: '',
+    if (Array.isArray(unit?.nearbyLandmarks)) {
+      pd.nearby_places = unit.nearbyLandmarks.map((landmark: any) => ({
+        name: this.safeText(landmark?.name, 'Nearby place'),
+        type: this.safeText(landmark?.type, 'Landmark'),
+        distance_km: this.parseDistanceKm(landmark?.distance),
+        travel_time: this.safeText(landmark?.travel_time, 'N/A'),
       }));
     }
 
-    // Investment Analysis
-    if (data.saleAnalysis) {
-      pd.price_investment_analysis = {
-        price_per_sqm: data.salePricing?.pricePerMeter
-          ? `${data.salePricing.pricePerMeter.toLocaleString()} ${data.salePricing.currency || 'EGP'}/sqm`
-          : '',
-        comparison_to_area_average:
-          data.saleAnalysis.priceAnalysis?.status || 'No comparison available',
-        expected_rental_yield: data.saleAnalysis.investmentAnalysis?.rentalYield
-          ? `${data.saleAnalysis.investmentAnalysis.rentalYield}%`
-          : '0%',
-        expected_rental_annual_return: data.saleAnalysis.investmentAnalysis?.annualRentIncome
-          ? `${data.saleAnalysis.investmentAnalysis.annualRentIncome.toLocaleString()} ${data.salePricing?.currency || 'EGP'}`
-          : '0 EGP',
-        expected_appreciation: data.saleAnalysis.investmentAnalysis?.appreciationRate
-          ? `${data.saleAnalysis.investmentAnalysis.appreciationRate}%`
-          : '0%',
-        payback_period_years: data.saleAnalysis.investmentAnalysis?.paybackPeriod || 0,
-      };
+    const investment = unit?.saleAnalysis?.investmentAnalysis || {};
+    const priceAnalysis = unit?.saleAnalysis?.priceAnalysis || {};
+    pd.price_investment_analysis = {
+      price_per_sqm:
+        pricePerMeter && pricePerMeter > 0 ? `${pricePerMeter.toLocaleString()} ${currency}/sqm` : 'N/A',
+      comparison_to_area_average: this.safeText(
+        priceAnalysis?.status,
+        'Market comparison is not available yet.',
+      ),
+      expected_rental_yield: this.formatPercentage(investment?.rentalYield),
+      expected_rental_annual_return: this.formatCurrency(investment?.annualRentIncome, currency, 'N/A'),
+      expected_appreciation: this.formatPercentage(investment?.appreciationRate),
+      payback_period_years: this.asNumber(investment?.paybackPeriod) ?? 0,
+    };
 
-      // AI Insights
-      if (data.saleAnalysis.smartInsights?.length) {
-        pd.ai_insights = data.saleAnalysis.smartInsights.map((insight: string) => ({
-          title: 'Smart Insight',
-          detail: insight,
-        }));
-      }
+    this.analysisSummary = this.safeText(unit?.saleAnalysis?.summary, this.analysisSummary);
+    this.analysisLastUpdated = this.safeText(unit?.saleAnalysis?.lastUpdated, '');
+
+    if (Array.isArray(unit?.saleAnalysis?.smartInsights) && unit.saleAnalysis.smartInsights.length) {
+      pd.ai_insights = unit.saleAnalysis.smartInsights.map((insight: string) => ({
+        title: 'Smart Insight',
+        detail: this.safeText(insight, 'Insight not available'),
+      }));
     }
 
-    // Agent/Owner
-    if (data.owner) {
+    if (Array.isArray(unit?.documents)) {
+      pd.documents = unit.documents.map((doc: any, index: number) => ({
+        name: this.buildDocumentName(doc, index),
+        status: this.toTitleCase(this.safeText(doc?.format, 'Available')),
+      }));
+    }
+
+    if (Array.isArray(unit?.taxesAndFees?.items)) {
+      pd.taxes_and_fees.items = unit.taxesAndFees.items.map((item: any) => ({
+        name: this.safeText(item?.name, 'Fee'),
+        amount: this.safeText(item?.amount, 'N/A'),
+        note: this.safeText(item?.note, 'Details not available'),
+      }));
+      pd.taxes_and_fees.total = this.safeText(unit?.taxesAndFees?.total, 'N/A');
+    }
+
+    if (Array.isArray(unit?.similarProperties)) {
+      pd.similar_properties = unit.similarProperties.map((property: any) => ({
+        title: this.safeText(property?.title, 'Similar property'),
+        image: this.safeText(property?.image, ''),
+        price: this.safeText(property?.price, 'N/A'),
+        price_per_sqm: this.safeText(property?.price_per_sqm, 'N/A'),
+        bedrooms: this.asNumber(property?.bedrooms) ?? 0,
+        bathrooms: this.asNumber(property?.bathrooms) ?? 0,
+        area_sqm: this.asNumber(property?.area_sqm) ?? 0,
+      }));
+    }
+
+    if (ownerPayload) {
       pd.agent = {
-        name: data.owner.name,
+        name: this.safeText(ownerPayload?.name, 'Owner not specified'),
         verified: true,
-        title: data.owner.role,
-        rating: 4.8,
-        reviews_count: 0,
-        sold_count: data.owner.stats?.soldCount || 0,
-        listed_count: data.owner.stats?.listedCount || 0,
-        response_rate: '95%',
-        response_time: '2 hours',
+        title: this.toTitleCase(this.safeText(ownerPayload?.role, 'Property Owner')),
+        rating: this.asNumber(unit?.averageRating) ?? 0,
+        reviews_count: this.asNumber(unit?.totalReviews) ?? 0,
+        sold_count: this.asNumber(ownerPayload?.stats?.soldCount) ?? 0,
+        listed_count: this.asNumber(ownerPayload?.stats?.listedCount) ?? 0,
+        response_rate: 'N/A',
+        response_time: 'N/A',
+      };
+
+      this.ownerContact = {
+        phoneNumber: this.safeText(ownerPayload?.contact?.phoneNumber, ''),
+        email: this.safeText(ownerPayload?.contact?.email, ''),
       };
     }
 
-    // Documents
-    if (data.documents?.length) {
-      pd.documents = data.documents.map((doc: any) => ({
-        name: doc.original_filename || 'Document',
-        status: 'Available',
-      }));
-    }
+    this.propertyData = pd;
+  }
+
+  private extractUnitPayload(response: any): any {
+    const candidates = [
+      response?.unit,
+      response?.property,
+      response?.data?.unit,
+      response?.data?.property,
+      response?.result?.unit,
+      response?.result?.property,
+      response?.data,
+      response?.result,
+      response,
+    ];
+
+    const matched = candidates.find((candidate) => this.isUnitLike(candidate));
+    if (matched) return matched;
+
+    return candidates.find((candidate) => !!candidate) || {};
+  }
+
+  private isUnitLike(value: any): boolean {
+    if (!value || typeof value !== 'object') return false;
+    return (
+      '_id' in value ||
+      'title' in value ||
+      'location' in value ||
+      'salePricing' in value ||
+      'unitType' in value
+    );
   }
 
   private calculateMonthlyPayment(
@@ -288,6 +379,185 @@ export class BuyUnitDetails implements OnInit, OnDestroy {
     return `${Math.round(monthlyPayment).toLocaleString()} EGP`;
   }
 
+  private createBasePropertyData(): PropertyDetails {
+    const base = this.cloneMock();
+    return {
+      ...base,
+      id: null,
+      title: 'Unit Details',
+      verified: false,
+      views: 0,
+      main_image: '',
+      gallery: [],
+      location: {
+        full: 'Location not specified',
+        area: '',
+        city: '',
+      },
+      specs: {
+        ...base.specs,
+        property_type: 'N/A',
+        bedrooms: 0,
+        bathrooms: 0,
+        area_sqm: 0,
+        floor: 'N/A',
+        ownership: 'N/A',
+        finishing: 'N/A',
+        year_built: 0,
+        compound: 'N/A',
+        delivery: 'N/A',
+      },
+      price: {
+        display: 'N/A',
+        per_sqm: 'N/A',
+      },
+      description: 'Description is not available yet.',
+      features: [],
+      compound_features: [],
+      payment_plans: [],
+      selected_plan_summary: {
+        name: 'Not selected yet',
+        down_payment: '-',
+        duration: '-',
+        monthly_installment: '-',
+        discount: '-',
+      },
+      price_investment_analysis: {
+        price_per_sqm: 'N/A',
+        comparison_to_area_average: 'Market comparison is not available yet.',
+        expected_rental_yield: 'N/A',
+        expected_rental_annual_return: 'N/A',
+        expected_appreciation: 'N/A',
+        payback_period_years: 0,
+      },
+      documents: [],
+      taxes_and_fees: {
+        items: [],
+        total: 'N/A',
+      },
+      nearby_places: [],
+      similar_properties: [],
+      sidebar: {
+        ...base.sidebar,
+        payment_plan_label: 'Not selected yet',
+        price_display: 'N/A',
+        per_sqm: 'N/A',
+        down_payment: '-',
+        monthly: '-',
+        duration: '-',
+      },
+      agent: {
+        ...base.agent,
+        name: 'Owner not specified',
+        verified: false,
+        title: 'Property Owner',
+        rating: 0,
+        reviews_count: 0,
+        sold_count: 0,
+        listed_count: 0,
+        response_rate: 'N/A',
+        response_time: 'N/A',
+      },
+      ai_insights: [],
+      meta: {
+        ...base.meta,
+        source: 'api',
+        extracted_at: new Date().toISOString(),
+      },
+    };
+  }
+
+  private safeText(value: unknown, fallback: string): string {
+    if (value === null || value === undefined) return fallback;
+    const text = String(value).trim();
+    return text ? text : fallback;
+  }
+
+  private asNumber(value: unknown): number | null {
+    if (typeof value === 'number' && Number.isFinite(value)) return value;
+    if (typeof value === 'string') {
+      const normalized = value.replace(/[^\d.-]/g, '');
+      if (!normalized) return null;
+      const parsed = Number(normalized);
+      return Number.isFinite(parsed) ? parsed : null;
+    }
+    return null;
+  }
+
+  private normalizeCurrency(value: unknown): string {
+    const currency = this.safeText(value, 'EGP').toUpperCase();
+    return /^[A-Z]{3}$/.test(currency) ? currency : 'EGP';
+  }
+
+  private formatCurrency(value: unknown, currency: string, fallback: string = 'N/A'): string {
+    const amount = this.asNumber(value);
+    if (amount === null) return fallback;
+    return `${amount.toLocaleString()} ${currency}`;
+  }
+
+  private formatPercentage(value: unknown, fallback: string = 'N/A'): string {
+    const percentage = this.asNumber(value);
+    if (percentage === null) return fallback;
+    return `${percentage}%`;
+  }
+
+  private parseYear(value: unknown): number | null {
+    if (!value) return null;
+    const date = new Date(String(value));
+    const year = date.getFullYear();
+    return Number.isFinite(year) ? year : null;
+  }
+
+  private formatOwnerType(value: unknown): string {
+    return this.toTitleCase(this.safeText(value, 'N/A'));
+  }
+
+  private toTitleCase(value: string): string {
+    if (!value) return 'N/A';
+    return value
+      .replace(/[_-]+/g, ' ')
+      .toLowerCase()
+      .split(' ')
+      .filter(Boolean)
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  }
+
+  private normalizeTextList(list: unknown): string[] {
+    if (!Array.isArray(list)) return [];
+    return list
+      .map((item) => this.safeText(item, ''))
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+
+  private mapGalleryUrls(gallery: unknown): string[] {
+    if (!Array.isArray(gallery)) return [];
+    return gallery
+      .map((image: any) => this.safeText(image?.secure_url, ''))
+      .map((url) => url.trim())
+      .filter(Boolean);
+  }
+
+  private parseDistanceKm(value: unknown): number {
+    if (typeof value === 'number' && Number.isFinite(value) && value >= 0) return value;
+    if (typeof value === 'string') {
+      const parsed = parseFloat(value.replace(/[^\d.]/g, ''));
+      return Number.isFinite(parsed) ? parsed : 0;
+    }
+    return 0;
+  }
+
+  private buildDocumentName(doc: any, index: number): string {
+    const originalFilename = this.safeText(doc?.original_filename, '');
+    if (originalFilename && originalFilename.toLowerCase() !== 'file') {
+      return originalFilename;
+    }
+
+    const extension = this.safeText(doc?.format, '').toUpperCase();
+    return extension ? `Document ${index + 1} (${extension})` : `Document ${index + 1}`;
+  }
+
   ngOnDestroy(): void {
     if (this.isImageModalOpen) {
       document.removeEventListener('keydown', this.handleKeydown.bind(this));
@@ -298,11 +568,12 @@ export class BuyUnitDetails implements OnInit, OnDestroy {
   get galleryImages(): string[] {
     const gallery = this.propertyData.gallery?.filter(Boolean) || [];
     if (gallery.length) return gallery;
-    return this.propertyData.main_image ? [this.propertyData.main_image] : [];
+    if (this.propertyData.main_image) return [this.propertyData.main_image];
+    return [this.fallbackGalleryImage];
   }
 
   get heroImage(): string {
-    return this.propertyData.main_image || this.galleryImages[0] || '';
+    return this.propertyData.main_image || this.galleryImages[0] || this.fallbackGalleryImage;
   }
 
   get agentInitial(): string {
@@ -313,8 +584,30 @@ export class BuyUnitDetails implements OnInit, OnDestroy {
     return this.propertyData.payment_plans.find((plan) => plan.selected) || null;
   }
 
+  onPaymentPlanSelected(plan: PaymentPlan): void {
+    this.propertyData.payment_plans = this.propertyData.payment_plans.map((currentPlan) => ({
+      ...currentPlan,
+      selected: currentPlan.name === plan.name,
+    }));
+
+    const summary = this.buildSelectedPlanSummary(plan);
+    this.propertyData.selected_plan_summary = summary;
+    this.propertyData.sidebar = {
+      ...this.propertyData.sidebar,
+      payment_plan_label: summary.name,
+      down_payment: summary.down_payment,
+      monthly: summary.monthly_installment,
+      duration: summary.duration,
+    };
+  }
+
+  scrollToPaymentPlans(): void {
+    if (typeof document === 'undefined') return;
+    document.getElementById('payment-plans')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
   get displayTitle(): string {
-    return this.propertyData.title || 'Property Image';
+    return this.propertyData.title || 'Unit Details';
   }
 
   get currentImageIndex(): number {
@@ -371,6 +664,30 @@ export class BuyUnitDetails implements OnInit, OnDestroy {
 
   private cloneMock(): PropertyDetails {
     return JSON.parse(JSON.stringify(MOCK_PROPERTY_DATA)) as PropertyDetails;
+  }
+
+  private buildSelectedPlanSummary(plan: PaymentPlan): PropertyDetails['selected_plan_summary'] {
+    return {
+      name: plan.name || 'Payment Plan',
+      down_payment: plan.down_payment || '-',
+      duration: this.getPlanDuration(plan),
+      monthly_installment: plan.monthly || 'N/A',
+      discount: plan.discount || '0%',
+    };
+  }
+
+  private getPlanDuration(plan: PaymentPlan): string {
+    if (plan.duration_months && plan.duration_months > 0) {
+      const years = plan.duration_months / 12;
+      return Number.isInteger(years) ? `${years} years` : `${plan.duration_months} months`;
+    }
+
+    const yearsInName = plan.name.match(/(\d+)\s*years?/i);
+    if (yearsInName?.[1]) {
+      return `${yearsInName[1]} years`;
+    }
+
+    return plan.monthly ? this.propertyData.sidebar.duration || '-' : 'Immediate';
   }
 
   private applyPropertyOverrides(property: PropertyCardData | Project): void {

@@ -8,7 +8,9 @@ import { CommonModule } from '@angular/common';
   template: `
     <div class="bg-white rounded-2xl p-6 shadow-sm">
       <h2 class="text-gray-900 mb-4">Description</h2>
-      <p class="text-gray-600 leading-relaxed whitespace-pre-line">{{ description }}</p>
+      <p class="text-gray-600 leading-relaxed whitespace-pre-line">
+        {{ description || 'Description is not available yet.' }}
+      </p>
     </div>
   `,
 })

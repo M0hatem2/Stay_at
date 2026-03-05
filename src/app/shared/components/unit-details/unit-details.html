@@ -14,12 +14,12 @@
       <app-unit-info
         [title]="displayTitle || 'Luxury Furnished Apartment - Fifth Settlement'"
         [location]="displayLocation || 'Fifth Settlement, New Cairo'"
-        [bedrooms]="bedrooms || 3"
-        [bathrooms]="bathrooms || 2"
-        [area]="area || '180 sqm'"
-        [rating]="rating || 4.8"
-        [reviews]="reviews || 24"
-        [floor]="floor || 5"
+        [bedrooms]="bedrooms ?? 3"
+        [bathrooms]="bathrooms ?? 2"
+        [area]="area ?? '180 sqm'"
+        [rating]="rating ?? 4.8"
+        [reviews]="reviews ?? 24"
+        [floor]="floor ?? 5"
         [furnished]="furnished !== null ? furnished : true"
         [yearBuilt]="yearBuilt"
         [description]="
@@ -42,18 +42,19 @@
         "
       />
       <!-- Pricing Table Component - Only for rent units -->
-      @if (unitData?.finalPricing) {
+      @if (effectivePricing) {
         <app-pricing-table
-          [finalPricing]="unitData!.finalPricing!"
+          [finalPricing]="effectivePricing!"
           [currency]="pricingCurrency"
           (priceSelected)="onPriceSelected($event)"
         />
       }
 
       <!-- Availability Calendar - Only for rent units -->
-      @if (unitData) {
+      @if (unitData?._id) {
         <app-availability-calendar
           [unitId]="unitData?._id"
+          [availabilityPeriods]="unitAvailabilityPeriods"
           (dateRangeSelected)="onDateRangeSelected($event)"
         ></app-availability-calendar>
       }
@@ -135,7 +136,7 @@
 
       <!-- Location Map Component -->
       <app-location-map
-        [nearbyLandmarks]="unitData?.aiAnalysis?.nearbyLandmarks"
+        [nearbyLandmarks]="nearbyPlaces"
         [coordinates]="locationCoordinates"
         [locationAddress]="locationAddress"
         [locationArea]="locationArea"
@@ -183,8 +184,15 @@
     >
       <div (click)="$event.stopPropagation()">
         <app-book-the-apartment
+          [unitId]="unitData?._id || null"
           [selectedStartDate]="selectedDateRange?.startDate"
           [selectedEndDate]="selectedDateRange?.endDate"
+          [defaultGuests]="unitData?.maxGuests || 1"
+          [defaultRentalType]="bookingRentalType"
+          [defaultCurrency]="pricingCurrency"
+          [defaultCity]="locationCity"
+          [defaultState]="locationCity"
+          [defaultCountry]="locationCountry"
           (closePopup)="closeBookingPopup()"
         />
       </div>

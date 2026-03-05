@@ -1,24 +1,28 @@
-<div class="flex items-center justify-between">
-      <div>
-            <h1 class="text-2xl mb-1 font-bold text-white">Real Estate Developer Dashboard</h1>
-            <p class="text-gray-300 text-sm">Comprehensive project and sales management</p>
+<div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <div class="min-w-0">
+            <h1 class="text-xl font-bold text-white sm:text-2xl lg:text-3xl">Real Estate Developer Dashboard</h1>
+            <p class="mt-1 text-xs text-gray-300 sm:text-sm">Comprehensive project and sales management</p>
       </div>
-      <div class="flex items-center gap-4">
-            <button class="relative p-2 hover:bg-white/10 rounded-lg transition-colors group" title="Notifications">
-                  <i class="fas fa-bell text-white text-lg group-hover:text-[#C4A962] transition-colors"></i>
-                  <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-            </button>
-            <button class="flex items-center gap-3 px-4 py-2 bg-gradient-to-r from-[#C4A962] to-[#B39952] rounded-lg hover:from-[#B39952] hover:to-[#A38942] transition-all shadow-lg group" title="Add New Project">
-                  <i class="fas fa-plus text-white text-sm"></i>
-                  <span class="font-medium text-white">New Project</span>
-            </button>
-            <div class="flex items-center gap-3 pr-4 border-r border-gray-700">
-                  <div class="text-right">
-                        <div class="text-sm font-medium text-white">Real Estate Development Co.</div>
+
+      <div class="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:justify-between lg:w-auto lg:justify-end">
+            <div class="flex items-center gap-2 sm:gap-3">
+                  <button class="group relative rounded-lg p-2 transition-colors hover:bg-white/10" title="Notifications">
+                        <i class="fas fa-bell text-base text-white transition-colors group-hover:text-[#C4A962] sm:text-lg"></i>
+                        <span class="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500"></span>
+                  </button>
+                  <button class="group flex flex-1 items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#C4A962] to-[#B39952] px-4 py-2 text-sm shadow-lg transition-all hover:from-[#B39952] hover:to-[#A38942] sm:flex-none" title="Add New Project">
+                        <i class="fas fa-plus text-xs text-white sm:text-sm"></i>
+                        <span class="font-medium text-white">New Project</span>
+                  </button>
+            </div>
+
+            <div class="flex items-center justify-between gap-3 border-t border-gray-700 pt-3 sm:justify-end sm:border-l sm:border-t-0 sm:pl-4 sm:pt-0">
+                  <div class="min-w-0 text-left sm:text-right">
+                        <div class="truncate text-sm font-medium text-white">Real Estate Development Co.</div>
                         <div class="text-xs text-gray-400">Project Manager</div>
                   </div>
-                  <div class="w-12 h-12 gradient-primary-btn rounded-full flex items-center justify-center text-white shadow-lg border-2 border-white/20">
-                        <i class="fas fa-building text-lg"></i>
+                  <div class="gradient-primary-btn flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-white/20 text-white shadow-lg sm:h-12 sm:w-12">
+                        <i class="fas fa-building text-base sm:text-lg"></i>
                   </div>
             </div>
       </div>

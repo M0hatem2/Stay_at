@@ -13,15 +13,19 @@
 
   <!-- Error State -->
   @if (!isLoading && errorMessage) {
-    <div class="flex items-center justify-center min-h-screen">
-      <div class="text-center">
-        <div class="text-red-500 text-6xl mb-4">⚠️</div>
-        <p class="text-gray-800 text-xl mb-2">{{ errorMessage }}</p>
+    <div class="flex items-center justify-center min-h-[70vh] px-4">
+      <div class="w-full max-w-xl rounded-3xl border border-red-100 bg-white p-8 text-center shadow-xl">
+        <div class="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-red-100 text-red-600">
+          <span class="text-3xl font-bold">!</span>
+        </div>
+        <h2 class="text-2xl font-semibold text-gray-900">Something went wrong</h2>
+        <p class="mt-2 text-sm text-gray-600">We couldn't load this unit details page.</p>
+        <p class="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{{ errorMessage }}</p>
         <button
           (click)="router.navigate(['/buy'])"
-          class="mt-4 px-6 py-3 gradient-primary-btn text-white rounded-xl hover:bg-[#B39952] transition-colors"
+          class="mt-6 mx-auto px-6 py-3 gradient-primary-btn text-white rounded-xl hover:bg-[#B39952] transition-colors"
         >
-          العودة إلى صفحة البحث
+          Back to Search
         </button>
       </div>
     </div>
@@ -47,14 +51,33 @@
           [compoundName]="propertyData.specs.compound"
         >
         </app-compound-features>
-        <app-payment-plans [selectedPlan]="propertyData.selected_plan_summary"></app-payment-plans>
-        <app-investment-analysis></app-investment-analysis>
-        <app-documents-taxes></app-documents-taxes>
-        <app-nearby-places></app-nearby-places>
-        <app-similar-properties></app-similar-properties>
+        <app-payment-plans
+          [plans]="propertyData.payment_plans"
+          [selectedPlan]="propertyData.selected_plan_summary"
+          (planSelected)="onPaymentPlanSelected($event)"
+        ></app-payment-plans>
+        <app-investment-analysis
+          [analysis]="propertyData.price_investment_analysis"
+          [summary]="analysisSummary"
+          [lastUpdated]="analysisLastUpdated"
+        ></app-investment-analysis>
+        <app-documents-taxes
+          [documents]="propertyData.documents"
+          [taxesAndFees]="propertyData.taxes_and_fees"
+        ></app-documents-taxes>
+        <app-nearby-places [places]="propertyData.nearby_places"></app-nearby-places>
+        <app-similar-properties
+          [similarProperties]="propertyData.similar_properties"
+        ></app-similar-properties>
       </div>
       <div class="lg:col-span-1">
-        <app-sidebar [propertyData]="propertyData" [agentInitial]="agentInitial"></app-sidebar>
+        <app-sidebar
+          [propertyData]="propertyData"
+          [agentInitial]="agentInitial"
+          [ownerContact]="ownerContact"
+          [selectedPlanSummary]="propertyData.selected_plan_summary"
+          (changePlanRequested)="scrollToPaymentPlans()"
+        ></app-sidebar>
       </div>
     </div>
   }
