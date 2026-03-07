@@ -73,6 +73,9 @@
       <div class="lg:col-span-1">
         <app-sidebar
           [propertyData]="propertyData"
+          [targetType]="offerTargetType"
+          [targetId]="offerTargetId"
+          [salePriceId]="offerSalePriceId"
           [agentInitial]="agentInitial"
           [ownerContact]="ownerContact"
           [selectedPlanSummary]="propertyData.selected_plan_summary"

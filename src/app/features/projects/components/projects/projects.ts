@@ -1,8 +1,48 @@
-import { Component } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { ProjectsCard } from '../../../../shared/components/projects-card/projects-card';
-import { Project } from '../../../../core/models/project.model';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
+import { Project } from '../../../../core/models/project.model';
+import { LanguageService } from '../../../../core/services/language.service';
+import { ProjectsCard } from '../../../../shared/components/projects-card/projects-card';
+import { environment } from '../../../../../environments/environment';
+
+interface ProjectSearchApiResponse {
+  message: string;
+  results: {
+    data: ProjectSearchItem[];
+    pages: number;
+    currentPage: number;
+    totalItems: number;
+    itemsPerPage: number;
+    nextPage: number | null;
+    previousPage: number | null;
+  };
+}
+
+interface ProjectSearchItem {
+  _id?: string;
+  entityType?: string;
+  type?: string;
+  project?: {
+    name?: string;
+    type?: string | string[];
+    priceStart?: number | string;
+    deliveryDate?: string;
+    plannedUnits?: number | string;
+    location?: string;
+  };
+  profile?: {
+    name?: string;
+  };
+  developer?: {
+    name?: string;
+  };
+  owner?: {
+    name?: string;
+  };
+  thumbnail?: string | { secure_url?: string };
+}
 
 @Component({
   selector: 'app-projects',
@@ -11,81 +51,152 @@ import { Router } from '@angular/router';
   templateUrl: './projects.html',
   styleUrl: './projects.scss',
 })
-export class Projects {
-  constructor(private router: Router) {}
+export class Projects implements OnInit, OnChanges {
+  @Input() searchQuery = '';
+  @Input() searchVersion = 0;
 
-  projects: Project[] = [
-    {
-      id: '1',
-      name: 'العاصمة جاردنز',
-      developer: 'شركة التطوير العقاري',
-      location: 'العاصمة الإدارية الجديدة',
-      imageUrl: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=600&fit=crop',
-      deliveryDate: '2025',
-      unitTypes: ['شقق', 'دوبليكس', 'بنتهاوس'],
-      startingPrice: 2,
-      totalUnits: 420,
-    },
-    {
-      id: '2',
-      name: 'زايد هايتس',
-      developer: 'المجموعة العقارية المتحدة',
-      location: 'الشيخ زايد، الجيزة',
-      imageUrl: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=600&fit=crop',
-      deliveryDate: '2024',
-      unitTypes: ['شقق', 'فلل', 'تاون هاوس'],
-      startingPrice: 3,
-      totalUnits: 320,
-    },
-    {
-      id: '3',
-      name: 'التجمع ريزيدنس',
-      developer: 'إعمار مصر',
-      location: 'التجمع الخامس، القاهرة الجديدة',
-      imageUrl: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=600&fit=crop',
-      deliveryDate: '2024',
-      unitTypes: ['شقق', 'دوبليكس'],
-      startingPrice: 2,
-      totalUnits: 560,
-    },
-    {
-      id: '4',
-      name: 'أكتوبر فيوز',
-      developer: 'طلعت مصطفى',
-      location: '6 أكتوبر، الجيزة',
-      imageUrl: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=600&fit=crop',
-      deliveryDate: '2025',
-      unitTypes: ['شقق', 'استوديو'],
-      startingPrice: 1,
-      totalUnits: 680,
-    },
-    {
-      id: '5',
-      name: 'القاهرة سيتي',
-      developer: 'سوديك',
-      location: 'القاهرة الجديدة',
-      imageUrl: 'https://images.unsplash.com/photo-1460317442991-0ec209397118?w=800&h=600&fit=crop',
-      deliveryDate: '2026',
-      unitTypes: ['شقق', 'فلل', 'توين هاوس'],
-      startingPrice: 3,
-      totalUnits: 850,
-    },
-    {
-      id: '6',
-      name: 'نور سيتي',
-      developer: 'بالم هيلز',
-      location: 'العاصمة الإدارية الجديدة',
-      imageUrl: 'https://images.unsplash.com/photo-1558036117-15d82a90b9b1?w=800&h=600&fit=crop',
-      deliveryDate: '2025',
-      unitTypes: ['شقق', 'دوبليكس', 'بنتهاوس'],
-      startingPrice: 2,
-      totalUnits: 540,
-    },
-  ];
+  isLoading = false;
+  errorMessage = '';
+
+  private readonly baseUrl = environment.api.baseUrl;
+  private readonly fallbackImage =
+    'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=600&fit=crop';
+  projects: Project[] = [];
+
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+    private languageService: LanguageService,
+  ) {}
+
+  ngOnInit(): void {
+    this.loadProjects();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['searchVersion'] && !changes['searchVersion'].firstChange) {
+      this.loadProjects();
+    }
+  }
+
+  retrySearch(): void {
+    this.loadProjects();
+  }
 
   onProjectClick(project: Project): void {
     this.router.navigate(['/projects', project.id], {
       state: { property: project },
     });
+  }
+
+  private loadProjects(): void {
+    const query = this.searchQuery.trim();
+    const currentLanguage = this.languageService.getCurrentLanguage();
+
+    const headers = {
+      'Accept-Language': currentLanguage,
+      'Content-Language': currentLanguage,
+      'X-Language': currentLanguage,
+    };
+
+    let params = new HttpParams();
+    if (query) {
+      params = params.set('name', query);
+    }
+
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    this.http
+      .get<ProjectSearchApiResponse>(`${this.baseUrl}/public/search/projects-and-profiles`, {
+        params,
+        headers,
+      })
+      .subscribe({
+        next: (response) => {
+          const mappedProjects = this.mapApiResults(response?.results?.data || []);
+          this.projects = mappedProjects;
+          this.isLoading = false;
+        },
+        error: () => {
+          this.isLoading = false;
+          this.errorMessage = 'Failed to load projects. Please try again.';
+          this.projects = [];
+        },
+      });
+  }
+
+  private mapApiResults(items: ProjectSearchItem[]): Project[] {
+    return items
+      .filter((item) => {
+        const entityType = String(item?.entityType || item?.type || '').toLowerCase();
+        return entityType === 'project' && !!item?.project;
+      })
+      .map((item) => {
+        const projectData = item.project || {};
+        const rawImage = this.resolveThumbnail(item);
+
+        return {
+          id: String(item?._id || ''),
+          name: projectData.name || 'Untitled Project',
+          developer: this.resolveDeveloperName(item),
+          location: projectData.location || 'Location not specified',
+          imageUrl: rawImage || this.fallbackImage,
+          deliveryDate: this.formatDeliveryDate(projectData.deliveryDate),
+          unitTypes: this.normalizeUnitTypes(projectData.type),
+          startingPrice: this.toNumber(projectData.priceStart),
+          totalUnits: this.toNumber(projectData.plannedUnits),
+        };
+      });
+  }
+
+  private resolveDeveloperName(item: ProjectSearchItem): string {
+    return item?.developer?.name || item?.owner?.name || item?.profile?.name || 'Developer';
+  }
+
+  private resolveThumbnail(item: ProjectSearchItem): string {
+    const thumb = item?.thumbnail;
+    if (typeof thumb === 'string' && thumb.trim()) return thumb.trim();
+    if (thumb && typeof thumb === 'object' && thumb.secure_url) return thumb.secure_url;
+    return this.fallbackImage;
+  }
+
+  private normalizeUnitTypes(value: string | string[] | undefined): string[] {
+    if (Array.isArray(value)) {
+      const list = value.map((item) => String(item).trim()).filter(Boolean);
+      return list.length ? list : ['Project'];
+    }
+
+    if (typeof value === 'string' && value.trim()) {
+      return [value.trim()];
+    }
+
+    return ['Project'];
+  }
+
+  private formatDeliveryDate(value: string | undefined): string {
+    if (!value) return 'TBD';
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return value;
+    }
+
+    return String(date.getFullYear());
+  }
+
+  private toNumber(value: number | string | undefined): number {
+    if (typeof value === 'number' && Number.isFinite(value)) {
+      return value;
+    }
+
+    if (typeof value === 'string') {
+      const parsed = Number(value.replace(/[^\d.-]/g, ''));
+      if (Number.isFinite(parsed)) {
+        return parsed;
+      }
+    }
+
+    return 0;
   }
 }

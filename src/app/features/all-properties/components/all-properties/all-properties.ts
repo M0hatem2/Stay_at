@@ -48,7 +48,7 @@ export class AllProperties implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Listen to query params for search
     this.routeSubscription = this.route.queryParams.subscribe((params) => {
-      this.searchQuery = params['search'] || '';
+      this.searchQuery = params['title'] || params['search'] || '';
       this.loadProperties();
     });
 

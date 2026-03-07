@@ -17,10 +17,12 @@ export class HomeHeader {
     if (event) {
       event.preventDefault();
     }
-    
-    // Navigate to all-properties with search query
+
+    const title = this.searchQuery.trim();
+
+    // Navigate to all-properties with title query param
     this.router.navigate(['/all-properties'], {
-      queryParams: { search: this.searchQuery }
+      queryParams: title ? { title } : {},
     });
   }
 

@@ -69,7 +69,7 @@ export class PropertyService {
   getProperties(
     page: number = 1,
     limit: number = 10,
-    search: string = '',
+    title: string = '',
   ): Observable<PropertyResponse> {
     const currentLanguage = this.languageService.getCurrentLanguage();
 
@@ -80,22 +80,10 @@ export class PropertyService {
       'X-Language': currentLanguage,
     };
 
-    // If search query exists, use search endpoint
-    if (search && search.trim()) {
- 
-      const searchBody = {
-        query: search.trim(),
-        page,
-        limit,
-      };
-
-      return this.http.post<PropertyResponse>(`${this.baseUrl}/property/search`, searchBody, {
-        headers,
-      });
+    let params = new HttpParams().set('page', page.toString()).set('limit', limit.toString());
+    if (title && title.trim()) {
+      params = params.set('title', title.trim());
     }
-
-    // Otherwise use regular get endpoint
-    const params = new HttpParams().set('page', page.toString()).set('limit', limit.toString());
  
 
     return this.http.get<PropertyResponse>(`${this.baseUrl}/public/search/units-and-properties`, {

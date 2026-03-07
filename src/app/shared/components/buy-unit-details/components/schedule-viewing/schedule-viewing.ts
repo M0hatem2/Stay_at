@@ -1,6 +1,32 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../../../../core/services/auth.service';
+import { environment } from '../../../../../../environments/environment';
+
+type ViewingTargetType = 'unit' | 'property' | 'project';
+
+interface ViewingPayload {
+  targetType: ViewingTargetType;
+  targetId: string;
+  requesterDetails: {
+    name: string;
+    phone: string;
+    email: string;
+  };
+  scheduledDate: string;
+  timeSlot: string;
+  notes?: string;
+}
+
+interface ViewingResponse {
+  message: string;
+  viewing?: {
+    _id?: string;
+    status?: string;
+  };
+}
 
 @Component({
   selector: 'app-schedule-viewing',
@@ -10,7 +36,16 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './schedule-viewing.scss',
 })
 export class ScheduleViewing {
+  @Input() targetType: ViewingTargetType = 'unit';
+  @Input() targetId: string = '';
+
   @Output() closeModal = new EventEmitter<void>();
+
+  isSubmitting = false;
+  errorMessage = '';
+  successMessage = '';
+  createdViewingId = '';
+  createdViewingStatus = '';
 
   formData = {
     name: '',
@@ -18,7 +53,7 @@ export class ScheduleViewing {
     email: '',
     date: '',
     time: '',
-    notes: ''
+    notes: '',
   };
 
   timeSlots = [
@@ -34,6 +69,11 @@ export class ScheduleViewing {
     { value: '18:00', label: '6:00 PM' },
   ];
 
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService,
+  ) { }
+
   // Get today's date in YYYY-MM-DD format for min date
   get minDate(): string {
     const today = new Date();
@@ -41,12 +81,74 @@ export class ScheduleViewing {
   }
 
   onSubmit(): void {
-    console.log('Viewing scheduled:', this.formData);
-    // Here you would typically call a service to submit the booking
-    this.closeModal.emit();
+    this.errorMessage = '';
+    this.successMessage = '';
+    this.createdViewingId = '';
+    this.createdViewingStatus = '';
+
+    if (!this.targetId) {
+      this.errorMessage = 'Missing targetId for viewing request.';
+      return;
+    }
+
+    const token = this.authService.getAccessToken();
+    if (!token) {
+      this.errorMessage = 'You need to login first.';
+      return;
+    }
+
+    const scheduledDate = this.toScheduledDate(this.formData.date, this.formData.time);
+    const timeSlot = this.toTimeSlot(this.formData.time);
+    if (!scheduledDate || !timeSlot) {
+      this.errorMessage = 'Please select a valid date and time.';
+      return;
+    }
+
+    const payload: ViewingPayload = {
+      targetType: this.targetType,
+      targetId: this.targetId,
+      requesterDetails: {
+        name: this.formData.name.trim(),
+        phone: this.formData.phone.trim(),
+        email: this.formData.email.trim(),
+      },
+      scheduledDate,
+      timeSlot,
+      notes: this.formData.notes.trim() || undefined,
+    };
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    this.isSubmitting = true;
+    this.http.post<ViewingResponse>(`${environment.api.baseUrl}/viewing`, payload, { headers }).subscribe({
+      next: (response) => {
+        this.isSubmitting = false;
+        this.successMessage = response?.message || 'Viewing request submitted successfully.';
+        this.createdViewingId = response?.viewing?._id || '';
+        this.createdViewingStatus = response?.viewing?.status || '';
+        setTimeout(() => this.closeModal.emit(), 900);
+      },
+      error: (error) => {
+        this.isSubmitting = false;
+        this.errorMessage = error?.error?.message || 'Failed to submit viewing request.';
+      },
+    });
   }
 
   onClose(): void {
+    if (this.isSubmitting) return;
     this.closeModal.emit();
+  }
+
+  private toScheduledDate(date: string, time: string): string {
+    if (!date || !time) return '';
+    return `${date}T${time}:00Z`;
+  }
+
+  private toTimeSlot(time: string): string {
+    if (!time) return '';
+    return `${time}:00Z`;
   }
 }

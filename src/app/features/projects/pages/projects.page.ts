@@ -12,7 +12,20 @@ import { YouDeveloper } from "../components/you-developer/you-developer";
   styleUrl: './projects.page.scss',
 })
 export class ProjectsPage {
-  constructor(private router: Router) {}
+  searchQuery = '';
+  searchVersion = 0;
+
+  constructor(private router: Router) { }
+
+  onSearch(query: string): void {
+    this.searchQuery = query;
+    this.searchVersion++;
+  }
+
+  onClearSearch(): void {
+    this.searchQuery = '';
+    this.searchVersion++;
+  }
 
   goToLogin() {
     this.router.navigate(['/auth/login']);

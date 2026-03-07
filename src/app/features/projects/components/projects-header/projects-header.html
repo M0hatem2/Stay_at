@@ -44,7 +44,7 @@
   </div>
 
   <!-- Search Bar -->
-  <div class="max-w-3xl mx-auto">
+  <form class="max-w-3xl mx-auto" (ngSubmit)="onSearch($event)">
     <div
       class="bg-white rounded-2xl shadow-2xl p-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-2"
     >
@@ -70,12 +70,22 @@
           type="text"
           placeholder="Search for project, developer, or location..."
           class="flex-1 py-3 text-gray-900 placeholder-gray-400 focus:outline-none text-sm sm:text-base"
-          value=""
+          name="projectSearch"
+          [(ngModel)]="searchTerm"
         />
       </div>
 
       <!-- Action Buttons -->
       <div class="flex items-center gap-2">
+        @if (searchTerm.trim()) {
+          <button
+            type="button"
+            (click)="onClear()"
+            class="flex-1 sm:flex-none px-5 sm:px-6 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all text-sm sm:text-base font-medium"
+          >
+            Clear
+          </button>
+        }
         <!-- <button
           class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 sm:px-6 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors text-sm sm:text-base"
         >
@@ -99,11 +109,12 @@
           <span>Filter</span>
         </button> -->
         <button
+          type="submit"
           class="flex-1 sm:flex-none px-6 sm:px-8 py-3 bg-gradient-to-r from-[#de5806] to-[#470e03] text-white rounded-xl hover:shadow-lg transition-all text-sm sm:text-base font-medium"
         >
           Search
         </button>
       </div>
     </div>
-  </div>
+  </form>
 </div>

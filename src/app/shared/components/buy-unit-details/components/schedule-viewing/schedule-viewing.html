@@ -13,6 +13,27 @@
         </button>
     </div>
     <form class="space-y-6" (ngSubmit)="onSubmit()" #viewingForm="ngForm">
+        @if (errorMessage) {
+            <div class="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+                {{ errorMessage }}
+            </div>
+        }
+        @if (successMessage) {
+            <div class="rounded-xl bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-700">
+                {{ successMessage }}
+                @if (createdViewingStatus || createdViewingId) {
+                    <div class="mt-2 text-xs text-green-800">
+                        @if (createdViewingStatus) {
+                            <div>Status: {{ createdViewingStatus }}</div>
+                        }
+                        @if (createdViewingId) {
+                            <div>Viewing ID: {{ createdViewingId }}</div>
+                        }
+                    </div>
+                }
+            </div>
+        }
+
         <div class="space-y-4">
             <div>
                 <label class="flex items-center gap-2 text-sm font-medium text-gray-700 mb-3">
@@ -121,10 +142,10 @@
             </button>
             <button 
                 type="submit"
-                [disabled]="!viewingForm.valid"
+                [disabled]="!viewingForm.valid || isSubmitting"
                 class="flex-1 px-6 py-3 bg-gradient-to-r from-[#de5806] to-[#470e03] text-white rounded-xl hover:shadow-xl hover:scale-[1.02] transition-all font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
                 <i class="fa-solid fa-calendar-check"></i>
-                Confirm Booking
+                {{ isSubmitting ? 'Submitting...' : 'Confirm Booking' }}
             </button>
         </div>
     </form>

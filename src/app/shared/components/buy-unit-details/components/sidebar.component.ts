@@ -193,7 +193,12 @@ type SelectedPlanSummary = PropertyDetails['selected_plan_summary'];
       <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" 
            (click)="closeMakeOfferModal()">
         <div (click)="$event.stopPropagation()">
-          <app-make-offer (closeModal)="closeMakeOfferModal()"></app-make-offer>
+          <app-make-offer
+            [targetType]="targetType"
+            [targetId]="targetId || propertyData?.id || ''"
+            [salePriceId]="salePriceId"
+            (closeModal)="closeMakeOfferModal()"
+          ></app-make-offer>
         </div>
       </div>
     }
@@ -203,7 +208,11 @@ type SelectedPlanSummary = PropertyDetails['selected_plan_summary'];
       <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" 
            (click)="closeScheduleViewingModal()">
         <div (click)="$event.stopPropagation()">
-          <app-schedule-viewing (closeModal)="closeScheduleViewingModal()"></app-schedule-viewing>
+          <app-schedule-viewing
+            [targetType]="targetType"
+            [targetId]="targetId || propertyData?.id || ''"
+            (closeModal)="closeScheduleViewingModal()"
+          ></app-schedule-viewing>
         </div>
       </div>
     }
@@ -211,6 +220,9 @@ type SelectedPlanSummary = PropertyDetails['selected_plan_summary'];
 })
 export class SidebarComponent {
   @Input() propertyData: any;
+  @Input() targetType: 'unit' | 'property' | 'project' = 'unit';
+  @Input() targetId: string = '';
+  @Input() salePriceId: string = '';
   @Input() agentInitial: string = '';
   @Input() ownerContact: { phoneNumber?: string; email?: string } | null = null;
   @Input() selectedPlanSummary: SelectedPlanSummary | null = null;

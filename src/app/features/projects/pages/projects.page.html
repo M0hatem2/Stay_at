@@ -1,4 +1,7 @@
-<app-projects-header></app-projects-header>
+<app-projects-header
+  (search)="onSearch($event)"
+  (clearSearch)="onClearSearch()"
+></app-projects-header>
 <app-projects-data></app-projects-data>
-<app-projects></app-projects>
+<app-projects [searchQuery]="searchQuery" [searchVersion]="searchVersion"></app-projects>
 <app-you-developer></app-you-developer>

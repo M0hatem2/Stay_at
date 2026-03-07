@@ -56,6 +56,9 @@ export class BuyUnitDetails implements OnInit, OnDestroy {
   analysisSummary = 'Investment summary is not available yet.';
   analysisLastUpdated = '';
   ownerContact: { phoneNumber: string; email: string } = { phoneNumber: '', email: '' };
+  offerTargetType: 'unit' | 'property' | 'project' = 'unit';
+  offerTargetId = '';
+  offerSalePriceId = '';
 
   // Image Gallery Properties
   selectedImageIndex: number = 0;
@@ -85,6 +88,9 @@ export class BuyUnitDetails implements OnInit, OnDestroy {
   private loadUnitDetails(id: string): void {
     this.isLoading = true;
     this.errorMessage = '';
+    this.offerTargetType = 'unit';
+    this.offerTargetId = id;
+    this.offerSalePriceId = '';
 
     this.unitService.getUnitByIdForSale(id).subscribe({
       next: (response: any) => {
@@ -139,6 +145,9 @@ export class BuyUnitDetails implements OnInit, OnDestroy {
     this.analysisSummary = 'Investment summary is not available yet.';
     this.analysisLastUpdated = '';
     this.ownerContact = { phoneNumber: '', email: '' };
+    this.offerTargetType = this.normalizeTargetType(unit?.targetType);
+    this.offerTargetId = this.safeText(unit?.targetId || unit?._id || unit?.id, '');
+    this.offerSalePriceId = this.safeText(unit?.salePricing?._id || unit?.salePriceId, '');
 
     pd.id = unit?._id || unit?.id || null;
     pd.title = this.safeText(unit?.title, pd.title);
@@ -756,6 +765,8 @@ export class BuyUnitDetails implements OnInit, OnDestroy {
     if (agent) data.agent = { ...data.agent, ...agent };
 
     if (this.isProject(property)) {
+      this.offerTargetType = 'project';
+      this.offerTargetId = String((property as any).id || '');
       data.specs.delivery = property.deliveryDate;
       data.specs.compound = property.name;
       data.specs.property_type = 'Project';
@@ -763,6 +774,17 @@ export class BuyUnitDetails implements OnInit, OnDestroy {
       data.agent.name = property.developer;
       data.agent.title = 'Developer';
       data.agent.listed_count = property.totalUnits;
+      return;
+    }
+
+    if (this.isApiProperty(property)) {
+      this.offerTargetType = this.normalizeTargetType(property.targetType);
+      this.offerTargetId = this.safeText(property.targetId || property._id, '');
+      return;
+    }
+
+    if ('id' in property && typeof (property as any).id === 'string') {
+      this.offerTargetId = (property as any).id;
     }
   }
 
@@ -873,6 +895,12 @@ export class BuyUnitDetails implements OnInit, OnDestroy {
       .map((item) => item.trim())
       .filter(Boolean);
     return { area: parts[0] || '', city: parts[1] || '' };
+  }
+
+  private normalizeTargetType(value: unknown): 'unit' | 'property' | 'project' {
+    const candidate = String(value || 'unit').toLowerCase();
+    if (candidate === 'property' || candidate === 'project') return candidate;
+    return 'unit';
   }
 
   private getPropertyType(property: PropertyCardData | Project): string | null {
