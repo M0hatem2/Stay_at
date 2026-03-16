@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { environment } from '../../../../environments/environment';
-import { AuthService } from '../../../core/services/auth.service';
+import { Observable, of } from 'rxjs';
+import { delay } from 'rxjs/operators';
 
 export interface CreateBookingRequest {
   unitId: string;
@@ -28,34 +26,43 @@ export interface CreateBookingResponse {
   providedIn: 'root',
 })
 export class BookingService {
-  private baseUrl = environment.api.baseUrl;
-
-  constructor(
-    private http: HttpClient,
-    private authService: AuthService,
-  ) {}
+  constructor() { }
 
   createBooking(payload: CreateBookingRequest): Observable<CreateBookingResponse> {
-    console.log('🎯 BookingService - Sending Booking Request');
-    console.log('📦 Payload to API:', JSON.stringify(payload, null, 2));
-    console.log('🔑 Auth Token Available:', !!this.authService.getAccessToken());
-    console.log('🌐 API Endpoint:', `${this.baseUrl}/booking`);
-    
-    const token = this.authService.getAccessToken();
-    const headers = token
-      ? new HttpHeaders({
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        })
-      : new HttpHeaders({
-          'Content-Type': 'application/json',
-        });
+    const bookingReference = `BK-${Date.now()}-${Math.floor(Math.random() * 9000 + 1000)}`;
+    const paymentAmountEstimate = this.estimatePaymentAmount(payload);
 
-    console.log('📋 Request Headers:', {
-      'Authorization': token ? `Bearer ${token.substring(0, 20)}...` : 'No token',
-      'Content-Type': 'application/json'
+    const paymentQuery = new URLSearchParams({
+      bookingRef: bookingReference,
+      unitId: payload.unitId,
+      method: payload.paymentMethod,
+      rentalType: payload.rentalType,
+      amount: String(paymentAmountEstimate),
+      currency: payload.currency,
     });
 
-    return this.http.post<CreateBookingResponse>(`${this.baseUrl}/booking`, payload, { headers });
+    const paymentUrl =
+      payload.paymentMethod === 'card'
+        ? `https://stay-at.demo/pay?${paymentQuery.toString()}`
+        : '';
+
+    return of({ URL: paymentUrl }).pipe(delay(450));
+  }
+
+  private estimatePaymentAmount(payload: CreateBookingRequest): number {
+    const start = new Date(payload.arrivalDate).getTime();
+    const end = new Date(payload.departureDate).getTime();
+    const days = Math.max(1, Math.ceil((end - start) / (1000 * 60 * 60 * 24)));
+
+    const baseDailyByRentalType: Record<CreateBookingRequest['rentalType'], number> = {
+      daily: 1800,
+      weekly: 1500,
+      monthly: 1200,
+      yearly: 950,
+    };
+
+    const baseDaily = baseDailyByRentalType[payload.rentalType] || 1800;
+    const guestFactor = 1 + Math.max(0, payload.numberOfGuests - 1) * 0.06;
+    return Math.round(baseDaily * days * guestFactor);
   }
 }

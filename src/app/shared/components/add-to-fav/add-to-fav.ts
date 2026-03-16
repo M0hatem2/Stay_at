@@ -20,7 +20,7 @@ export class AddToFav {
   constructor(
     private authService: AuthService,
     private apiService: ApiService,
-  ) {}
+  ) { }
 
   onFavoriteClick(event: Event): void {
     event.stopPropagation();

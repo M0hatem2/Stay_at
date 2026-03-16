@@ -17,35 +17,47 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(
     private authService: AuthService,
     private router: Router,
-    @Inject(PLATFORM_ID) private platformId: Object,
-  ) {}
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-    // Clone the request to add headers
     let modifiedRequest = request;
 
-    // Add authorization header with JWT accessToken if available
     if (isPlatformBrowser(this.platformId)) {
+
       const token = this.authService.getAccessToken();
+
+      // لو التوكن موجود
       if (token) {
+
+        // تحقق هل التوكن منتهي
+        if (this.authService.isTokenExpired(token)) {
+
+          this.authService.clearTokens();
+          this.router.navigate(['/auth/login']);
+          return throwError(() => new Error('Token expired'));
+        }
+
         modifiedRequest = request.clone({
           setHeaders: {
             Authorization: `Bearer ${token}`,
           },
         });
-      }  
+      }
     }
 
     return next.handle(modifiedRequest).pipe(
       catchError((error: HttpErrorResponse) => {
+
         if (error.status === 401) {
-           // Handle unauthorized access
+
           this.authService.clearTokens();
           this.router.navigate(['/auth/login']);
         }
+
         return throwError(() => error);
-      }),
+      })
     );
   }
 }

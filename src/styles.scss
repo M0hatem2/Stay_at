@@ -402,7 +402,11 @@
     transform: scale(0.97);
   }
 }
-
+.gradient-primary-text {
+  background: linear-gradient(to right, #de5806, #470e03);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 .gradient-primary-header {
   background: linear-gradient(to top right, #de5806, #470e03, #de5806);
   color: #ffffff;

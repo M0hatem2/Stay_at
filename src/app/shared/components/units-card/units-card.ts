@@ -258,7 +258,7 @@ export class UnitsCard {
 
   get propertyId(): string {
     if (this.isApiProperty(this.property)) {
-      return this.property._id || '';
+      return this.property.targetId || '';
     }
     if (this.isProperty(this.property)) {
       return String(this.property.id || '');

@@ -35,6 +35,7 @@ export class Buy implements OnInit, OnDestroy {
   // UI Filters (for future implementation)
   filters: {
     type: string;
+    city: string;
     minBedrooms: number | null;
     minBathrooms: number | null;
     managed: boolean;
@@ -44,16 +45,17 @@ export class Buy implements OnInit, OnDestroy {
     areaMin: number | null;
     areaMax: number | null;
   } = {
-    type: '',
-    minBedrooms: null,
-    minBathrooms: null,
-    managed: false,
-    verified: false,
-    priceMin: null,
-    priceMax: null,
-    areaMin: null,
-    areaMax: null,
-  };
+      type: '',
+      city: '',
+      minBedrooms: null,
+      minBathrooms: null,
+      managed: false,
+      verified: false,
+      priceMin: null,
+      priceMax: null,
+      areaMin: null,
+      areaMax: null,
+    };
 
   private languageSubscription: Subscription | null = null;
 
@@ -61,7 +63,7 @@ export class Buy implements OnInit, OnDestroy {
     private router: Router,
     private unitService: UnitService,
     private languageService: LanguageService,
-  ) {}
+  ) { }
 
   get displayedProperties(): ApiProperty[] {
     return this.units;
@@ -88,7 +90,6 @@ export class Buy implements OnInit, OnDestroy {
 
     this.unitService.getUnits(this.apiFilters).subscribe({
       next: (response) => {
- 
         if (append) {
           this.units = [...this.units, ...(response.results.data as unknown as ApiProperty[])];
         } else {
@@ -124,12 +125,13 @@ export class Buy implements OnInit, OnDestroy {
 
   onSortChange(value: string): void {
     this.sortOption = value as any;
-    // TODO: Implement API-based sorting
-   }
+    this.applyFiltersAndSort();
+  }
 
   clearFilters(): void {
     this.filters = {
       type: '',
+      city: '',
       minBedrooms: null,
       minBathrooms: null,
       managed: false,
@@ -149,8 +151,50 @@ export class Buy implements OnInit, OnDestroy {
   }
 
   applyFiltersAndSort(): void {
-    // TODO: Convert UI filters to API filters and reload
-     this.loadUnits();
+    const newFilters: UnitFilters = {
+      purpose: 'sale',
+      page: 1,
+      limit: this.itemsPerPage,
+    };
+
+    if (this.filters.type) {
+      newFilters.unitType = this.filters.type;
+    }
+
+    if (this.filters.minBedrooms !== null) {
+      newFilters.bedrooms = this.filters.minBedrooms;
+    }
+
+    if (this.filters.minBathrooms !== null) {
+      newFilters.bathrooms = this.filters.minBathrooms;
+    }
+
+    if (this.filters.verified) {
+      newFilters.isVerified = true;
+    }
+
+    if (this.filters.priceMin !== null) {
+      newFilters.priceFrom = this.filters.priceMin;
+    }
+
+    if (this.filters.priceMax !== null) {
+      newFilters.priceTo = this.filters.priceMax;
+    }
+
+    const sortMap: Record<string, string | undefined> = {
+      'recommended': undefined,
+      'price-low': 'price_asc',
+      'price-high': 'price_desc',
+      'newest': 'newest',
+      'area': undefined,
+    };
+
+    if (sortMap[this.sortOption]) {
+      newFilters.sort = sortMap[this.sortOption];
+    }
+
+    this.apiFilters = newFilters;
+    this.loadUnits();
   }
 
   onPropertyClick(property: PropertyCardData): void {

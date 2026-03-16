@@ -13,7 +13,7 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     @Inject(PLATFORM_ID) private platformId: Object,
-  ) {}
+  ) { }
 
   // Sign up with email confirmation
   signUp(userData: any): Observable<any> {
@@ -51,7 +51,20 @@ export class AuthService {
   signIn(credentials: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/auth/signIn`, credentials);
   }
+  isTokenExpired(token: string): boolean {
+    try {
 
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const expiry = payload.exp;
+
+      if (!expiry) return false;
+
+      return Date.now() >= expiry * 1000;
+
+    } catch {
+      return true;
+    }
+  }
   // Forgot password
   forgotPassword(email: string): Observable<any> {
     return this.http.post(`${this.baseUrl}/auth/forgotPassword`, { email });
@@ -87,14 +100,14 @@ export class AuthService {
       return null;
     }
     const token = localStorage.getItem('accessToken');
-     return token;
+    return token;
   }
 
   setAccessToken(accessToken: string): void {
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
-     localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('accessToken', accessToken);
   }
 
   getRefreshToken(): string | null {
@@ -115,13 +128,13 @@ export class AuthService {
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
-     localStorage.removeItem('accessToken');
+    localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
   }
 
   isAuthenticated(): boolean {
     const hasToken = !!this.getAccessToken();
-     return hasToken;
+    return hasToken;
   }
 
   getRole(): string | null {
@@ -132,7 +145,7 @@ export class AuthService {
     if (token) {
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
-         return payload.role;
+        return payload.role;
       } catch (error) {
         console.error('❌ Error decoding token:', error);
         return null;
